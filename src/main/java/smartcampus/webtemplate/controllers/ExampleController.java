@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,6 +25,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import smartcampus.ifame.model.Mensa;
 
 import eu.trentorise.smartcampus.ac.provider.AcService;
 import eu.trentorise.smartcampus.ac.provider.filters.AcProviderFilter;
@@ -87,6 +90,63 @@ public class ExampleController {
 		}
 		return null;
 	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/provaora")
+	public @ResponseBody
+	Long getData(HttpServletRequest request, HttpServletResponse response,
+			HttpSession session) throws IOException {
+		try {
+			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
+			ProfileConnector profileConnector = new ProfileConnector(
+					serverAddress);
+			BasicProfile profile = profileConnector.getBasicProfile(token);
+
+			if (profile != null) {
+				return System.currentTimeMillis();
+			}
+
+		} catch (Exception e) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+	}
+
+	@RequestMapping(method = RequestMethod.GET, value = "/getmense")
+	public @ResponseBody
+	ArrayList<Mensa> getMense(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session)
+			throws IOException {
+		try {
+			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
+			ProfileConnector profileConnector = new ProfileConnector(
+					serverAddress);
+			BasicProfile profile = profileConnector.getBasicProfile(token);
+			if (profile != null) {
+
+				ArrayList<Mensa> mense = new ArrayList<Mensa>();
+
+				String[] link = { "link1.com", "link2.com", "link3.com",
+						"link4.com" };
+				String[] name = { "mensa1", "mensa2", "mensa3", "mensa4" };
+				Long[] id = { (long) 656356, (long) 344647, (long) 455365,
+						(long) 356356 };
+
+				for (int i = 0; i < name.length; i++) {
+					Mensa m = new Mensa();
+					m.setMensa_link(link[i]);
+					m.setMensa_name(name[i]);
+					m.setMensa_id(id[i]);
+					mense.add(m);
+				}
+				return mense;
+			}
+		} catch (Exception e) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+	}
+	
+	
 
 	/*
 	 * Request all the routes for Trentino Trasporti (agencyId = "12")
@@ -165,7 +225,8 @@ public class ExampleController {
 					filter, token);
 
 			@SuppressWarnings("unchecked")
-			List<EventObject> list = (List<EventObject>) result.get(EVENT_OBJECT);
+			List<EventObject> list = (List<EventObject>) result
+					.get(EVENT_OBJECT);
 			return list;
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -185,7 +246,7 @@ public class ExampleController {
 			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
 
 			CommunicatorConnector communicatorConnector = new CommunicatorConnector(
-					serverAddress);//, appName);
+					serverAddress);// , appName);
 
 			List<Notification> result = communicatorConnector.getNotifications(
 					0L, 0, -1, token);
@@ -239,8 +300,6 @@ public class ExampleController {
 				"513da746975aa4412a383769");
 	}
 
-
-
 	/*
 	 * Example to get some social information about a user. Example shows how
 	 * retrieve the group created by the user
@@ -254,37 +313,33 @@ public class ExampleController {
 		return socialsrv.getGroups(token);
 	}
 
-	
-
-	
 	/**
 	 * Register the user for the push notifications on this app
+	 * 
 	 * @param request
 	 * @throws SecurityException
 	 * @throws SocialServiceException
 	 * @throws CommunicatorConnectorException
 	 */
 	/*
-	@RequestMapping(method = RequestMethod.GET, value = "/register/user/")
-	public @ResponseBody
-	boolean registerUser(HttpServletRequest request) throws SecurityException,
-			SocialServiceException, CommunicatorConnectorException {
-		logger.debug("registerUser - enter");
-		String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-		String registrationId = request
-				.getHeader(CommunicatorConnector.REGISTRATIONID_HEADER);
-
-		CommunicatorConnector communicatorConnector = new CommunicatorConnector(
-				serverAddress, appName);
-		communicatorConnector.registerUser(token, registrationId);
-		return true;
-
-	}
-	*/
-	
+	 * @RequestMapping(method = RequestMethod.GET, value = "/register/user/")
+	 * public @ResponseBody boolean registerUser(HttpServletRequest request)
+	 * throws SecurityException, SocialServiceException,
+	 * CommunicatorConnectorException { logger.debug("registerUser - enter");
+	 * String token = request.getHeader(AcProviderFilter.TOKEN_HEADER); String
+	 * registrationId = request
+	 * .getHeader(CommunicatorConnector.REGISTRATIONID_HEADER);
+	 * 
+	 * CommunicatorConnector communicatorConnector = new CommunicatorConnector(
+	 * serverAddress, appName); communicatorConnector.registerUser(token,
+	 * registrationId); return true;
+	 * 
+	 * }
+	 */
 
 	/**
 	 * Register app for the push notifications server side
+	 * 
 	 * @param request
 	 * @param senderId
 	 * @throws SecurityException
@@ -292,21 +347,20 @@ public class ExampleController {
 	 * @throws CommunicatorConnectorException
 	 */
 	/*
-	@RequestMapping(method = RequestMethod.GET, value = "/register/app/{senderId}")
-	public @ResponseBody
-	boolean registerApp(HttpServletRequest request,
-			@PathVariable("senderId") String senderId)
-			throws SecurityException, SocialServiceException,
-			CommunicatorConnectorException {
-		logger.debug("registerApp - enter");
-		String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-
-		CommunicatorConnector communicatorConnector = new CommunicatorConnector(
-				serverAddress, appName);
-
-		communicatorConnector.registerApp(token, senderId);
-		return true;
-
-	}
-*/
+	 * @RequestMapping(method = RequestMethod.GET, value =
+	 * "/register/app/{senderId}") public @ResponseBody boolean
+	 * registerApp(HttpServletRequest request,
+	 * 
+	 * @PathVariable("senderId") String senderId) throws SecurityException,
+	 * SocialServiceException, CommunicatorConnectorException {
+	 * logger.debug("registerApp - enter"); String token =
+	 * request.getHeader(AcProviderFilter.TOKEN_HEADER);
+	 * 
+	 * CommunicatorConnector communicatorConnector = new CommunicatorConnector(
+	 * serverAddress, appName);
+	 * 
+	 * communicatorConnector.registerApp(token, senderId); return true;
+	 * 
+	 * }
+	 */
 }
