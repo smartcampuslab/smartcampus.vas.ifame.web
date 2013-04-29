@@ -91,62 +91,21 @@ public class ExampleController {
 		return null;
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/provaora")
-	public @ResponseBody
-	Long getData(HttpServletRequest request, HttpServletResponse response,
-			HttpSession session) throws IOException {
-		try {
-			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-			ProfileConnector profileConnector = new ProfileConnector(
-					serverAddress);
-			BasicProfile profile = profileConnector.getBasicProfile(token);
-
-			if (profile != null) {
-				return System.currentTimeMillis();
-			}
-
-		} catch (Exception e) {
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		}
-		return null;
-	}
-
-	@RequestMapping(method = RequestMethod.GET, value = "/getmense")
-	public @ResponseBody
-	ArrayList<Mensa> getMense(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session)
-			throws IOException {
-		try {
-			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-			ProfileConnector profileConnector = new ProfileConnector(
-					serverAddress);
-			BasicProfile profile = profileConnector.getBasicProfile(token);
-			if (profile != null) {
-
-				ArrayList<Mensa> mense = new ArrayList<Mensa>();
-
-				String[] link = { "link1.com", "link2.com", "link3.com",
-						"link4.com" };
-				String[] name = { "mensa1", "mensa2", "mensa3", "mensa4" };
-				Long[] id = { (long) 656356, (long) 344647, (long) 455365,
-						(long) 356356 };
-
-				for (int i = 0; i < name.length; i++) {
-					Mensa m = new Mensa();
-					m.setMensa_link(link[i]);
-					m.setMensa_name(name[i]);
-					m.setMensa_id(id[i]);
-					mense.add(m);
-				}
-				return mense;
-			}
-		} catch (Exception e) {
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		}
-		return null;
-	}
-	
-	
+	/*
+	 * @RequestMapping(method = RequestMethod.GET, value = "/provaora") public
+	 * 
+	 * @ResponseBody Long getData(HttpServletRequest request,
+	 * HttpServletResponse response, HttpSession session) throws IOException {
+	 * try { String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
+	 * ProfileConnector profileConnector = new ProfileConnector( serverAddress);
+	 * BasicProfile profile = profileConnector.getBasicProfile(token);
+	 * 
+	 * if (profile != null) { return System.currentTimeMillis(); }
+	 * 
+	 * } catch (Exception e) {
+	 * response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR); }
+	 * return null; }
+	 */
 
 	/*
 	 * Request all the routes for Trentino Trasporti (agencyId = "12")
