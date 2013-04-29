@@ -1,5 +1,6 @@
 package smartcampus.ifame.model;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -8,27 +9,31 @@ import java.util.Random;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "iSoldi")
-public class ISoldiObject {
+public class Saldo {
 
 	private Long user_id;
 	private Long card_id;
-	private Float credit;
+	private String credit;
 	private List<Transaction> transactions;
 
-	public ISoldiObject() {
+	public Saldo() {
 		Random rand = new Random();
 
 		this.user_id = Math.abs(rand.nextLong());
 		this.card_id = Math.abs(rand.nextLong());
-		this.credit = rand.nextFloat() + rand.nextInt(10);
+
+		DecimalFormat df = new DecimalFormat("###.##");
+		double number = rand.nextDouble() + rand.nextInt(10);
+		this.credit = df.format(number);
 
 		this.transactions = new ArrayList<Transaction>();
 		for (int i = 0; i < 5; i++) {
+
+			double n = rand.nextDouble() + rand.nextInt(10);
 			Transaction t = new Transaction();
-			t.setValue(rand.nextFloat() + rand.nextInt(10));
-			// t.setDate(new Date(Math.abs(System.currentTimeMillis()
-			// - rand.nextLong())));
-			t.setDate(new Date(System.currentTimeMillis()));
+
+			t.setValue(df.format(n));
+			t.setTimemillis(System.currentTimeMillis());
 
 			transactions.add(t);
 		}
@@ -59,33 +64,34 @@ public class ISoldiObject {
 		this.card_id = card_id;
 	}
 
-	public Float getCredit() {
+	public String getCredit() {
 		return credit;
 	}
 
-	public void setCredit(Float credit) {
+	public void setCredit(String credit) {
 		this.credit = credit;
 	}
+
 }
 
 class Transaction {
 
-	private Date date;
-	private Float value;
+	private Long timemillis;
+	private String value;
 
-	public Date getDate() {
-		return date;
+	public Long getTimemillis() {
+		return timemillis;
 	}
 
-	public void setDate(Date date) {
-		this.date = date;
+	public void setTimemillis(Long timemillis) {
+		this.timemillis = timemillis;
 	}
 
-	public Float getValue() {
+	public String getValue() {
 		return value;
 	}
 
-	public void setValue(Float value) {
+	public void setValue(String value) {
 		this.value = value;
 	}
 }

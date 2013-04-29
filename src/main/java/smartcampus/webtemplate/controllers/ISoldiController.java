@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import smartcampus.ifame.model.ISoldiObject;
+import smartcampus.ifame.model.Saldo;
 import eu.trentorise.smartcampus.ac.provider.AcService;
 import eu.trentorise.smartcampus.ac.provider.filters.AcProviderFilter;
 import eu.trentorise.smartcampus.profileservice.ProfileConnector;
@@ -48,17 +48,17 @@ public class ISoldiController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/getsoldi")
 	public @ResponseBody
-	ISoldiObject getMense(HttpServletRequest request,
+	Saldo getMense(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session)
 			throws IOException {
-		ISoldiObject iso = null;
+		Saldo iso = null;
 		try {
 			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
 			ProfileConnector profileConnector = new ProfileConnector(
 					serverAddress);
 			BasicProfile profile = profileConnector.getBasicProfile(token);
 			if (profile != null) {
-				iso = new ISoldiObject();
+				iso = new Saldo();
 				return iso;
 			}
 		} catch (Exception e) {

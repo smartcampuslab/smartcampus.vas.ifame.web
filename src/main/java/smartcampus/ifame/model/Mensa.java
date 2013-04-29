@@ -9,6 +9,10 @@ public class Mensa {
 	private String mensa_name;
 	private String mensa_link;
 
+	public Mensa() {
+
+	}
+
 	public Mensa(Long mensa_id, String mensa_name, String mensa_link) {
 		super();
 		this.mensa_id = mensa_id;

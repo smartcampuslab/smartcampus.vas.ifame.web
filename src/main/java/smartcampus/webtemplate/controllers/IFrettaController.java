@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import smartcampus.ifame.model.ListaMense;
 import smartcampus.ifame.model.Mensa;
 
 import eu.trentorise.smartcampus.ac.provider.AcService;
@@ -74,7 +75,7 @@ public class IFrettaController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/getmense")
 	public @ResponseBody
-	ArrayList<Mensa> getMense(HttpServletRequest request,
+	ListaMense getMense(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session)
 			throws IOException {
 		try {
@@ -113,7 +114,10 @@ public class IFrettaController {
 				mense.add(zanella);
 				mense.add(mesiano);
 
-				return mense;
+				ListaMense lm = new ListaMense();
+				lm.setList(mense);
+
+				return lm;
 			}
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
