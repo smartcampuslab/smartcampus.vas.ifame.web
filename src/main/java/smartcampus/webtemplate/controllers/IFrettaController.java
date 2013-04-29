@@ -115,6 +115,7 @@ public class IFrettaController {
 				mense.add(mesiano);
 
 				ListaMense lm = new ListaMense();
+				lm.setLast_update_milis(System.currentTimeMillis());
 				lm.setList(mense);
 
 				return lm;
