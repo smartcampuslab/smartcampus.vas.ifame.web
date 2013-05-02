@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import smartcampus.ifame.model.Saldo;
+import smartcampus.ifame.model.init.SaldoInit;
 import eu.trentorise.smartcampus.ac.provider.AcService;
 import eu.trentorise.smartcampus.ac.provider.filters.AcProviderFilter;
 import eu.trentorise.smartcampus.profileservice.ProfileConnector;
@@ -28,7 +29,7 @@ public class ISoldiController {
 
 	private static final String EVENT_OBJECT = "eu.trentorise.smartcampus.dt.model.EventObject";
 	private static final Logger logger = Logger
-			.getLogger(IFrettaController.class);
+			.getLogger(ISoldiController.class);
 	@Autowired
 	private AcService acService;
 
@@ -48,18 +49,17 @@ public class ISoldiController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/getsoldi")
 	public @ResponseBody
-	Saldo getMense(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session)
-			throws IOException {
-		Saldo iso = null;
+	Saldo getMense(HttpServletRequest request, HttpServletResponse response,
+			HttpSession session) throws IOException {
+		Saldo saldo = null;
 		try {
 			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
 			ProfileConnector profileConnector = new ProfileConnector(
 					serverAddress);
 			BasicProfile profile = profileConnector.getBasicProfile(token);
 			if (profile != null) {
-				iso = new Saldo();
-				return iso;
+				saldo = SaldoInit.createFakeSaldo();
+				return saldo;
 			}
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
