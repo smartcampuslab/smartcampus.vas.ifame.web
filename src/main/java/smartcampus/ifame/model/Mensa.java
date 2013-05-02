@@ -43,11 +43,4 @@ public class Mensa {
 	public void setMensa_link(String mensa_link) {
 		this.mensa_link = mensa_link;
 	}
-
-	@Override
-	public String toString() {
-		return "Mensa [mensa_id=" + mensa_id + ", mensa_name=" + mensa_name
-				+ ", mensa_link=" + mensa_link + "]";
-	}
-
 }

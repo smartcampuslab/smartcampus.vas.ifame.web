@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import smartcampus.ifame.model.MenuDelGiorno;
 import smartcampus.ifame.model.MenuDellaSettimana;
+import smartcampus.ifame.model.PiattiList;
 import smartcampus.ifame.model.Piatto;
 import smartcampus.ifame.model.Saldo;
 import smartcampus.ifame.model.init.PiattoInit;
@@ -55,7 +56,7 @@ public class MenuController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/getallpiatti")
 	public @ResponseBody
-	List<Piatto> getAllPiatti(HttpServletRequest request,
+	PiattiList getAllPiatti(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session)
 			throws IOException {
 		try {
@@ -65,8 +66,11 @@ public class MenuController {
 			BasicProfile profile = profileConnector.getBasicProfile(token);
 			if (profile != null) {
 
+				PiattiList pl = new PiattiList();
 				List<Piatto> list = PiattoInit.getpiatti();
-				return list;
+				pl.setPiatti(list);
+
+				return pl;
 			}
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
