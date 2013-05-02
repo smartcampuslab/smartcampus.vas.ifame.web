@@ -9,7 +9,7 @@ public class ListaMenseInit {
 
 	public static ListaMense getMenseValues() {
 
-		final String url_povo_0 = "http://www.operauni.tn.it/cms-01.00/articolo.asp?IDcms=13737&s=279&l=IT";
+		final String url_povo_0 = "http://www.operauni.tn.it/upload/cms/456_x/mensa-povo1.jpg";
 		final String url_povo_1 = "http://www.operauni.tn.it/upload/cms/456_x/mensa-povo2.jpg";
 		final String url_tommaso_gar = "http://www.operauni.tn.it/upload/cms/456_x/gar-offline.jpg";
 		final String url_zanella = "http://www.operauni.tn.it/upload/cms/456_x/mensa-zanella.jpg";
