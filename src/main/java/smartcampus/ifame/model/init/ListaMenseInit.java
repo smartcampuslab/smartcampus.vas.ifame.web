@@ -9,12 +9,20 @@ public class ListaMenseInit {
 
 	public static ListaMense getMenseValues() {
 
+		final String url_povo_0_off = "http://www.operauni.tn.it/upload/cms/456_x/mensa-povo1.jpg";
+		final String url_povo_1_off = "http://www.operauni.tn.it/upload/cms/456_x/mensa-povo2.jpg";
+		final String url_tommaso_gar_off = "http://www.operauni.tn.it/upload/cms/456_x/gar-offline.jpg";
+		final String url_zanella_off = "http://www.operauni.tn.it/upload/cms/456_x/mensa-zanella.jpg";
+		final String url_mesiano_off = "http://www.operauni.tn.it/upload/cms/456_x/mesiano-offline.jpg";
+
+
 		final String url_povo_0 = "http://www.operauni.tn.it/upload/cms/456_x/mensa-povo1.jpg";
 		final String url_povo_1 = "http://www.operauni.tn.it/upload/cms/456_x/mensa-povo2.jpg";
 		final String url_tommaso_gar = "http://www.operauni.tn.it/upload/cms/456_x/gar-offline.jpg";
 		final String url_zanella = "http://www.operauni.tn.it/upload/cms/456_x/mensa-zanella.jpg";
 		final String url_mesiano = "http://www.operauni.tn.it/upload/cms/456_x/mesiano-offline.jpg";
 
+		
 		final String name_povo_0 = "POVO_0";
 		final String name_povo_1 = "POVO_1";
 		final String name_tommaso_gar = "TOMMASO_GAR";

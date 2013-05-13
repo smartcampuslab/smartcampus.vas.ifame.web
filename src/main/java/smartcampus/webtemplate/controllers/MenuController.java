@@ -27,10 +27,20 @@ import smartcampus.ifame.model.PiattiList;
 import smartcampus.ifame.model.Piatto;
 import smartcampus.ifame.model.Saldo;
 import smartcampus.ifame.model.init.PiattoInit;
+import smartcampus.ifame.model.init.ReadExcel;
 import eu.trentorise.smartcampus.ac.provider.AcService;
 import eu.trentorise.smartcampus.ac.provider.filters.AcProviderFilter;
 import eu.trentorise.smartcampus.profileservice.ProfileConnector;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
+
+import jxl.Cell;
+import jxl.CellType;
+import jxl.Sheet;
+import jxl.Workbook;
+import jxl.WorkbookSettings;
+import jxl.format.CellFormat;
+import jxl.format.Colour;
+import jxl.read.biff.BiffException;
 
 @Controller("MenuController")
 public class MenuController {
@@ -93,9 +103,37 @@ public class MenuController {
 
 				List<Piatto> list = PiattoInit.getpiatti();
 				mdg.setPiattiDelGiorno(list);
+				// String day = "";
+
 				mdg.setMenuDate(new Date(System.currentTimeMillis()));
+				// mdg.setMenuDate(new Date(day));
 
 				return mdg;
+			}
+		} catch (Exception e) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+	}
+
+	/*
+	 * 
+	 * 
+	 * FUNZIONE NUOVA
+	 */
+
+	@RequestMapping(method = RequestMethod.GET, value = "/getmenudelgiornolist")
+	public @ResponseBody
+	List<String> getMenuDelGiornoStringList(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session)
+			throws IOException {
+		try {
+			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
+			ProfileConnector profileConnector = new ProfileConnector(
+					serverAddress);
+			BasicProfile profile = profileConnector.getBasicProfile(token);
+			if (profile != null) {
+				return ReadExcel.getMenuOfTheDay("13");
 			}
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
