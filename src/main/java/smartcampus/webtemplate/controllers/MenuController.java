@@ -133,6 +133,7 @@ public class MenuController {
 					serverAddress);
 			BasicProfile profile = profileConnector.getBasicProfile(token);
 			if (profile != null) {
+				
 				return ReadExcel.getMenuOfTheDay("13");
 			}
 		} catch (Exception e) {
@@ -141,6 +142,7 @@ public class MenuController {
 		return null;
 	}
 
+	
 	@RequestMapping(method = RequestMethod.GET, value = "/getmenudellasettimana")
 	public @ResponseBody
 	MenuDellaSettimana getMenuDellaSettimana(HttpServletRequest request,
