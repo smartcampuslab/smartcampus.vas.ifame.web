@@ -1,30 +1,31 @@
 package smartcampus.ifame.model;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 public class MenuDelGiorno {
 
-	private List<Piatto> piattiDelGiorno;
-	private Date menuDate;
+	private List<PiattoKcal> piattiDelGiorno;
+	private int day;
 
 	public MenuDelGiorno() {
 	}
 
-	public List<Piatto> getPiattiDelGiorno() {
+	public List<PiattoKcal> getPiattiDelGiorno() {
 		return piattiDelGiorno;
 	}
 
-	public void setPiattiDelGiorno(List<Piatto> piattiDelGiorno) {
+	public void setPiattiDelGiorno(List<PiattoKcal> piattiDelGiorno) {
 		this.piattiDelGiorno = piattiDelGiorno;
 	}
 
-	public Date getMenuDate() {
-		return menuDate;
+	public int getDay() {
+		return day;
 	}
 
-	public void setMenuDate(Date menuDate) {
-		this.menuDate = menuDate;
+	public void setDay(int day) {
+		this.day = day;
 	}
 
 }

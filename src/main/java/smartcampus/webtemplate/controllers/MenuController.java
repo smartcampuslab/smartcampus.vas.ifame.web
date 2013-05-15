@@ -2,7 +2,9 @@ package smartcampus.webtemplate.controllers;
 
 import java.awt.Menu;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -25,9 +27,10 @@ import smartcampus.ifame.model.MenuDelGiorno;
 import smartcampus.ifame.model.MenuDellaSettimana;
 import smartcampus.ifame.model.PiattiList;
 import smartcampus.ifame.model.Piatto;
+import smartcampus.ifame.model.PiattoKcal;
 import smartcampus.ifame.model.Saldo;
 import smartcampus.ifame.model.init.PiattoInit;
-import smartcampus.ifame.model.init.ReadExcel;
+import smartcampus.ifame.model.init.MenuInit;
 import eu.trentorise.smartcampus.ac.provider.AcService;
 import eu.trentorise.smartcampus.ac.provider.filters.AcProviderFilter;
 import eu.trentorise.smartcampus.profileservice.ProfileConnector;
@@ -47,6 +50,9 @@ public class MenuController {
 
 	private static final String EVENT_OBJECT = "eu.trentorise.smartcampus.dt.model.EventObject";
 	private static final Logger logger = Logger.getLogger(MenuController.class);
+
+	private final Workbook workbook = getWorkbook();
+
 	@Autowired
 	private AcService acService;
 
@@ -88,27 +94,31 @@ public class MenuController {
 		return null;
 	}
 
+	/*
+	 * 
+	 * 
+	 * 
+	 * 
+	 * MENU DEL GIORNO CONTROLLER
+	 */
+
 	@RequestMapping(method = RequestMethod.GET, value = "/getmenudelgiorno")
 	public @ResponseBody
-	MenuDelGiorno getMenuDelGiorno(HttpServletRequest request,
+	MenuDelGiorno getMenuDelGiornoStringList(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session)
 			throws IOException {
 		try {
+
 			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
 			ProfileConnector profileConnector = new ProfileConnector(
 					serverAddress);
 			BasicProfile profile = profileConnector.getBasicProfile(token);
 			if (profile != null) {
-				MenuDelGiorno mdg = new MenuDelGiorno();
 
-				List<Piatto> list = PiattoInit.getpiatti();
-				mdg.setPiattiDelGiorno(list);
-				// String day = "";
+				Calendar data = Calendar.getInstance();
+				int day = data.get(Calendar.DAY_OF_MONTH);
 
-				mdg.setMenuDate(new Date(System.currentTimeMillis()));
-				// mdg.setMenuDate(new Date(day));
-
-				return mdg;
+				return MenuInit.getMenuDelGiorno(day, workbook);
 			}
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -119,30 +129,11 @@ public class MenuController {
 	/*
 	 * 
 	 * 
-	 * FUNZIONE NUOVA
+	 * 
+	 * 
+	 * MENU DELLA SETTIMANA CONTROLLER
 	 */
 
-	@RequestMapping(method = RequestMethod.GET, value = "/getmenudelgiornolist")
-	public @ResponseBody
-	List<String> getMenuDelGiornoStringList(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session)
-			throws IOException {
-		try {
-			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-			ProfileConnector profileConnector = new ProfileConnector(
-					serverAddress);
-			BasicProfile profile = profileConnector.getBasicProfile(token);
-			if (profile != null) {
-				
-				return ReadExcel.getMenuOfTheDay("13");
-			}
-		} catch (Exception e) {
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		}
-		return null;
-	}
-
-	
 	@RequestMapping(method = RequestMethod.GET, value = "/getmenudellasettimana")
 	public @ResponseBody
 	MenuDellaSettimana getMenuDellaSettimana(HttpServletRequest request,
@@ -155,22 +146,11 @@ public class MenuController {
 			BasicProfile profile = profileConnector.getBasicProfile(token);
 			if (profile != null) {
 
-				MenuDellaSettimana mds = new MenuDellaSettimana();
-				ArrayList<MenuDelGiorno> listmdg = new ArrayList<MenuDelGiorno>();
+				Calendar data = Calendar.getInstance();
+				int today = data.get(Calendar.DAY_OF_MONTH);
 
-				for (int i = 0; i < 7; i++) {
-					MenuDelGiorno mdg = new MenuDelGiorno();
-					List<Piatto> list = PiattoInit.getpiatti();
-					mdg.setPiattiDelGiorno(list);
-					mdg.setMenuDate(new Date(System.currentTimeMillis()));
-					listmdg.add(mdg);
-				}
+				return MenuInit.getMenuDellaSettimana(today, workbook);
 
-				mds.setMenuDellaSettimana(listmdg);
-				mds.setEnd_day(new Date(System.currentTimeMillis()));
-				mds.setStart_day(new Date(System.currentTimeMillis()));
-
-				return mds;
 			}
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -178,4 +158,24 @@ public class MenuController {
 		return null;
 	}
 
+	/*
+	 * 
+	 * 
+	 * 
+	 * INIZIALIZZO IL WORKBOOK
+	 */
+	private Workbook getWorkbook() {
+		InputStream is = getClass().getResourceAsStream("/Menu.xls");
+		WorkbookSettings xlsSettings = new WorkbookSettings();
+		xlsSettings.setDrawingsDisabled(true);
+		Workbook w = null;
+		try {
+			w = Workbook.getWorkbook(is, xlsSettings);
+		} catch (BiffException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return w;
+	}
 }

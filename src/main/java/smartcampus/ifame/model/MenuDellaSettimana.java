@@ -6,8 +6,8 @@ import java.util.List;
 public class MenuDellaSettimana {
 
 	private List<MenuDelGiorno> menuDellaSettimana;
-	private Date start_day;
-	private Date end_day;
+
+	private int start_day;
 
 	public MenuDellaSettimana() {
 	}
@@ -20,19 +20,11 @@ public class MenuDellaSettimana {
 		this.menuDellaSettimana = menuDellaSettimana;
 	}
 
-	public Date getStart_day() {
+	public int getStart_day() {
 		return start_day;
 	}
 
-	public void setStart_day(Date start_day) {
+	public void setStart_day(int start_day) {
 		this.start_day = start_day;
-	}
-
-	public Date getEnd_day() {
-		return end_day;
-	}
-
-	public void setEnd_day(Date end_day) {
-		this.end_day = end_day;
 	}
 }
