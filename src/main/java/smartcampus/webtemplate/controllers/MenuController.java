@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import smartcampus.ifame.model.MenuDelGiorno;
+import smartcampus.ifame.model.MenuDelMese;
 import smartcampus.ifame.model.MenuDellaSettimana;
 import smartcampus.ifame.model.PiattiList;
 import smartcampus.ifame.model.Piatto;
@@ -131,7 +132,7 @@ public class MenuController {
 	 * 
 	 * 
 	 * 
-	 * MENU DELLA SETTIMANA CONTROLLER
+	 * MENU DELLA SETTIMANA
 	 */
 
 	@RequestMapping(method = RequestMethod.GET, value = "/getmenudellasettimana")
@@ -150,6 +151,37 @@ public class MenuController {
 				int today = data.get(Calendar.DAY_OF_MONTH);
 
 				return MenuInit.getMenuDellaSettimana(today, workbook);
+
+			}
+		} catch (Exception e) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+	}
+
+	/*
+	 * 
+	 * 
+	 * 
+	 * 
+	 * MENU DEL MESE
+	 */
+
+	@RequestMapping(method = RequestMethod.GET, value = "/getmenudelmese")
+	public @ResponseBody
+	MenuDelMese getMenuDelMese(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session)
+			throws IOException {
+		try {
+			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
+			ProfileConnector profileConnector = new ProfileConnector(
+					serverAddress);
+			BasicProfile profile = profileConnector.getBasicProfile(token);
+			if (profile != null) {
+
+				MenuDelMese mdm = MenuInit.getMenuDelMese(workbook);
+
+				return mdm;
 
 			}
 		} catch (Exception e) {
