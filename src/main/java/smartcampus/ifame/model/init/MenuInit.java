@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
+import smartcampus.ifame.model.Alternative;
 import smartcampus.ifame.model.MenuDelGiorno;
 import smartcampus.ifame.model.MenuDelMese;
 import smartcampus.ifame.model.MenuDellaSettimana;
@@ -25,6 +26,47 @@ import jxl.format.Colour;
 import jxl.read.biff.BiffException;
 
 public class MenuInit {
+	/*
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * ALTERNATIVE
+	 */
+
+	public static Alternative getAlternative(Workbook workbook) {
+
+		Alternative alternative = new Alternative();
+		List<PiattoKcal> listaPiatti = new ArrayList<PiattoKcal>();
+
+		// le alternative sono uguali per tutte le settimane perciò leggiamo le
+		// alternative sul foglio della prima settimana
+		final int SHEET = 1;
+
+		final int COLONNA_INIZIALE = 0;
+		final int COLONNA_FINALE = 7;
+		final int RIGA_INIZIALE = 15;
+		final int RIGA_FINALE = 18;
+
+		Sheet sheet = workbook.getSheet(SHEET);
+		for (int colonna = COLONNA_INIZIALE; colonna <= COLONNA_FINALE; colonna = colonna + 2) {
+			for (int riga = RIGA_INIZIALE; riga <= RIGA_FINALE; riga++) {
+				Cell nomePiatto = sheet.getCell(colonna, riga);
+				CellType type = nomePiatto.getType();
+				// check se la casella contiene qualcosa
+				if (type == CellType.LABEL) {
+					Cell kcal = sheet.getCell(colonna + 1, riga);
+					listaPiatti.add(new PiattoKcal(nomePiatto.getContents(),
+							kcal.getContents()));
+				}
+			}
+		}
+		alternative.setAlternative(listaPiatti);
+
+		return alternative;
+	}
 
 	/*
 	 * 
@@ -238,7 +280,7 @@ public class MenuInit {
 		// setto il primo e l'ultimo giorno del mese
 		mdm.setStart_day(1);
 		mdm.setEnd_day(giornoDelMese);
-		
+
 		return mdm;
 	}
 }

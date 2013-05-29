@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import smartcampus.ifame.model.Alternative;
 import smartcampus.ifame.model.MenuDelGiorno;
 import smartcampus.ifame.model.MenuDelMese;
 import smartcampus.ifame.model.MenuDellaSettimana;
@@ -183,6 +184,33 @@ public class MenuController {
 
 				return mdm;
 
+			}
+		} catch (Exception e) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+	}
+
+	/*
+	 * 
+	 * 
+	 * 
+	 * 
+	 * ALTERNATIVE CONTROLLER
+	 */
+
+	@RequestMapping(method = RequestMethod.GET, value = "/getalternative")
+	public @ResponseBody
+	Alternative getAlternative(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session)
+			throws IOException {
+		try {
+			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
+			ProfileConnector profileConnector = new ProfileConnector(
+					serverAddress);
+			BasicProfile profile = profileConnector.getBasicProfile(token);
+			if (profile != null) {
+				return MenuInit.getAlternative(workbook);
 			}
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
