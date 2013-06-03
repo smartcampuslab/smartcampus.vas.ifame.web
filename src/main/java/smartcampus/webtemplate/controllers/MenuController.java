@@ -5,8 +5,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.activation.MimeType;
 import javax.servlet.http.HttpServletRequest;
@@ -83,11 +86,25 @@ public class MenuController {
 					serverAddress);
 			BasicProfile profile = profileConnector.getBasicProfile(token);
 			if (profile != null) {
-
+				Set<String> piattilist = new HashSet<String>();
 				PiattiList pl = new PiattiList();
-				List<Piatto> list = PiattoInit.getpiatti();
-				pl.setPiatti(list);
 
+				List<MenuDellaSettimana> mdslist = MenuInit.getMenuDelMese(
+						workbook).getMenuDellaSettimana();
+				for (MenuDellaSettimana mds : mdslist) {
+					List<MenuDelGiorno> mdglist = mds.getMenuDelGiorno();
+					for (MenuDelGiorno mdg : mdglist) {
+						List<PiattoKcal> piatti = mdg.getPiattiDelGiorno();
+						for (PiattoKcal p : piatti) {
+							piattilist.add(p.getPiatto());
+						}
+					}
+				}
+
+				ArrayList<String> list = new ArrayList<String>(piattilist);
+				Collections.sort(list);
+				pl.setPiatti(list);
+				
 				return pl;
 			}
 		} catch (Exception e) {

@@ -3,13 +3,13 @@ package smartcampus.ifame.model;
 import java.util.List;
 
 public class PiattiList {
-	private List<Piatto> piatti;
+	private List<String> piatti;
 
-	public List<Piatto> getPiatti() {
+	public List<String> getPiatti() {
 		return piatti;
 	}
 
-	public void setPiatti(List<Piatto> piatti) {
+	public void setPiatti(List<String> piatti) {
 		this.piatti = piatti;
 	}
 
