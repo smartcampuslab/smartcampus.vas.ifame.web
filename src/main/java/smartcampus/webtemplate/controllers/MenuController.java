@@ -150,38 +150,6 @@ public class MenuController {
 	 * 
 	 * 
 	 * 
-	 * MENU DELLA SETTIMANA
-	 */
-
-	@RequestMapping(method = RequestMethod.GET, value = "/getmenudellasettimana")
-	public @ResponseBody
-	MenuDellaSettimana getMenuDellaSettimana(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session)
-			throws IOException {
-		try {
-			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-			ProfileConnector profileConnector = new ProfileConnector(
-					serverAddress);
-			BasicProfile profile = profileConnector.getBasicProfile(token);
-			if (profile != null) {
-
-				Calendar data = Calendar.getInstance();
-				int today = data.get(Calendar.DAY_OF_MONTH);
-
-				return MenuInit.getMenuDellaSettimana(today, workbook);
-
-			}
-		} catch (Exception e) {
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		}
-		return null;
-	}
-
-	/*
-	 * 
-	 * 
-	 * 
-	 * 
 	 * MENU DEL MESE
 	 */
 
