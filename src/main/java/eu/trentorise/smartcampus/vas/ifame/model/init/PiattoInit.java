@@ -1,11 +1,12 @@
-package smartcampus.ifame.model.init;
+package eu.trentorise.smartcampus.vas.ifame.model.init;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import smartcampus.ifame.model.Piatto;
-import smartcampus.ifame.model.PiattoType;
+import eu.trentorise.smartcampus.vas.ifame.model.Piatto;
+import eu.trentorise.smartcampus.vas.ifame.model.PiattoType;
+
 
 public class PiattoInit {
 

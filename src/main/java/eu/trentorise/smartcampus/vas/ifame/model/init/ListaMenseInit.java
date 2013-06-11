@@ -1,10 +1,11 @@
-package smartcampus.ifame.model.init;
+package eu.trentorise.smartcampus.vas.ifame.model.init;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import smartcampus.ifame.model.ListaMense;
-import smartcampus.ifame.model.Mensa;
+import eu.trentorise.smartcampus.vas.ifame.model.ListaMense;
+import eu.trentorise.smartcampus.vas.ifame.model.Mensa;
+
 
 public class ListaMenseInit {
 
@@ -22,7 +23,7 @@ public class ListaMenseInit {
 		final String url_tommaso_gar = "http://www.operauni.tn.it/upload/Webcam/MensaUni.jpg";
 		final String url_zanella = "http://www.operauni.tn.it/upload/Webcam/mensa_zanella.jpg";
 		final String url_mesiano_1 = "http://www.operauni.tn.it/upload/Webcam/MensaMes01.jpg";
-		final String url_mesiano_2 = "http://www.operauni.tn.it/upload/cms/456_x/MensaMes02.jpg";
+		final String url_mesiano_2 = "http://www.operauni.tn.it/upload/MensaMes02.jpg";
 
 		final String name_povo_0 = "Povo Mensa";
 		final String name_povo_1 = "Povo Mensa Veloce";

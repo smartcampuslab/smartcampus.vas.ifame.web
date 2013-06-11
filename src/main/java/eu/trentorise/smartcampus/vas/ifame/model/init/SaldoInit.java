@@ -1,11 +1,12 @@
-package smartcampus.ifame.model.init;
+package eu.trentorise.smartcampus.vas.ifame.model.init;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Random;
 
-import smartcampus.ifame.model.Saldo;
-import smartcampus.ifame.model.Transaction;
+import eu.trentorise.smartcampus.vas.ifame.model.Saldo;
+import eu.trentorise.smartcampus.vas.ifame.model.Transaction;
+
 
 public class SaldoInit {
 

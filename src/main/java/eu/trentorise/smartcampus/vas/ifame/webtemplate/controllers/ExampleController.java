@@ -1,4 +1,4 @@
-package smartcampus.webtemplate.controllers;
+package eu.trentorise.smartcampus.vas.ifame.webtemplate.controllers;
 
 import it.sayservice.platform.smartplanner.data.message.Itinerary;
 import it.sayservice.platform.smartplanner.data.message.Position;
@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import smartcampus.ifame.model.Mensa;
 
 import eu.trentorise.smartcampus.ac.provider.AcService;
 import eu.trentorise.smartcampus.ac.provider.filters.AcProviderFilter;
@@ -47,6 +46,7 @@ import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 import eu.trentorise.smartcampus.socialservice.SocialService;
 import eu.trentorise.smartcampus.socialservice.SocialServiceException;
 import eu.trentorise.smartcampus.socialservice.model.Group;
+import eu.trentorise.smartcampus.vas.ifame.model.Mensa;
 
 @Controller("exampleController")
 public class ExampleController {

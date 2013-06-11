@@ -1,4 +1,4 @@
-package smartcampus.ifame.model;
+package eu.trentorise.smartcampus.vas.ifame.model;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;

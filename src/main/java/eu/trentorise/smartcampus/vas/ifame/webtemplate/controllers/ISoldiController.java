@@ -1,4 +1,4 @@
-package smartcampus.webtemplate.controllers;
+package eu.trentorise.smartcampus.vas.ifame.webtemplate.controllers;
 
 import java.io.IOException;
 
@@ -17,12 +17,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import smartcampus.ifame.model.Saldo;
-import smartcampus.ifame.model.init.SaldoInit;
 import eu.trentorise.smartcampus.ac.provider.AcService;
 import eu.trentorise.smartcampus.ac.provider.filters.AcProviderFilter;
 import eu.trentorise.smartcampus.profileservice.ProfileConnector;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
+import eu.trentorise.smartcampus.vas.ifame.model.Saldo;
+import eu.trentorise.smartcampus.vas.ifame.model.init.SaldoInit;
 
 @Controller("ISoldiController")
 public class ISoldiController {

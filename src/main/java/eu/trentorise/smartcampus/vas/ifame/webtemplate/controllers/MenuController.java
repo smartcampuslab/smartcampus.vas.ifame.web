@@ -1,4 +1,4 @@
-package smartcampus.webtemplate.controllers;
+package eu.trentorise.smartcampus.vas.ifame.webtemplate.controllers;
 
 import java.awt.Menu;
 import java.io.IOException;
@@ -26,20 +26,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import smartcampus.ifame.model.Alternative;
-import smartcampus.ifame.model.MenuDelGiorno;
-import smartcampus.ifame.model.MenuDelMese;
-import smartcampus.ifame.model.MenuDellaSettimana;
-import smartcampus.ifame.model.PiattiList;
-import smartcampus.ifame.model.Piatto;
-import smartcampus.ifame.model.PiattoKcal;
-import smartcampus.ifame.model.Saldo;
-import smartcampus.ifame.model.init.PiattoInit;
-import smartcampus.ifame.model.init.MenuInit;
 import eu.trentorise.smartcampus.ac.provider.AcService;
 import eu.trentorise.smartcampus.ac.provider.filters.AcProviderFilter;
 import eu.trentorise.smartcampus.profileservice.ProfileConnector;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
+import eu.trentorise.smartcampus.vas.ifame.model.Alternative;
+import eu.trentorise.smartcampus.vas.ifame.model.MenuDelGiorno;
+import eu.trentorise.smartcampus.vas.ifame.model.MenuDelMese;
+import eu.trentorise.smartcampus.vas.ifame.model.MenuDellaSettimana;
+import eu.trentorise.smartcampus.vas.ifame.model.PiattiList;
+import eu.trentorise.smartcampus.vas.ifame.model.Piatto;
+import eu.trentorise.smartcampus.vas.ifame.model.PiattoKcal;
+import eu.trentorise.smartcampus.vas.ifame.model.Saldo;
+import eu.trentorise.smartcampus.vas.ifame.model.init.MenuInit;
+import eu.trentorise.smartcampus.vas.ifame.model.init.PiattoInit;
 
 import jxl.Cell;
 import jxl.CellType;

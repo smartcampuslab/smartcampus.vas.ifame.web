@@ -1,4 +1,4 @@
-package smartcampus.ifame.model;
+package eu.trentorise.smartcampus.vas.ifame.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

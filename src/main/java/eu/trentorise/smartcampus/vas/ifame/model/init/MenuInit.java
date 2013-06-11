@@ -1,4 +1,4 @@
-package smartcampus.ifame.model.init;
+package eu.trentorise.smartcampus.vas.ifame.model.init;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,11 +10,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
-import smartcampus.ifame.model.Alternative;
-import smartcampus.ifame.model.MenuDelGiorno;
-import smartcampus.ifame.model.MenuDelMese;
-import smartcampus.ifame.model.MenuDellaSettimana;
-import smartcampus.ifame.model.PiattoKcal;
+import eu.trentorise.smartcampus.vas.ifame.model.Alternative;
+import eu.trentorise.smartcampus.vas.ifame.model.MenuDelGiorno;
+import eu.trentorise.smartcampus.vas.ifame.model.MenuDelMese;
+import eu.trentorise.smartcampus.vas.ifame.model.MenuDellaSettimana;
+import eu.trentorise.smartcampus.vas.ifame.model.PiattoKcal;
+
 
 import jxl.Cell;
 import jxl.CellType;
