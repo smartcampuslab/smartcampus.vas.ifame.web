@@ -1,12 +1,25 @@
 package smartcampus.ifame.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.xml.bind.annotation.XmlRootElement;
 
+
+@Entity
 @XmlRootElement(name = "Mensa")
 public class Mensa {
 
+	
+	@Id
+	@GeneratedValue
 	private Long mensa_id;
+	
+	@Column(name="MENSA_NAME")
 	private String mensa_name;
+	
+	@Column(name="MENSA_LINK")
 	private String mensa_link;
 
 	public Mensa() {

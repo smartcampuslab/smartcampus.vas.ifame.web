@@ -20,10 +20,13 @@
 	<!-- Scan controllers in this package -->
 	<context:component-scan base-package="smartcampus.webtemplate.controllers"/>
 
-	<context:property-placeholder location="classpath:webtemplate.properties"/>
+	<context:property-placeholder location="classpath:ifame.properties"/>
 
 
 	<bean id="acClient" class="eu.trentorise.smartcampus.ac.provider.filters.AcClient">
 		<property name="endpointUrl" value="https://vas-dev.smartcampuslab.it/acService"/>
 	</bean>
+	
+	
+		<import resource="datalayer.xml"/>
 </beans>
