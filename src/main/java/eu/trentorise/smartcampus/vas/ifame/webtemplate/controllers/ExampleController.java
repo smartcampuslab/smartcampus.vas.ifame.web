@@ -46,7 +46,7 @@ import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 import eu.trentorise.smartcampus.socialservice.SocialService;
 import eu.trentorise.smartcampus.socialservice.SocialServiceException;
 import eu.trentorise.smartcampus.socialservice.model.Group;
-import eu.trentorise.smartcampus.vas.ifame.model.Mensa;
+import eu.trentorise.smartcampus.vas.ifame.model.table.mapping.Mensa;
 
 @Controller("exampleController")
 public class ExampleController {

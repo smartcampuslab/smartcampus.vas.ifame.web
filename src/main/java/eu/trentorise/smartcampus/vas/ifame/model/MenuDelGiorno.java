@@ -4,19 +4,21 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import eu.trentorise.smartcampus.vas.ifame.model.table.mapping.Piatto;
+
 public class MenuDelGiorno {
 
-	private List<PiattoKcal> piattiDelGiorno;
+	private List<Piatto> piattiDelGiorno;
 	private int day;
 
 	public MenuDelGiorno() {
 	}
 
-	public List<PiattoKcal> getPiattiDelGiorno() {
+	public List<Piatto> getPiattiDelGiorno() {
 		return piattiDelGiorno;
 	}
 
-	public void setPiattiDelGiorno(List<PiattoKcal> piattiDelGiorno) {
+	public void setPiattiDelGiorno(List<Piatto> piattiDelGiorno) {
 		this.piattiDelGiorno = piattiDelGiorno;
 	}
 

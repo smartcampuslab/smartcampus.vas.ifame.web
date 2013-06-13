@@ -2,14 +2,16 @@ package eu.trentorise.smartcampus.vas.ifame.model;
 
 import java.util.List;
 
-public class PiattiList {
-	private List<String> piatti;
+import eu.trentorise.smartcampus.vas.ifame.model.table.mapping.Piatto;
 
-	public List<String> getPiatti() {
+public class PiattiList {
+	private List<Piatto> piatti;
+
+	public List<Piatto> getPiatti() {
 		return piatti;
 	}
 
-	public void setPiatti(List<String> piatti) {
+	public void setPiatti(List<Piatto> piatti) {
 		this.piatti = piatti;
 	}
 

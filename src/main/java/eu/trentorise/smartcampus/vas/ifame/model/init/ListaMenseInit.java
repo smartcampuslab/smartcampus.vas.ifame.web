@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import eu.trentorise.smartcampus.vas.ifame.model.ListaMense;
-import eu.trentorise.smartcampus.vas.ifame.model.Mensa;
+import eu.trentorise.smartcampus.vas.ifame.model.table.mapping.Mensa;
 
 
 public class ListaMenseInit {

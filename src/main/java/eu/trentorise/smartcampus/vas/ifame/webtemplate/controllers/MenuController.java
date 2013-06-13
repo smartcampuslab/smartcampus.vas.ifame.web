@@ -35,11 +35,9 @@ import eu.trentorise.smartcampus.vas.ifame.model.MenuDelGiorno;
 import eu.trentorise.smartcampus.vas.ifame.model.MenuDelMese;
 import eu.trentorise.smartcampus.vas.ifame.model.MenuDellaSettimana;
 import eu.trentorise.smartcampus.vas.ifame.model.PiattiList;
-import eu.trentorise.smartcampus.vas.ifame.model.Piatto;
-import eu.trentorise.smartcampus.vas.ifame.model.PiattoKcal;
 import eu.trentorise.smartcampus.vas.ifame.model.Saldo;
 import eu.trentorise.smartcampus.vas.ifame.model.init.MenuInit;
-import eu.trentorise.smartcampus.vas.ifame.model.init.PiattoInit;
+import eu.trentorise.smartcampus.vas.ifame.model.table.mapping.Piatto;
 
 import jxl.Cell;
 import jxl.CellType;
@@ -86,7 +84,8 @@ public class MenuController {
 					serverAddress);
 			BasicProfile profile = profileConnector.getBasicProfile(token);
 			if (profile != null) {
-				Set<String> piattilist = new HashSet<String>();
+				//Set<String> piattilist = new HashSet<String>();
+				Set<Piatto> piatti = new HashSet<Piatto>();
 				PiattiList pl = new PiattiList();
 
 				List<MenuDellaSettimana> mdslist = MenuInit.getMenuDelMese(
@@ -94,15 +93,16 @@ public class MenuController {
 				for (MenuDellaSettimana mds : mdslist) {
 					List<MenuDelGiorno> mdglist = mds.getMenuDelGiorno();
 					for (MenuDelGiorno mdg : mdglist) {
-						List<PiattoKcal> piatti = mdg.getPiattiDelGiorno();
-						for (PiattoKcal p : piatti) {
-							piattilist.add(p.getPiatto());
+						List<Piatto> piattiDelGiorno = mdg.getPiattiDelGiorno();
+						for (Piatto p : piattiDelGiorno) {
+							piatti.add(p);
 						}
 					}
 				}
 
-				ArrayList<String> list = new ArrayList<String>(piattilist);
-				Collections.sort(list);
+				ArrayList<Piatto> list = new ArrayList<Piatto>();
+				list.addAll(piatti);
+				//Collections.sort(list);
 				pl.setPiatti(list);
 				
 				return pl;

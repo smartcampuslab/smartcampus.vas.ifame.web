@@ -14,7 +14,7 @@ import eu.trentorise.smartcampus.vas.ifame.model.Alternative;
 import eu.trentorise.smartcampus.vas.ifame.model.MenuDelGiorno;
 import eu.trentorise.smartcampus.vas.ifame.model.MenuDelMese;
 import eu.trentorise.smartcampus.vas.ifame.model.MenuDellaSettimana;
-import eu.trentorise.smartcampus.vas.ifame.model.PiattoKcal;
+import eu.trentorise.smartcampus.vas.ifame.model.table.mapping.Piatto;
 
 
 import jxl.Cell;
@@ -40,7 +40,7 @@ public class MenuInit {
 	public static Alternative getAlternative(Workbook workbook) {
 
 		Alternative alternative = new Alternative();
-		List<PiattoKcal> listaPiatti = new ArrayList<PiattoKcal>();
+		List<Piatto> listaPiatti = new ArrayList<Piatto>();
 
 		// le alternative sono uguali per tutte le settimane perciò leggiamo le
 		// alternative sul foglio della prima settimana
@@ -59,7 +59,7 @@ public class MenuInit {
 				// check se la casella contiene qualcosa
 				if (type == CellType.LABEL) {
 					Cell kcal = sheet.getCell(colonna + 1, riga);
-					listaPiatti.add(new PiattoKcal(nomePiatto.getContents(),
+					listaPiatti.add(new Piatto(nomePiatto.getContents(),
 							kcal.getContents()));
 				}
 			}
@@ -82,7 +82,7 @@ public class MenuInit {
 	public static MenuDelGiorno getMenuDelGiorno(Integer targetDay,
 			Workbook workbook) {
 
-		List<PiattoKcal> listaPiatti = new ArrayList<PiattoKcal>();
+		List<Piatto> listaPiatti = new ArrayList<Piatto>();
 		Integer currentDay = 0;
 
 		// ciclo sui fogli desiderati (evito la cena)
@@ -106,7 +106,7 @@ public class MenuInit {
 						CellFormat cformat = cell.getCellFormat();
 						if (type == CellType.LABEL) {
 							Cell kcal = sheet.getCell(colonnaGiorno + 1, i);
-							listaPiatti.add(new PiattoKcal(cell.getContents(),
+							listaPiatti.add(new Piatto(cell.getContents(),
 									kcal.getContents()));
 						}
 					}
@@ -167,14 +167,14 @@ public class MenuInit {
 							.getColumns(); colonnaMenuDelGiorno = colonnaMenuDelGiorno + 2) {
 
 						// ogni piatto li inserisco nella lista
-						List<PiattoKcal> piattiDelGiornoList = new ArrayList<PiattoKcal>();
+						List<Piatto> piattiDelGiornoList = new ArrayList<Piatto>();
 						for (int i = 4; i < 12; i++) {
 							Cell cell = sheet.getCell(colonnaMenuDelGiorno, i);
 							CellType type = cell.getType();
 							if (type == CellType.LABEL) {
 								Cell kcal = sheet.getCell(
 										colonnaMenuDelGiorno + 1, i);
-								piattiDelGiornoList.add(new PiattoKcal(cell
+								piattiDelGiornoList.add(new Piatto(cell
 										.getContents(), kcal.getContents()));
 
 							}
@@ -243,7 +243,7 @@ public class MenuInit {
 					// ogni giorno ho un nuovo menu del giorno e una lista di
 					// piatti
 					MenuDelGiorno mdg = new MenuDelGiorno();
-					List<PiattoKcal> piattiDelGiornoList = new ArrayList<PiattoKcal>();
+					List<Piatto> piattiDelGiornoList = new ArrayList<Piatto>();
 					// ciclo sulle right del giorno considerato
 					for (int riga = 4; riga < 12; riga++) {
 						Cell piattoNameCell = sheet
@@ -254,7 +254,7 @@ public class MenuInit {
 						if (piattoNameCellType == CellType.LABEL) {
 							Cell kcalCell = sheet.getCell(colonnaGiorno + 1,
 									riga);
-							piattiDelGiornoList.add(new PiattoKcal(
+							piattiDelGiornoList.add(new Piatto(
 									piattoNameCell.getContents(), kcalCell
 											.getContents()));
 						}
