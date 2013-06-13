@@ -1,7 +1,6 @@
 package eu.trentorise.smartcampus.vas.ifame.webtemplate.controllers;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -22,7 +21,6 @@ import eu.trentorise.smartcampus.ac.provider.AcService;
 import eu.trentorise.smartcampus.ac.provider.filters.AcProviderFilter;
 import eu.trentorise.smartcampus.profileservice.ProfileConnector;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
-import eu.trentorise.smartcampus.vas.ifame.model.ListaMense;
 import eu.trentorise.smartcampus.vas.ifame.model.table.mapping.Mensa;
 import eu.trentorise.smartcampus.vas.ifame.repository.MensaRepository;
 
@@ -73,7 +71,7 @@ public class IFrettaController {
 	}
 
 	@PostConstruct
-	public ListaMense initMense() {
+	public void initMense() {
 
 		final String url_povo_0_off = "http://www.operauni.tn.it/upload/cms/456_x/mensa-povo1.jpg";
 		final String url_povo_1_off = "http://www.operauni.tn.it/upload/cms/456_x/mensa-povo2.jpg";
@@ -129,7 +127,7 @@ public class IFrettaController {
 
 		}
 
-		ArrayList<Mensa> mense = new ArrayList<Mensa>();
+
 		mensaRepository.save(povo_0);
 		mensaRepository.save(povo_1);
 		mensaRepository.save(tommaso_gar);
@@ -137,10 +135,7 @@ public class IFrettaController {
 		mensaRepository.save(mesiano_1);
 		mensaRepository.save(mesiano_2);
 
-		ListaMense lm = new ListaMense();
-		lm.setLast_update_milis(System.currentTimeMillis());
-		lm.setList(mense);
+	
 
-		return lm;
 	}
 }
