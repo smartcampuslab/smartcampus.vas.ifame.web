@@ -1,32 +1,20 @@
-package eu.trentorise.smartcampus.vas.ifame.model.init;
+package eu.trentorise.smartcampus.vas.ifame.utils;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Scanner;
 
+import jxl.Cell;
+import jxl.CellType;
+import jxl.Sheet;
+import jxl.Workbook;
+import jxl.format.CellFormat;
 import eu.trentorise.smartcampus.vas.ifame.model.Alternative;
 import eu.trentorise.smartcampus.vas.ifame.model.MenuDelGiorno;
 import eu.trentorise.smartcampus.vas.ifame.model.MenuDelMese;
 import eu.trentorise.smartcampus.vas.ifame.model.MenuDellaSettimana;
 import eu.trentorise.smartcampus.vas.ifame.model.table.mapping.Piatto;
 
-
-import jxl.Cell;
-import jxl.CellType;
-import jxl.Sheet;
-import jxl.Workbook;
-import jxl.WorkbookSettings;
-import jxl.format.CellFormat;
-import jxl.format.Colour;
-import jxl.read.biff.BiffException;
-
-public class MenuInit {
+public class MenuXlsUtil {
 	/*
 	 * 
 	 * 
@@ -103,7 +91,6 @@ public class MenuInit {
 					for (int i = 4; i < 12; i++) {
 						Cell cell = sheet.getCell(colonnaGiorno, i);
 						CellType type = cell.getType();
-						CellFormat cformat = cell.getCellFormat();
 						if (type == CellType.LABEL) {
 							Cell kcal = sheet.getCell(colonnaGiorno + 1, i);
 							listaPiatti.add(new Piatto(cell.getContents(),

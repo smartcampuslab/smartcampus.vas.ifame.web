@@ -26,7 +26,7 @@
 	<bean id="acClient" class="eu.trentorise.smartcampus.ac.provider.filters.AcClient">
 		<property name="endpointUrl" value="https://vas-dev.smartcampuslab.it/acService"/>
 	</bean>
-	
+	<context:annotation-config />
 	
 		<import resource="datalayer.xml"/>
 </beans>

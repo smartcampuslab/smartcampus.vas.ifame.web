@@ -1,10 +1,6 @@
 package eu.trentorise.smartcampus.vas.ifame.model;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 import javax.xml.bind.annotation.XmlRootElement;
 

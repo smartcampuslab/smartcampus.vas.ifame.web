@@ -1,23 +1,22 @@
 package eu.trentorise.smartcampus.vas.ifame.webtemplate.controllers;
 
-import java.awt.Menu;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.activation.MimeType;
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.ws.rs.Produces;
 
-import org.apache.http.entity.ContentType;
+import jxl.Workbook;
+import jxl.WorkbookSettings;
+import jxl.read.biff.BiffException;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,26 +34,16 @@ import eu.trentorise.smartcampus.vas.ifame.model.MenuDelGiorno;
 import eu.trentorise.smartcampus.vas.ifame.model.MenuDelMese;
 import eu.trentorise.smartcampus.vas.ifame.model.MenuDellaSettimana;
 import eu.trentorise.smartcampus.vas.ifame.model.PiattiList;
-import eu.trentorise.smartcampus.vas.ifame.model.Saldo;
-import eu.trentorise.smartcampus.vas.ifame.model.init.MenuInit;
 import eu.trentorise.smartcampus.vas.ifame.model.table.mapping.Piatto;
-
-import jxl.Cell;
-import jxl.CellType;
-import jxl.Sheet;
-import jxl.Workbook;
-import jxl.WorkbookSettings;
-import jxl.format.CellFormat;
-import jxl.format.Colour;
-import jxl.read.biff.BiffException;
+import eu.trentorise.smartcampus.vas.ifame.utils.MenuXlsUtil;
 
 @Controller("MenuController")
 public class MenuController {
 
-	private static final String EVENT_OBJECT = "eu.trentorise.smartcampus.dt.model.EventObject";
+
 	private static final Logger logger = Logger.getLogger(MenuController.class);
 
-	private final Workbook workbook = getWorkbook();
+	private static Workbook workbook =null;
 
 	@Autowired
 	private AcService acService;
@@ -79,6 +68,8 @@ public class MenuController {
 			HttpServletResponse response, HttpSession session)
 			throws IOException {
 		try {
+			logger.info("/getallpiatti");
+			
 			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
 			ProfileConnector profileConnector = new ProfileConnector(
 					serverAddress);
@@ -88,7 +79,7 @@ public class MenuController {
 				Set<Piatto> piatti = new HashSet<Piatto>();
 				PiattiList pl = new PiattiList();
 
-				List<MenuDellaSettimana> mdslist = MenuInit.getMenuDelMese(
+				List<MenuDellaSettimana> mdslist = MenuXlsUtil.getMenuDelMese(
 						workbook).getMenuDellaSettimana();
 				for (MenuDellaSettimana mds : mdslist) {
 					List<MenuDelGiorno> mdglist = mds.getMenuDelGiorno();
@@ -127,6 +118,7 @@ public class MenuController {
 			HttpServletResponse response, HttpSession session)
 			throws IOException {
 		try {
+			logger.info("/getmenudelgiorno");
 
 			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
 			ProfileConnector profileConnector = new ProfileConnector(
@@ -137,7 +129,7 @@ public class MenuController {
 				Calendar data = Calendar.getInstance();
 				int day = data.get(Calendar.DAY_OF_MONTH);
 
-				return MenuInit.getMenuDelGiorno(day, workbook);
+				return MenuXlsUtil.getMenuDelGiorno(day, workbook);
 			}
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -159,13 +151,15 @@ public class MenuController {
 			HttpServletResponse response, HttpSession session)
 			throws IOException {
 		try {
+			
+			logger.info("/getmenudelmese");
 			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
 			ProfileConnector profileConnector = new ProfileConnector(
 					serverAddress);
 			BasicProfile profile = profileConnector.getBasicProfile(token);
 			if (profile != null) {
 
-				MenuDelMese mdm = MenuInit.getMenuDelMese(workbook);
+				MenuDelMese mdm = MenuXlsUtil.getMenuDelMese(workbook);
 
 				return mdm;
 
@@ -190,12 +184,14 @@ public class MenuController {
 			HttpServletResponse response, HttpSession session)
 			throws IOException {
 		try {
+			
+			logger.info("/getalternative");
 			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
 			ProfileConnector profileConnector = new ProfileConnector(
 					serverAddress);
 			BasicProfile profile = profileConnector.getBasicProfile(token);
 			if (profile != null) {
-				return MenuInit.getAlternative(workbook);
+				return MenuXlsUtil.getAlternative(workbook);
 			}
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -209,7 +205,8 @@ public class MenuController {
 	 * 
 	 * INIZIALIZZO IL WORKBOOK
 	 */
-	private Workbook getWorkbook() {
+	@PostConstruct
+	private void initXls() {
 		InputStream is = getClass().getResourceAsStream("/Menu.xls");
 		WorkbookSettings xlsSettings = new WorkbookSettings();
 		xlsSettings.setDrawingsDisabled(true);
@@ -221,6 +218,6 @@ public class MenuController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return w;
+		MenuController.workbook=w;
 	}
 }
