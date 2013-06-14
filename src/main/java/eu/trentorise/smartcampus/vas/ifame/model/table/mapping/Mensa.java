@@ -17,24 +17,22 @@ public class Mensa {
 	@Column(name = "MENSA_NOME")
 	private String mensa_nome;
 
-	@Column(name = "MENSA_LINK")
-	private String mensa_link;
+	@Column(name = "MENSA_LINK_ONLINE")
+	private String mensa_link_online;
+
+	@Column(name = "MENSA_LINK_OFFLINE")
+	private String mensa_link_offline;
 
 	public Mensa() {
 		super();
 	}
 
-	public Mensa(Long mensa_id, String mensa_name, String mensa_link) {
+	public Mensa(String mensa_nome, String mensa_link_online,
+			String mensa_link_offline) {
 		super();
-		this.mensa_id = mensa_id;
-		this.mensa_nome = mensa_name;
-		this.mensa_link = mensa_link;
-	}
-
-	public Mensa(String mensa_name, String mensa_link) {
-		super();
-		this.mensa_nome = mensa_name;
-		this.mensa_link = mensa_link;
+		this.mensa_nome = mensa_nome;
+		this.mensa_link_online = mensa_link_online;
+		this.mensa_link_offline = mensa_link_offline;
 	}
 
 	public Long getMensa_id() {
@@ -45,20 +43,28 @@ public class Mensa {
 		this.mensa_id = mensa_id;
 	}
 
-	public String getMensa_link() {
-		return mensa_link;
-	}
-
-	public void setMensa_link(String mensa_link) {
-		this.mensa_link = mensa_link;
-	}
-
 	public String getMensa_nome() {
 		return mensa_nome;
 	}
 
 	public void setMensa_nome(String mensa_nome) {
 		this.mensa_nome = mensa_nome;
+	}
+
+	public String getMensa_link_online() {
+		return mensa_link_online;
+	}
+
+	public void setMensa_link_online(String mensa_link_online) {
+		this.mensa_link_online = mensa_link_online;
+	}
+
+	public String getMensa_link_offline() {
+		return mensa_link_offline;
+	}
+
+	public void setMensa_link_offline(String mensa_link_offline) {
+		this.mensa_link_offline = mensa_link_offline;
 	}
 
 }

@@ -34,7 +34,6 @@ public class Giudizio {
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Piatto_Mensa piatto_mensa;
 
-	
 	public Giudizio() {
 		super();
 	}

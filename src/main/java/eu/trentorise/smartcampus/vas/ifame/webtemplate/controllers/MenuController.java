@@ -220,4 +220,11 @@ public class MenuController {
 		}
 		MenuController.workbook=w;
 	}
+	
+	@PostConstruct
+	private void insertPiatti(){
+		
+	}
+	
+	
 }

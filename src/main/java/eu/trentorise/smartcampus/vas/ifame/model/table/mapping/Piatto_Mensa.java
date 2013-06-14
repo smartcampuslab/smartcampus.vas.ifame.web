@@ -25,7 +25,7 @@ public class Piatto_Mensa {
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Mensa mensa;
-	
+
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Piatto piatto;
 

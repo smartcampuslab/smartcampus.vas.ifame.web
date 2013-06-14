@@ -9,23 +9,24 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.hibernate.annotations.Type;
+
 @Entity
-@XmlRootElement(name = "Like")
-public class Like {
+@XmlRootElement(name = "Likes")
+public class Likes {
 
 	@Id
 	@GeneratedValue
 	private Long like_id;
-	
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, optional = false)
 	private Giudizio giudizio;
-	
+
 	@Column(name = "USER_ID")
 	private Long user_id;
-	
-	@Column(name = "LIKE")
-	private Boolean like;
 
-	
-	
+	@Column(name = "IS_LIKE")
+	@Type(type = "org.hibernate.type.NumericBooleanType")
+	private Boolean is_like;
+
 }
