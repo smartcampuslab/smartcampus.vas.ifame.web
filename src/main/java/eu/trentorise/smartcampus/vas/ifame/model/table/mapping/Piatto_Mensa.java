@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -23,14 +24,27 @@ public class Piatto_Mensa {
 	@Column(name = "VOTO_MEDIO")
 	private Float voto_medio;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToOne
+	// (fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn(name = "MENSA_ID")
 	private Mensa mensa;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToOne
+	// (fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn(name = "PIATTO_ID")
 	private Piatto piatto;
 
 	public Piatto_Mensa() {
 		super();
+	}
+
+	public Piatto_Mensa(Long numero_giudizi, Float voto_medio, Mensa mensa,
+			Piatto piatto) {
+		super();
+		this.numero_giudizi = numero_giudizi;
+		this.voto_medio = voto_medio;
+		this.mensa = mensa;
+		this.piatto = piatto;
 	}
 
 	public Long getPiatto_mensa_id() {

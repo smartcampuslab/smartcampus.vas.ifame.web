@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -19,7 +20,9 @@ public class Likes {
 	@GeneratedValue
 	private Long like_id;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, optional = false)
+	@ManyToOne
+	// (fetch = FetchType.EAGER, cascade = CascadeType.ALL, optional = false)
+	@JoinColumn(name = "GIUDIZIO_ID")
 	private Giudizio giudizio;
 
 	@Column(name = "USER_ID")

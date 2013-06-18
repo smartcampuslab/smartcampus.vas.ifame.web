@@ -34,16 +34,29 @@ import eu.trentorise.smartcampus.vas.ifame.model.MenuDelGiorno;
 import eu.trentorise.smartcampus.vas.ifame.model.MenuDelMese;
 import eu.trentorise.smartcampus.vas.ifame.model.MenuDellaSettimana;
 import eu.trentorise.smartcampus.vas.ifame.model.PiattiList;
+import eu.trentorise.smartcampus.vas.ifame.model.table.mapping.Mensa;
 import eu.trentorise.smartcampus.vas.ifame.model.table.mapping.Piatto;
+import eu.trentorise.smartcampus.vas.ifame.model.table.mapping.Piatto_Mensa;
+import eu.trentorise.smartcampus.vas.ifame.repository.MensaRepository;
+import eu.trentorise.smartcampus.vas.ifame.repository.PiattoRepository;
+import eu.trentorise.smartcampus.vas.ifame.repository.Piatto_MensaRepository;
 import eu.trentorise.smartcampus.vas.ifame.utils.MenuXlsUtil;
 
 @Controller("MenuController")
 public class MenuController {
 
-
 	private static final Logger logger = Logger.getLogger(MenuController.class);
 
-	private static Workbook workbook =null;
+	private static Workbook workbook = null;
+
+	@Autowired
+	PiattoRepository piattoRepository;
+
+	@Autowired
+	MensaRepository mensaRepository;
+
+	@Autowired
+	Piatto_MensaRepository piattoMensaRepository;
 
 	@Autowired
 	private AcService acService;
@@ -64,39 +77,19 @@ public class MenuController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/getallpiatti")
 	public @ResponseBody
-	PiattiList getAllPiatti(HttpServletRequest request,
+	List<Piatto> getAllPiatti(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session)
 			throws IOException {
 		try {
 			logger.info("/getallpiatti");
-			
+
 			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
 			ProfileConnector profileConnector = new ProfileConnector(
 					serverAddress);
 			BasicProfile profile = profileConnector.getBasicProfile(token);
 			if (profile != null) {
-				//Set<String> piattilist = new HashSet<String>();
-				Set<Piatto> piatti = new HashSet<Piatto>();
-				PiattiList pl = new PiattiList();
 
-				List<MenuDellaSettimana> mdslist = MenuXlsUtil.getMenuDelMese(
-						workbook).getMenuDellaSettimana();
-				for (MenuDellaSettimana mds : mdslist) {
-					List<MenuDelGiorno> mdglist = mds.getMenuDelGiorno();
-					for (MenuDelGiorno mdg : mdglist) {
-						List<Piatto> piattiDelGiorno = mdg.getPiattiDelGiorno();
-						for (Piatto p : piattiDelGiorno) {
-							piatti.add(p);
-						}
-					}
-				}
-
-				ArrayList<Piatto> list = new ArrayList<Piatto>();
-				list.addAll(piatti);
-				//Collections.sort(list);
-				pl.setPiatti(list);
-				
-				return pl;
+				return piattoRepository.findAll();
 			}
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -151,7 +144,7 @@ public class MenuController {
 			HttpServletResponse response, HttpSession session)
 			throws IOException {
 		try {
-			
+
 			logger.info("/getmenudelmese");
 			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
 			ProfileConnector profileConnector = new ProfileConnector(
@@ -184,7 +177,7 @@ public class MenuController {
 			HttpServletResponse response, HttpSession session)
 			throws IOException {
 		try {
-			
+
 			logger.info("/getalternative");
 			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
 			ProfileConnector profileConnector = new ProfileConnector(
@@ -218,13 +211,51 @@ public class MenuController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		MenuController.workbook=w;
+		MenuController.workbook = w;
 	}
-	
+
 	@PostConstruct
-	private void insertPiatti(){
-		
+	private void inizializzaTabellaPiatti() {
+
+		List<MenuDellaSettimana> mdslist = MenuXlsUtil.getMenuDelMese(workbook)
+				.getMenuDellaSettimana();
+
+		Set<Piatto> setPiatti = new HashSet<Piatto>();
+
+		for (MenuDellaSettimana mds : mdslist) {
+			List<MenuDelGiorno> mdglist = mds.getMenuDelGiorno();
+			for (MenuDelGiorno mdg : mdglist) {
+				List<Piatto> piattiDelGiorno = mdg.getPiattiDelGiorno();
+				for (Piatto p : piattiDelGiorno) {
+					setPiatti.add(p);
+				}
+			}
+		}
+		piattoRepository.save(setPiatti);
+
+		inizializzaTabella_PIATTO_MENSA();
 	}
-	
-	
+
+	private void inizializzaTabella_PIATTO_MENSA() {
+
+		List<Mensa> lista_mense = mensaRepository.findAll();
+		List<Piatto> lista_piatti = piattoRepository.findAll();
+
+		List<Piatto_Mensa> lista_piatto_mensa = new ArrayList<Piatto_Mensa>();
+
+		// System.out.println("-------------------------------------------");
+		// System.out.println("Piatti list -> " + lista_piatti.size());
+		// System.out.println("Mense List -> " + lista_mense.size());
+		// System.out.println("-------------------------------------------");
+
+		for (Mensa mensa : lista_mense) {
+			for (Piatto piatto : lista_piatti) {
+				lista_piatto_mensa.add(new Piatto_Mensa((long) 0, (float) 0,
+						mensa, piatto));
+			}
+		}
+
+		piattoMensaRepository.save(lista_piatto_mensa);
+	}
+
 }

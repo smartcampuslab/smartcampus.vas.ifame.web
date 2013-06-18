@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -31,7 +32,9 @@ public class Giudizio {
 	@Column(name = "USER_ID")
 	private Long user_id;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToOne
+	// (fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn(name = "PIATTO_MENSA_ID")
 	private Piatto_Mensa piatto_mensa;
 
 	public Giudizio() {
