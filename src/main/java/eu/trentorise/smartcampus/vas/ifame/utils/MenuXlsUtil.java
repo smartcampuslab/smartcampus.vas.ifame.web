@@ -11,7 +11,7 @@ import eu.trentorise.smartcampus.vas.ifame.model.Alternative;
 import eu.trentorise.smartcampus.vas.ifame.model.MenuDelGiorno;
 import eu.trentorise.smartcampus.vas.ifame.model.MenuDelMese;
 import eu.trentorise.smartcampus.vas.ifame.model.MenuDellaSettimana;
-import eu.trentorise.smartcampus.vas.ifame.model.table.mapping.Piatto;
+import eu.trentorise.smartcampus.vas.ifame.model.Piatto;
 
 public class MenuXlsUtil {
 	/*

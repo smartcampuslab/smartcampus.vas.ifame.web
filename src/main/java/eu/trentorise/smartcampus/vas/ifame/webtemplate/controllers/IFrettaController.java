@@ -21,7 +21,7 @@ import eu.trentorise.smartcampus.ac.provider.AcService;
 import eu.trentorise.smartcampus.ac.provider.filters.AcProviderFilter;
 import eu.trentorise.smartcampus.profileservice.ProfileConnector;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
-import eu.trentorise.smartcampus.vas.ifame.model.table.mapping.Mensa;
+import eu.trentorise.smartcampus.vas.ifame.model.Mensa;
 import eu.trentorise.smartcampus.vas.ifame.repository.MensaRepository;
 
 @Controller("IFrettaController")

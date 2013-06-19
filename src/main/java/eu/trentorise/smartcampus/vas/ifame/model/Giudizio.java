@@ -1,4 +1,4 @@
-package eu.trentorise.smartcampus.vas.ifame.model.table.mapping;
+package eu.trentorise.smartcampus.vas.ifame.model;
 
 import java.util.Date;
 

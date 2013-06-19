@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -22,7 +23,8 @@ import eu.trentorise.smartcampus.ac.provider.AcService;
 import eu.trentorise.smartcampus.ac.provider.filters.AcProviderFilter;
 import eu.trentorise.smartcampus.profileservice.ProfileConnector;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
-import eu.trentorise.smartcampus.vas.ifame.model.table.mapping.Mensa;
+import eu.trentorise.smartcampus.vas.ifame.model.Giudizio;
+import eu.trentorise.smartcampus.vas.ifame.model.Mensa;
 
 @Controller("GiudizioController")
 public class GiudizioController {
@@ -46,17 +48,13 @@ public class GiudizioController {
 	@Value("${webapp.name}")
 	private String appName;
 
-	@RequestMapping(method = RequestMethod.POST, value = "/addgiudizio")
-	/*
-	 * 
-	 * da nadare avanti 
-	 */
-	//@Consumes(MediaType.APPLICATION_JSON)
+	@RequestMapping(method = RequestMethod.POST, value = "/giudizio/add")
 	public @ResponseBody
 	void getMense(HttpServletRequest request, HttpServletResponse response,
-			HttpSession session) throws IOException {
+			HttpSession session, @RequestBody Giudizio giudizio)
+			throws IOException {
 		try {
-			logger.info("/addgiudizio");
+			logger.info("/giudizio/add");
 			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
 			ProfileConnector profileConnector = new ProfileConnector(
 					serverAddress);

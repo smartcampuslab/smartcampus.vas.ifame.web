@@ -3,7 +3,6 @@ package eu.trentorise.smartcampus.vas.ifame.model;
 import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import eu.trentorise.smartcampus.vas.ifame.model.table.mapping.Mensa;
 
 @XmlRootElement(name = "ListaMense")
 public class ListaMense {
