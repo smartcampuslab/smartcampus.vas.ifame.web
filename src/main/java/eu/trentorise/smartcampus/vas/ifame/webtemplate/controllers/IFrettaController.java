@@ -96,11 +96,16 @@ public class IFrettaController {
 
 		Mensa povo_0 = new Mensa(name_povo_0, url_povo_0_online,
 				url_povo_0_offline);
-		Mensa povo_1 = new Mensa(name_povo_1, url_povo_1_online,url_povo_1_offline);
-		Mensa tommaso_gar = new Mensa(name_tommaso_gar, url_tommaso_gar_online,url_tommaso_gar_offline);
-		Mensa zanella = new Mensa(name_zanella, url_zanella_online,url_zanella_offline);
-		Mensa mesiano_1 = new Mensa(name_mesiano_1, url_mesiano_1_online,url_mesiano_1_offline);
-		Mensa mesiano_2 = new Mensa(name_mesiano_2, url_mesiano_2_online,url_mesiano_2_offline);
+		Mensa povo_1 = new Mensa(name_povo_1, url_povo_1_online,
+				url_povo_1_offline);
+		Mensa tommaso_gar = new Mensa(name_tommaso_gar, url_tommaso_gar_online,
+				url_tommaso_gar_offline);
+		Mensa zanella = new Mensa(name_zanella, url_zanella_online,
+				url_zanella_offline);
+		Mensa mesiano_1 = new Mensa(name_mesiano_1, url_mesiano_1_online,
+				url_mesiano_1_offline);
+		Mensa mesiano_2 = new Mensa(name_mesiano_2, url_mesiano_2_online,
+				url_mesiano_2_offline);
 
 		mensaRepository.save(povo_0);
 		mensaRepository.save(povo_1);

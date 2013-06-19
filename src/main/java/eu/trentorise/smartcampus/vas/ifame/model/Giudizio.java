@@ -89,4 +89,12 @@ public class Giudizio {
 		this.piatto_mensa = piatto_mensa;
 	}
 
+	@Override
+	public String toString() {
+		return "Giudizio [giudizio_id=" + giudizio_id + ", voto=" + voto
+				+ ", commento=" + commento + ", ultimo_aggiornamento="
+				+ ultimo_aggiornamento + ", user_id=" + user_id
+				+ ", piatto_mensa=" + piatto_mensa + "]";
+	}
+
 }

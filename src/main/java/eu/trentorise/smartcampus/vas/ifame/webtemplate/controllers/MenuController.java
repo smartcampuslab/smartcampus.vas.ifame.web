@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -29,12 +30,10 @@ import eu.trentorise.smartcampus.ac.provider.AcService;
 import eu.trentorise.smartcampus.ac.provider.filters.AcProviderFilter;
 import eu.trentorise.smartcampus.profileservice.ProfileConnector;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
-import eu.trentorise.smartcampus.vas.ifame.model.Alternative;
 import eu.trentorise.smartcampus.vas.ifame.model.Mensa;
 import eu.trentorise.smartcampus.vas.ifame.model.MenuDelGiorno;
 import eu.trentorise.smartcampus.vas.ifame.model.MenuDelMese;
 import eu.trentorise.smartcampus.vas.ifame.model.MenuDellaSettimana;
-import eu.trentorise.smartcampus.vas.ifame.model.PiattiList;
 import eu.trentorise.smartcampus.vas.ifame.model.Piatto;
 import eu.trentorise.smartcampus.vas.ifame.model.Piatto_Mensa;
 import eu.trentorise.smartcampus.vas.ifame.repository.MensaRepository;
@@ -75,6 +74,11 @@ public class MenuController {
 	@Value("${webapp.name}")
 	private String appName;
 
+	/*
+	 * 
+	 * 
+	 * old method no more used
+	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/getallpiatti")
 	public @ResponseBody
 	List<Piatto> getAllPiatti(HttpServletRequest request,
@@ -90,6 +94,38 @@ public class MenuController {
 			if (profile != null) {
 
 				return piattoRepository.findAll();
+			}
+		} catch (Exception e) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+	}
+
+	/*
+	 * 
+	 * 
+	 * 
+	 * new service for igradito
+	 */
+
+	@RequestMapping(method = RequestMethod.GET, value = "/iGradito/{mensa_id}")
+	public @ResponseBody
+	List<Piatto_Mensa> getMensaPiatti(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session,
+			@PathVariable("mensa_id") Long mensa_id) throws IOException {
+		try {
+			logger.info("/iGradito/{mensa_id}");
+
+			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
+			ProfileConnector profileConnector = new ProfileConnector(
+					serverAddress);
+			BasicProfile profile = profileConnector.getBasicProfile(token);
+			if (profile != null) {
+
+				System.out.println(mensa_id);
+
+				return piattoMensaRepository
+						.getPiattiWhereMensaIdEquals(mensa_id);
 			}
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -173,7 +209,7 @@ public class MenuController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/getalternative")
 	public @ResponseBody
-	Alternative getAlternative(HttpServletRequest request,
+	List<Piatto> getAlternative(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session)
 			throws IOException {
 		try {
@@ -184,6 +220,7 @@ public class MenuController {
 					serverAddress);
 			BasicProfile profile = profileConnector.getBasicProfile(token);
 			if (profile != null) {
+
 				return MenuXlsUtil.getAlternative(workbook);
 			}
 		} catch (Exception e) {
@@ -231,6 +268,7 @@ public class MenuController {
 				}
 			}
 		}
+
 		piattoRepository.save(setPiatti);
 
 		inizializzaTabella_PIATTO_MENSA();
@@ -241,21 +279,17 @@ public class MenuController {
 		List<Mensa> lista_mense = mensaRepository.findAll();
 		List<Piatto> lista_piatti = piattoRepository.findAll();
 
-		List<Piatto_Mensa> lista_piatto_mensa = new ArrayList<Piatto_Mensa>();
-
-		// System.out.println("-------------------------------------------");
-		// System.out.println("Piatti list -> " + lista_piatti.size());
-		// System.out.println("Mense List -> " + lista_mense.size());
-		// System.out.println("-------------------------------------------");
-
 		for (Mensa mensa : lista_mense) {
 			for (Piatto piatto : lista_piatti) {
-				lista_piatto_mensa.add(new Piatto_Mensa((long) 0, (float) 0,
-						mensa, piatto));
+				Piatto_Mensa piatto_mensa = new Piatto_Mensa((long) 0,
+						(float) 0, mensaRepository.save(mensa),
+						piattoRepository.save(piatto));
+				piattoMensaRepository.saveAndFlush(piatto_mensa);
 			}
 		}
-
-		piattoMensaRepository.save(lista_piatto_mensa);
+		
+		
+		
 	}
 
 }

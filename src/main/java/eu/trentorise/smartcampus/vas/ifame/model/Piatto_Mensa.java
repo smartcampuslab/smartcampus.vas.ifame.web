@@ -10,8 +10,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.hibernate.annotations.NamedQueries;
+import org.hibernate.annotations.NamedQuery;
+
 @Entity
 @XmlRootElement(name = "Piatto_Mensa")
+@NamedQuery(name = "Piatto_Mensa.getPiattiWhereMensaIdEquals", query = "from Piatto_Mensa p where  p.mensa.mensa_id = ?1")
 public class Piatto_Mensa {
 
 	@Id
@@ -24,13 +28,11 @@ public class Piatto_Mensa {
 	@Column(name = "VOTO_MEDIO")
 	private Float voto_medio;
 
-	@ManyToOne
-	// (fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "MENSA_ID")
 	private Mensa mensa;
 
-	@ManyToOne
-	// (fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "PIATTO_ID")
 	private Piatto piatto;
 

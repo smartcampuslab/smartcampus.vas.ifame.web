@@ -7,7 +7,7 @@ import jxl.Cell;
 import jxl.CellType;
 import jxl.Sheet;
 import jxl.Workbook;
-import eu.trentorise.smartcampus.vas.ifame.model.Alternative;
+
 import eu.trentorise.smartcampus.vas.ifame.model.MenuDelGiorno;
 import eu.trentorise.smartcampus.vas.ifame.model.MenuDelMese;
 import eu.trentorise.smartcampus.vas.ifame.model.MenuDellaSettimana;
@@ -24,9 +24,8 @@ public class MenuXlsUtil {
 	 * ALTERNATIVE
 	 */
 
-	public static Alternative getAlternative(Workbook workbook) {
+	public static List<Piatto> getAlternative(Workbook workbook) {
 
-		Alternative alternative = new Alternative();
 		List<Piatto> listaPiatti = new ArrayList<Piatto>();
 
 		// le alternative sono uguali per tutte le settimane perciò leggiamo le
@@ -46,14 +45,13 @@ public class MenuXlsUtil {
 				// check se la casella contiene qualcosa
 				if (type == CellType.LABEL) {
 					Cell kcal = sheet.getCell(colonna + 1, riga);
-					listaPiatti.add(new Piatto(nomePiatto.getContents(),
-							kcal.getContents()));
+					listaPiatti.add(new Piatto(nomePiatto.getContents(), kcal
+							.getContents()));
 				}
 			}
 		}
-		alternative.setAlternative(listaPiatti);
 
-		return alternative;
+		return listaPiatti;
 	}
 
 	/*
@@ -92,8 +90,8 @@ public class MenuXlsUtil {
 						CellType type = cell.getType();
 						if (type == CellType.LABEL) {
 							Cell kcal = sheet.getCell(colonnaGiorno + 1, i);
-							listaPiatti.add(new Piatto(cell.getContents(),
-									kcal.getContents()));
+							listaPiatti.add(new Piatto(cell.getContents(), kcal
+									.getContents()));
 						}
 					}
 				}
@@ -240,9 +238,8 @@ public class MenuXlsUtil {
 						if (piattoNameCellType == CellType.LABEL) {
 							Cell kcalCell = sheet.getCell(colonnaGiorno + 1,
 									riga);
-							piattiDelGiornoList.add(new Piatto(
-									piattoNameCell.getContents(), kcalCell
-											.getContents()));
+							piattiDelGiornoList.add(new Piatto(piattoNameCell
+									.getContents(), kcalCell.getContents()));
 						}
 					}
 					// setto il giorno corrente al menu del giorno

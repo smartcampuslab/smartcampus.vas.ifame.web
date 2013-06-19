@@ -3,10 +3,10 @@
 	xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
 	<persistence-unit name="corsi.db">
-		<class>eu.trentorise.smartcampus.vas.ifame.model.table.mapping.Mensa</class>
-		<class>eu.trentorise.smartcampus.vas.ifame.model.table.mapping.Piatto</class>
-		<class>eu.trentorise.smartcampus.vas.ifame.model.table.mapping.Giudizio</class>
-		<class>eu.trentorise.smartcampus.vas.ifame.model.table.mapping.Piatto_Mensa</class>
-		<class>eu.trentorise.smartcampus.vas.ifame.model.table.mapping.Likes</class>
+		<class>eu.trentorise.smartcampus.vas.ifame.model.Mensa</class>
+		<class>eu.trentorise.smartcampus.vas.ifame.model.Piatto</class>
+		<class>eu.trentorise.smartcampus.vas.ifame.model.Giudizio</class>
+		<class>eu.trentorise.smartcampus.vas.ifame.model.Piatto_Mensa</class>
+		<class>eu.trentorise.smartcampus.vas.ifame.model.Likes</class>
 	</persistence-unit>
 </persistence>

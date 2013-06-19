@@ -56,10 +56,23 @@ public class GiudizioController {
 		try {
 			logger.info("/giudizio/add");
 			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
+			
 			ProfileConnector profileConnector = new ProfileConnector(
 					serverAddress);
 			BasicProfile profile = profileConnector.getBasicProfile(token);
 			if (profile != null) {
+
+				System.out.println(giudizio);
+
+				if (giudizio.getPiatto_mensa() == null) {
+					return;
+				}
+				if (giudizio.getUser_id() == null) {
+					return;
+				}
+				if (giudizio.getVoto() == null) {
+					return;
+				}
 
 				return;
 			}
