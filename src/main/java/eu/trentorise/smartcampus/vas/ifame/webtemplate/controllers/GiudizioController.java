@@ -91,8 +91,15 @@ public class GiudizioController {
 				if (mensaRepository.exists(mensa_id)
 						&& piattoRepository.exists(piatto_id)) {
 
-					return giudizioNewRepository
+					List<GiudizioNew> giudizi_list = giudizioNewRepository
 							.getGiudizi(mensa_id, piatto_id);
+
+					for (GiudizioNew giudizio : giudizi_list) {
+						giudizio.setLikes(likeRepository
+								.getGiudizioLikes(giudizio.getGiudizio_id()));
+					}
+
+					return giudizi_list;
 
 				} else {
 					response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -141,7 +148,13 @@ public class GiudizioController {
 						giudizio_old.setVoto(data.voto);
 						giudizio_old.setCommento(data.commento);
 
-						giudizioNewRepository.save(giudizio_old);
+						giudizio_old = giudizioNewRepository.save(giudizio_old);
+
+//						System.out.println("giudizio_id : "
+//								+ giudizio_old.getGiudizio_id());
+
+						likeRepository.eliminaLikesGiudizio(giudizio_old
+								.getGiudizio_id());
 
 					} else {
 						GiudizioNew giudizio = new GiudizioNew();
@@ -157,8 +170,16 @@ public class GiudizioController {
 						giudizioNewRepository.save(giudizio);
 					}
 
-					return giudizioNewRepository
+					List<GiudizioNew> giudizi_list = giudizioNewRepository
 							.getGiudizi(mensa_id, piatto_id);
+
+					for (GiudizioNew giudizio : giudizi_list) {
+						giudizio.setLikes(likeRepository
+								.getGiudizioLikes(giudizio.getGiudizio_id()));
+					}
+
+					return giudizi_list;
+
 				} else {
 					response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 					return null;

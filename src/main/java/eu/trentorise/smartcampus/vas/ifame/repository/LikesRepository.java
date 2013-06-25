@@ -14,4 +14,6 @@ public interface LikesRepository extends JpaRepository<Likes, Long> {
 
 	List<Likes> getGiudizioLikes(Long giudizio_id);
 
+	Likes alreadyLiked(Long giudizio_id, Long user_id);
+
 }
