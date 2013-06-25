@@ -35,10 +35,10 @@ import eu.trentorise.smartcampus.vas.ifame.model.MenuDelGiorno;
 import eu.trentorise.smartcampus.vas.ifame.model.MenuDelMese;
 import eu.trentorise.smartcampus.vas.ifame.model.MenuDellaSettimana;
 import eu.trentorise.smartcampus.vas.ifame.model.Piatto;
-import eu.trentorise.smartcampus.vas.ifame.model.Piatto_Mensa;
+//import eu.trentorise.smartcampus.vas.ifame.model.Piatto_Mensa;
 import eu.trentorise.smartcampus.vas.ifame.repository.MensaRepository;
 import eu.trentorise.smartcampus.vas.ifame.repository.PiattoRepository;
-import eu.trentorise.smartcampus.vas.ifame.repository.Piatto_MensaRepository;
+//import eu.trentorise.smartcampus.vas.ifame.repository.Piatto_MensaRepository;
 import eu.trentorise.smartcampus.vas.ifame.utils.MenuXlsUtil;
 
 @Controller("MenuController")
@@ -53,9 +53,6 @@ public class MenuController {
 
 	@Autowired
 	MensaRepository mensaRepository;
-
-	@Autowired
-	Piatto_MensaRepository piattoMensaRepository;
 
 	@Autowired
 	private AcService acService;
@@ -79,7 +76,7 @@ public class MenuController {
 	 * 
 	 * old method no more used
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/getallpiatti")
+	@RequestMapping(method = RequestMethod.GET, value = "/getpiatti")
 	public @ResponseBody
 	List<Piatto> getAllPiatti(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session)
@@ -94,38 +91,6 @@ public class MenuController {
 			if (profile != null) {
 
 				return piattoRepository.findAll();
-			}
-		} catch (Exception e) {
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		}
-		return null;
-	}
-
-	/*
-	 * 
-	 * 
-	 * 
-	 * new service for igradito
-	 */
-
-	@RequestMapping(method = RequestMethod.GET, value = "/iGradito/{mensa_id}")
-	public @ResponseBody
-	List<Piatto_Mensa> getMensaPiatti(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session,
-			@PathVariable("mensa_id") Long mensa_id) throws IOException {
-		try {
-			logger.info("/iGradito/{mensa_id}");
-
-			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-			ProfileConnector profileConnector = new ProfileConnector(
-					serverAddress);
-			BasicProfile profile = profileConnector.getBasicProfile(token);
-			if (profile != null) {
-
-				System.out.println(mensa_id);
-
-				return piattoMensaRepository
-						.getPiattiWhereMensaIdEquals(mensa_id);
 			}
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -251,11 +216,42 @@ public class MenuController {
 		MenuController.workbook = w;
 	}
 
-	@PostConstruct
-	private void inizializzaTabellaPiatti() {
+	/*
+	 * 
+	 * SOLO PER INIZIALIZZARE LE TABELLE
+	 */
+	private Workbook getWorkbook() {
+		InputStream is = getClass().getResourceAsStream("/Menu.xls");
+		WorkbookSettings xlsSettings = new WorkbookSettings();
+		xlsSettings.setDrawingsDisabled(true);
+		Workbook w = null;
+		try {
+			w = Workbook.getWorkbook(is, xlsSettings);
+		} catch (BiffException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return w;
+	}
 
-		List<MenuDellaSettimana> mdslist = MenuXlsUtil.getMenuDelMese(workbook)
-				.getMenuDellaSettimana();
+	/*
+	 * 
+	 * 
+	 * 
+	 * 
+	 * INIZIALIZZO TUTTE LE TABELLE
+	 */
+
+	@PostConstruct
+	private void inizializzaDatabaseTabelle() {
+
+		/*
+		 * 
+		 * Inizializzo i piatti
+		 */
+		List<MenuDellaSettimana> mdslist = MenuXlsUtil.getMenuDelMese(
+				getWorkbook()).getMenuDellaSettimana();
 
 		Set<Piatto> setPiatti = new HashSet<Piatto>();
 
@@ -271,25 +267,49 @@ public class MenuController {
 
 		piattoRepository.save(setPiatti);
 
-		inizializzaTabella_PIATTO_MENSA();
+		/*
+		 * 
+		 * Inizializzo le mense
+		 */
+		final String url_povo_0_offline = "http://www.operauni.tn.it/upload/cms/456_x/mensa-povo1.jpg";
+		final String url_povo_1_offline = "http://www.operauni.tn.it/upload/cms/456_x/mensa-povo2.jpg";
+		final String url_tommaso_gar_offline = "http://www.operauni.tn.it/upload/cms/456_x/gar-offline.jpg";
+		final String url_zanella_offline = "http://www.operauni.tn.it/upload/cms/456_x/mensa-zanella.jpg";
+		final String url_mesiano_1_offline = "http://www.operauni.tn.it/upload/cms/456_x/mesiano-offline.jpg";
+		final String url_mesiano_2_offline = "http://www.operauni.tn.it/upload/cms/456_x/mesiano-web-2.jpg";
+
+		final String url_povo_0_online = "http://www.operauni.tn.it/upload/Webcam/Povo01.jpg";
+		final String url_povo_1_online = "http://www.operauni.tn.it/upload/Webcam/Povo02.jpg";
+		final String url_tommaso_gar_online = "http://www.operauni.tn.it/upload/Webcam/MensaUni.jpg";
+		final String url_zanella_online = "http://www.operauni.tn.it/upload/Webcam/mensa_zanella.jpg";
+		final String url_mesiano_1_online = "http://www.operauni.tn.it/upload/Webcam/MensaMes01.jpg";
+		final String url_mesiano_2_online = "http://www.operauni.tn.it/upload/MensaMes02.jpg";
+
+		final String name_povo_0 = "Povo Mensa";
+		final String name_povo_1 = "Povo Mensa Veloce";
+		final String name_tommaso_gar = "Tommaso Gar";
+		final String name_zanella = "Zanella";
+		final String name_mesiano_1 = "Mesiano 1";
+		final String name_mesiano_2 = "Mesiano 2";
+
+		Mensa povo_0 = new Mensa(name_povo_0, url_povo_0_online,
+				url_povo_0_offline);
+		Mensa povo_1 = new Mensa(name_povo_1, url_povo_1_online,
+				url_povo_1_offline);
+		Mensa tommaso_gar = new Mensa(name_tommaso_gar, url_tommaso_gar_online,
+				url_tommaso_gar_offline);
+		Mensa zanella = new Mensa(name_zanella, url_zanella_online,
+				url_zanella_offline);
+		Mensa mesiano_1 = new Mensa(name_mesiano_1, url_mesiano_1_online,
+				url_mesiano_1_offline);
+		Mensa mesiano_2 = new Mensa(name_mesiano_2, url_mesiano_2_online,
+				url_mesiano_2_offline);
+
+		mensaRepository.save(povo_0);
+		mensaRepository.save(povo_1);
+		mensaRepository.save(tommaso_gar);
+		mensaRepository.save(zanella);
+		mensaRepository.save(mesiano_1);
+		mensaRepository.save(mesiano_2);
 	}
-
-	private void inizializzaTabella_PIATTO_MENSA() {
-
-		List<Mensa> lista_mense = mensaRepository.findAll();
-		List<Piatto> lista_piatti = piattoRepository.findAll();
-
-		for (Mensa mensa : lista_mense) {
-			for (Piatto piatto : lista_piatti) {
-				Piatto_Mensa piatto_mensa = new Piatto_Mensa((long) 0,
-						(float) 0, mensaRepository.save(mensa),
-						piattoRepository.save(piatto));
-				piattoMensaRepository.saveAndFlush(piatto_mensa);
-			}
-		}
-		
-		
-		
-	}
-
 }

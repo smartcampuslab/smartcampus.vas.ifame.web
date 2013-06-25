@@ -1,4 +1,6 @@
-package eu.trentorise.smartcampus.vas.ifame.repository;
+/*
+ package eu.trentorise.smartcampus.vas.ifame.repository;
+ 
 
 import java.util.List;
 
@@ -14,3 +16,4 @@ public interface Piatto_MensaRepository extends
 	List<Piatto_Mensa> getPiattiWhereMensaIdEquals(Long mensa_id);
 
 }
+*/

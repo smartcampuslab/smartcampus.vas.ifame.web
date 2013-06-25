@@ -1,3 +1,4 @@
+/*
 package eu.trentorise.smartcampus.vas.ifame.model;
 
 import javax.persistence.CascadeType;
@@ -90,3 +91,4 @@ public class Piatto_Mensa {
 	}
 
 }
+*/

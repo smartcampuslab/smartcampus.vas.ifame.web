@@ -104,34 +104,34 @@
 			<artifactId>filestorage.client</artifactId>
 			<version>1.0</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>eu.trentorise.smartcampus</groupId>
 			<artifactId>journeyplanner.client</artifactId>
 			<version>1.0</version>
-		</dependency>	
-		
+		</dependency>
+
 		<dependency>
 			<groupId>eu.trentorise.smartcampus</groupId>
 			<artifactId>discovertrento.client</artifactId>
 			<version>1.0</version>
-		</dependency>		
-		
+		</dependency>
+
 		<dependency>
 			<groupId>eu.trentorise.smartcampus</groupId>
 			<artifactId>communicator.client</artifactId>
 			<version>1.0</version>
-		</dependency>	
-		
+		</dependency>
+
 		<dependency>
 			<groupId>eu.trentorise.smartcampus</groupId>
 			<artifactId>socialservice.client</artifactId>
 			<version>1.0</version>
-		</dependency>	
-		
-		<!--  DB  -->
-		
-				<dependency>
+		</dependency>
+
+		<!-- DB -->
+
+		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.24</version>
@@ -171,22 +171,22 @@
 			<version>2.5</version>
 			<scope>provided</scope>
 		</dependency>
-        <dependency>
-            <groupId>javax.servlet.jsp</groupId>
-            <artifactId>jsp-api</artifactId>
-            <version>2.2</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>jstl</artifactId>
-            <version>1.2</version>
-        </dependency>
-<dependency>
-	<groupId>org.slf4j</groupId>
-	<artifactId>slf4j-log4j12</artifactId>
-	<version>1.7.5</version>
-</dependency>
+		<dependency>
+			<groupId>javax.servlet.jsp</groupId>
+			<artifactId>jsp-api</artifactId>
+			<version>2.2</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.5</version>
+		</dependency>
 		<dependency>
 			<groupId>cglib</groupId>
 			<artifactId>cglib</artifactId>
@@ -197,8 +197,17 @@
 			<groupId>commons-dbcp</groupId>
 			<artifactId>commons-dbcp</artifactId>
 			<version>1.4</version>
-		</dependency>							
-		
+		</dependency>
+
+		<!-- JXL -->
+
+		<dependency>
+			<groupId>net.sourceforge.jexcelapi</groupId>
+			<artifactId>jxl</artifactId>
+			<version>2.6.12</version>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>
@@ -224,11 +233,11 @@
 
 		<finalName>web-ifame</finalName>
 	</build>
-    <repositories>
-        <repository>
-            <id>SmartCampus</id>
-            <url>http://repository.smartcampuslab.it/content/groups/public</url>
-        </repository>
-    </repositories>
+	<repositories>
+		<repository>
+			<id>SmartCampus</id>
+			<url>http://repository.smartcampuslab.it/content/groups/public</url>
+		</repository>
+	</repositories>
 
 </project>
