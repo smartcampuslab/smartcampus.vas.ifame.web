@@ -5,5 +5,4 @@ public class GiudizioDataToPost {
 	public String commento;
 	public Float voto;
 	public Long userId;
-
 }

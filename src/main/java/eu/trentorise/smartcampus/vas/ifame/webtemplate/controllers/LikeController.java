@@ -54,36 +54,40 @@ public class LikeController {
 	@Value("${webapp.name}")
 	private String appName;
 
-	@RequestMapping(method = RequestMethod.POST, value = "/like")
+	@RequestMapping(method = RequestMethod.POST, value = "giudizio/{giudizio_id}/like")
 	public @ResponseBody
 	void doLike(HttpServletRequest request, HttpServletResponse response,
-			HttpSession session, @RequestBody Likes like) throws IOException {
+			HttpSession session, @PathVariable("giudizio_id") Long giudizio_id,
+			@RequestBody Likes like) throws IOException {
 		try {
-			logger.info("/like");
+			logger.info("giudizio/" + giudizio_id + "/like");
 
 			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
 			ProfileConnector profileConnector = new ProfileConnector(
 					serverAddress);
 			BasicProfile profile = profileConnector.getBasicProfile(token);
 			if (profile != null) {
+				// se l'id del giudizio non esiste torno BAD REQUEST
+				if (giudizioNewRepository.exists(giudizio_id)) {
+					if (like.getUser_id() != null) {
+						if (like.getIs_like() != null) {
+							// ho tutti i dati compreso like
 
-				if (like.getGiudizio_id() != null && like.getUser_id() != null
-						&& like.getIs_like() != null) {
+							// controllo se c'era già il like
+							Likes old_like = likeRepository.alreadyLiked(
+									giudizio_id, like.getUser_id());
 
-					if (giudizioNewRepository.exists(like.getGiudizio_id())) {
-
-						Likes old_like = likeRepository.alreadyLiked(
-								like.getGiudizio_id(), like.getUser_id());
-
-						if (old_like != null) {
-							old_like.setIs_like(like.getIs_like());
-
-							likeRepository.save(old_like);
-						} else {
-
-							likeRepository.save(like);
+							if (old_like != null) {
+								// aggiorno quello esistente
+								old_like.setIs_like(like.getIs_like());
+								likeRepository.save(old_like);
+							} else {
+								// inserisco il nuovo like
+								like.setGiudizio_id(giudizio_id);
+								likeRepository.save(like);
+							}
+							return;
 						}
-						return;
 					}
 				}
 			}
@@ -91,7 +95,49 @@ public class LikeController {
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
+		/*
+		 * BAD REQUEST -> SE HO AVUTO ERRORI NEI CONTROLLI
+		 */
+		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		return;
+	}
 
+	@RequestMapping(method = RequestMethod.DELETE, value = "giudizio/{giudizio_id}/like")
+	public @ResponseBody
+	void deleteLike(HttpServletRequest request, HttpServletResponse response,
+			HttpSession session, @PathVariable("giudizio_id") Long giudizio_id,
+			@RequestBody Likes like) throws IOException {
+		try {
+			logger.info("giudizio/" + giudizio_id + "/like -> delete");
+
+			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
+			ProfileConnector profileConnector = new ProfileConnector(
+					serverAddress);
+			BasicProfile profile = profileConnector.getBasicProfile(token);
+			if (profile != null) {
+				// se l'id del giudizio non esiste torno BAD REQUEST
+				if (giudizioNewRepository.exists(giudizio_id)) {
+					if (like.getUser_id() != null) {
+						// controllo se c'era già il like
+						Likes old_like = likeRepository.alreadyLiked(
+								giudizio_id, like.getUser_id());
+						if (old_like != null) {
+							likeRepository.delete(old_like);
+							return;
+						} else {
+							response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+							return;
+						}
+
+					}
+				}
+			}
+		} catch (Exception e) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		/*
+		 * BAD REQUEST -> SE HO AVUTO ERRORI NEI CONTROLLI
+		 */
 		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		return;
 	}

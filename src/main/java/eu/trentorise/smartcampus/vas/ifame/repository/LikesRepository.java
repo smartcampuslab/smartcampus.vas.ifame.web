@@ -10,8 +10,6 @@ import eu.trentorise.smartcampus.vas.ifame.model.Likes;
 @Repository
 public interface LikesRepository extends JpaRepository<Likes, Long> {
 
-	void eliminaLikesGiudizio(Long giudizio_id);
-
 	List<Likes> getGiudizioLikes(Long giudizio_id);
 
 	Likes alreadyLiked(Long giudizio_id, Long user_id);

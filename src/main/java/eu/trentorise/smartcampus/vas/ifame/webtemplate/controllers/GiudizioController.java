@@ -27,6 +27,7 @@ import eu.trentorise.smartcampus.profileservice.ProfileConnector;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 import eu.trentorise.smartcampus.vas.ifame.model.GiudizioDataToPost;
 import eu.trentorise.smartcampus.vas.ifame.model.GiudizioNew;
+import eu.trentorise.smartcampus.vas.ifame.model.Likes;
 import eu.trentorise.smartcampus.vas.ifame.model.Mensa;
 import eu.trentorise.smartcampus.vas.ifame.repository.GiudizioNewRepository;
 import eu.trentorise.smartcampus.vas.ifame.repository.LikesRepository;
@@ -70,10 +71,9 @@ public class GiudizioController {
 	/*
 	 * 
 	 * 
-	 * 
-	 * PATH /mensa/{id}/piatto/{id}
+	 * GET GIUDIZI /mensa/{id}/piatto/{id}/giudizio
 	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/mensa/{mensa_id}/piatto/{piatto_id}")
+	@RequestMapping(method = RequestMethod.GET, value = "/mensa/{mensa_id}/piatto/{piatto_id}/giudizio")
 	public @ResponseBody
 	List<GiudizioNew> getMensaPiatti(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
@@ -109,14 +109,18 @@ public class GiudizioController {
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
+		
+		/*
+		 * BAD REQUEST SE HO ERRORI NEI CONTROLLI
+		 */
+		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		return null;
 	}
 
 	/*
 	 * 
 	 * 
-	 * 
-	 * PATH /mensa/{id}/piatto/{id}/giudizio/add
+	 * ADD or UPDATE GIUDIZIO /mensa/{id}/piatto/{id}/giudizio/add
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/mensa/{mensa_id}/piatto/{piatto_id}/giudizio/add")
 	public @ResponseBody
@@ -150,11 +154,10 @@ public class GiudizioController {
 
 						giudizio_old = giudizioNewRepository.save(giudizio_old);
 
-//						System.out.println("giudizio_id : "
-//								+ giudizio_old.getGiudizio_id());
+						List<Likes> like_list = likeRepository
+								.getGiudizioLikes(giudizio_old.getGiudizio_id());
 
-						likeRepository.eliminaLikesGiudizio(giudizio_old
-								.getGiudizio_id());
+						likeRepository.delete(like_list);
 
 					} else {
 						GiudizioNew giudizio = new GiudizioNew();
@@ -181,6 +184,10 @@ public class GiudizioController {
 					return giudizi_list;
 
 				} else {
+					/*
+					 * SE NON TROVO PIATTO e/o MENSA CORRISPONDENTI AI VALORI
+					 * PASSATI NELL URL
+					 */
 					response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 					return null;
 				}
@@ -188,6 +195,78 @@ public class GiudizioController {
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
+		/*
+		 * BAD REQUEST SE HO ERRORI NEI CONTROLLI
+		 */
+		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		return null;
+	}
+
+	/*
+	 * 
+	 * 
+	 * DELETE GIUDIZIO
+	 * /mensa/{mensa_id}/piatto/{piatto_id}/giudizio/{giudizio_id}/delete
+	 */
+
+	@RequestMapping(method = RequestMethod.DELETE, value = "/mensa/{mensa_id}/piatto/{piatto_id}/giudizio/{giudizio_id}/delete")
+	public @ResponseBody
+	List<GiudizioNew> eliminaGiudizio(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session,
+			@PathVariable("mensa_id") Long mensa_id,
+			@PathVariable("piatto_id") Long piatto_id,
+			@PathVariable("giudizio_id") Long giudizio_id,
+			@RequestBody GiudizioDataToPost data) throws IOException {
+		try {
+			logger.info("/mensa/" + mensa_id + "/piatto/" + piatto_id
+					+ "/giudizio/" + giudizio_id + "/delete");
+
+			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
+
+			ProfileConnector profileConnector = new ProfileConnector(
+					serverAddress);
+			BasicProfile profile = profileConnector.getBasicProfile(token);
+			if (profile != null) {
+				if (mensaRepository.exists(mensa_id)
+						&& piattoRepository.exists(piatto_id)
+						&& giudizioNewRepository.exists(giudizio_id)) {
+
+					GiudizioNew giudizio_old = giudizioNewRepository
+							.getUserGiudizio(mensa_id, piatto_id, data.userId);
+					if (giudizio_old != null) {
+						// se 3esiste elimino i likes
+						List<Likes> like_list = likeRepository
+								.getGiudizioLikes(giudizio_old.getGiudizio_id());
+
+						likeRepository.delete(like_list);
+
+						// e poi elimino il giudizio
+						giudizioNewRepository.delete(giudizio_old);
+					}
+
+					/*
+					 * RITORNO LA LISTA DI GIUDIZI
+					 */
+
+					List<GiudizioNew> giudizi_list = giudizioNewRepository
+							.getGiudizi(mensa_id, piatto_id);
+
+					for (GiudizioNew giudizio : giudizi_list) {
+						giudizio.setLikes(likeRepository
+								.getGiudizioLikes(giudizio.getGiudizio_id()));
+					}
+
+					return giudizi_list;
+				}
+			}
+		} catch (Exception e) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+
+		/*
+		 * BAD REQUEST SE HO ERRORI NEI CONTROLLI
+		 */
+		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		return null;
 	}
 }

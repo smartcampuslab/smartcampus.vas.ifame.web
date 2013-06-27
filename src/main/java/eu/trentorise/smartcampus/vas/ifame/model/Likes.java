@@ -20,7 +20,6 @@ import org.hibernate.annotations.Type;
 @XmlRootElement(name = "Likes")
 @NamedQueries({
 		@NamedQuery(name = "Likes.getGiudizioLikes", query = "from Likes where giudizio_id = ?1"),
-		@NamedQuery(name = "Likes.eliminaLikesGiudizio", query = "delete Likes l where l.giudizio_id = ?1"),
 		@NamedQuery(name = "Likes.alreadyLiked", query = "from Likes where giudizio_id = ?1 and user_id = ?2") })
 public class Likes {
 
