@@ -45,7 +45,7 @@ public class GiudizioNew {
 	private Long piatto_id;
 
 	@Transient
-	List<Likes> likes;
+	private List<Likes> likes;
 
 	public GiudizioNew() {
 		super();

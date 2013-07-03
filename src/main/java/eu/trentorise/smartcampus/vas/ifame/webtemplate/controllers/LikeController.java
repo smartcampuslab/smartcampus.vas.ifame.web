@@ -102,7 +102,7 @@ public class LikeController {
 		return;
 	}
 
-	@RequestMapping(method = RequestMethod.DELETE, value = "giudizio/{giudizio_id}/like")
+	@RequestMapping(method = RequestMethod.POST, value = "giudizio/{giudizio_id}/like/delete")
 	public @ResponseBody
 	void deleteLike(HttpServletRequest request, HttpServletResponse response,
 			HttpSession session, @PathVariable("giudizio_id") Long giudizio_id,
@@ -113,22 +113,23 @@ public class LikeController {
 			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
 			ProfileConnector profileConnector = new ProfileConnector(
 					serverAddress);
+
 			BasicProfile profile = profileConnector.getBasicProfile(token);
 			if (profile != null) {
-				// se l'id del giudizio non esiste torno BAD REQUEST
+				// se l'id del giudizio o del like non esiste torno BAD REQUEST
 				if (giudizioNewRepository.exists(giudizio_id)) {
-					if (like.getUser_id() != null) {
-						// controllo se c'era già il like
-						Likes old_like = likeRepository.alreadyLiked(
-								giudizio_id, like.getUser_id());
-						if (old_like != null) {
-							likeRepository.delete(old_like);
-							return;
-						} else {
-							response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-							return;
-						}
 
+					Likes old_like = likeRepository.alreadyLiked(giudizio_id,
+							like.getUser_id());
+
+					if (old_like != null) {
+
+						likeRepository.delete(old_like);
+						return;
+
+					} else {
+						response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+						return;
 					}
 				}
 			}

@@ -80,7 +80,8 @@ public class GiudizioController {
 			@PathVariable("mensa_id") Long mensa_id,
 			@PathVariable("piatto_id") Long piatto_id) throws IOException {
 		try {
-			logger.info("/mensa/" + mensa_id + "/piatto/" + piatto_id);
+			logger.info("/mensa/" + mensa_id + "/piatto/" + piatto_id
+					+ "/giudizio");
 
 			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
 			ProfileConnector profileConnector = new ProfileConnector(
@@ -102,6 +103,9 @@ public class GiudizioController {
 					return giudizi_list;
 
 				} else {
+					/*
+					 * not found se non trova mensa e/o piatto
+					 */
 					response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 					return null;
 				}
@@ -109,7 +113,54 @@ public class GiudizioController {
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
-		
+
+		/*
+		 * BAD REQUEST SE HO ERRORI NEI CONTROLLI
+		 */
+		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		return null;
+	}
+
+	/*
+	 * 
+	 * 
+	 * GET user giudizio /mensa/{id}/piatto/{id}/giudizio
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/mensa/{mensa_id}/piatto/{piatto_id}/user/{user_id}/giudizio")
+	public @ResponseBody
+	GiudizioNew getUserGiudizio(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session,
+			@PathVariable("mensa_id") Long mensa_id,
+			@PathVariable("piatto_id") Long piatto_id,
+			@PathVariable("user_id") Long user_id) throws IOException {
+		try {
+			logger.info("/mensa/" + mensa_id + "/piatto/" + piatto_id
+					+ "/user_id/" + user_id + "/giudizio");
+
+			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
+			ProfileConnector profileConnector = new ProfileConnector(
+					serverAddress);
+			BasicProfile profile = profileConnector.getBasicProfile(token);
+			if (profile != null) {
+
+				if (mensaRepository.exists(mensa_id)
+						&& piattoRepository.exists(piatto_id)) {
+
+					return giudizioNewRepository.getUserGiudizio(mensa_id,
+							piatto_id, user_id);
+
+				} else {
+					/*
+					 * not found se non trova mensa e/o piatto
+					 */
+					response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+					return null;
+				}
+			}
+		} catch (Exception e) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+
 		/*
 		 * BAD REQUEST SE HO ERRORI NEI CONTROLLI
 		 */
