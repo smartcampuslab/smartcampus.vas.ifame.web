@@ -7,9 +7,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,19 +23,19 @@ import eu.trentorise.smartcampus.ac.provider.filters.AcProviderFilter;
 import eu.trentorise.smartcampus.profileservice.ProfileConnector;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 import eu.trentorise.smartcampus.vas.ifame.model.GiudizioDataToPost;
-import eu.trentorise.smartcampus.vas.ifame.model.GiudizioNew;
+import eu.trentorise.smartcampus.vas.ifame.model.Giudizio;
 import eu.trentorise.smartcampus.vas.ifame.model.Likes;
-import eu.trentorise.smartcampus.vas.ifame.model.Mensa;
-import eu.trentorise.smartcampus.vas.ifame.repository.GiudizioNewRepository;
+import eu.trentorise.smartcampus.vas.ifame.model.Piatto;
+import eu.trentorise.smartcampus.vas.ifame.repository.GiudizioRepository;
 import eu.trentorise.smartcampus.vas.ifame.repository.LikesRepository;
 import eu.trentorise.smartcampus.vas.ifame.repository.MensaRepository;
 import eu.trentorise.smartcampus.vas.ifame.repository.PiattoRepository;
 
 @Controller("GiudizioController")
-public class GiudizioController {
+public class IGraditoController {
 
 	private static final Logger logger = Logger
-			.getLogger(GiudizioController.class);
+			.getLogger(IGraditoController.class);
 	@Autowired
 	private AcService acService;
 
@@ -49,7 +46,7 @@ public class GiudizioController {
 	MensaRepository mensaRepository;
 
 	@Autowired
-	GiudizioNewRepository giudizioNewRepository;
+	GiudizioRepository giudizioNewRepository;
 
 	@Autowired
 	LikesRepository likeRepository;
@@ -71,11 +68,38 @@ public class GiudizioController {
 	/*
 	 * 
 	 * 
+	 * RITORNA LA LISTA DI TUTTI PIATTI PER IGRADITO
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/getpiatti")
+	public @ResponseBody
+	List<Piatto> getAllPiatti(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session)
+			throws IOException {
+		try {
+			logger.info("/getpiatti");
+
+			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
+			ProfileConnector profileConnector = new ProfileConnector(
+					serverAddress);
+			BasicProfile profile = profileConnector.getBasicProfile(token);
+			if (profile != null) {
+
+				return piattoRepository.findAll();
+			}
+		} catch (Exception e) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+	}
+
+	/*
+	 * 
+	 * 
 	 * GET GIUDIZI /mensa/{id}/piatto/{id}/giudizio
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/mensa/{mensa_id}/piatto/{piatto_id}/giudizio")
 	public @ResponseBody
-	List<GiudizioNew> getMensaPiatti(HttpServletRequest request,
+	List<Giudizio> getMensaPiatti(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
 			@PathVariable("mensa_id") Long mensa_id,
 			@PathVariable("piatto_id") Long piatto_id) throws IOException {
@@ -92,10 +116,10 @@ public class GiudizioController {
 				if (mensaRepository.exists(mensa_id)
 						&& piattoRepository.exists(piatto_id)) {
 
-					List<GiudizioNew> giudizi_list = giudizioNewRepository
+					List<Giudizio> giudizi_list = giudizioNewRepository
 							.getGiudizi(mensa_id, piatto_id);
 
-					for (GiudizioNew giudizio : giudizi_list) {
+					for (Giudizio giudizio : giudizi_list) {
 						giudizio.setLikes(likeRepository
 								.getGiudizioLikes(giudizio.getGiudizio_id()));
 					}
@@ -128,7 +152,7 @@ public class GiudizioController {
 	 */
 	@RequestMapping(method = RequestMethod.GET, value = "/mensa/{mensa_id}/piatto/{piatto_id}/user/{user_id}/giudizio")
 	public @ResponseBody
-	GiudizioNew getUserGiudizio(HttpServletRequest request,
+	Giudizio getUserGiudizio(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
 			@PathVariable("mensa_id") Long mensa_id,
 			@PathVariable("piatto_id") Long piatto_id,
@@ -175,7 +199,7 @@ public class GiudizioController {
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/mensa/{mensa_id}/piatto/{piatto_id}/giudizio/add")
 	public @ResponseBody
-	List<GiudizioNew> aggiungiGiudizio(HttpServletRequest request,
+	List<Giudizio> aggiungiGiudizio(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
 			@PathVariable("mensa_id") Long mensa_id,
 			@PathVariable("piatto_id") Long piatto_id,
@@ -192,11 +216,16 @@ public class GiudizioController {
 
 				if (mensaRepository.exists(mensa_id)
 						&& piattoRepository.exists(piatto_id)) {
-
-					GiudizioNew giudizio_old = giudizioNewRepository
+					/*
+					 * controllo se ha già inserito un giudizio
+					 */
+					Giudizio giudizio_old = giudizioNewRepository
 							.getUserGiudizio(mensa_id, piatto_id, data.userId);
 
 					if (giudizio_old != null) {
+						/*
+						 * lo aggiorno
+						 */
 						giudizio_old.setUltimo_aggiornamento(new Date(System
 								.currentTimeMillis()));
 
@@ -211,7 +240,10 @@ public class GiudizioController {
 						likeRepository.delete(like_list);
 
 					} else {
-						GiudizioNew giudizio = new GiudizioNew();
+						/*
+						 * lo aggiungo
+						 */
+						Giudizio giudizio = new Giudizio();
 
 						giudizio.setUltimo_aggiornamento(new Date(System
 								.currentTimeMillis()));
@@ -224,10 +256,13 @@ public class GiudizioController {
 						giudizioNewRepository.save(giudizio);
 					}
 
-					List<GiudizioNew> giudizi_list = giudizioNewRepository
+					/*
+					 * ritorno la lista di giudizi con anche i likes associati
+					 */
+					List<Giudizio> giudizi_list = giudizioNewRepository
 							.getGiudizi(mensa_id, piatto_id);
 
-					for (GiudizioNew giudizio : giudizi_list) {
+					for (Giudizio giudizio : giudizi_list) {
 						giudizio.setLikes(likeRepository
 								.getGiudizioLikes(giudizio.getGiudizio_id()));
 					}
@@ -262,7 +297,7 @@ public class GiudizioController {
 
 	@RequestMapping(method = RequestMethod.DELETE, value = "/mensa/{mensa_id}/piatto/{piatto_id}/giudizio/{giudizio_id}/delete")
 	public @ResponseBody
-	List<GiudizioNew> eliminaGiudizio(HttpServletRequest request,
+	List<Giudizio> eliminaGiudizio(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
 			@PathVariable("mensa_id") Long mensa_id,
 			@PathVariable("piatto_id") Long piatto_id,
@@ -282,7 +317,7 @@ public class GiudizioController {
 						&& piattoRepository.exists(piatto_id)
 						&& giudizioNewRepository.exists(giudizio_id)) {
 
-					GiudizioNew giudizio_old = giudizioNewRepository
+					Giudizio giudizio_old = giudizioNewRepository
 							.getUserGiudizio(mensa_id, piatto_id, data.userId);
 					if (giudizio_old != null) {
 						// se 3esiste elimino i likes
@@ -299,10 +334,10 @@ public class GiudizioController {
 					 * RITORNO LA LISTA DI GIUDIZI
 					 */
 
-					List<GiudizioNew> giudizi_list = giudizioNewRepository
+					List<Giudizio> giudizi_list = giudizioNewRepository
 							.getGiudizi(mensa_id, piatto_id);
 
-					for (GiudizioNew giudizio : giudizi_list) {
+					for (Giudizio giudizio : giudizi_list) {
 						giudizio.setLikes(likeRepository
 								.getGiudizioLikes(giudizio.getGiudizio_id()));
 					}

@@ -21,21 +21,21 @@ import eu.trentorise.smartcampus.ac.provider.AcService;
 import eu.trentorise.smartcampus.ac.provider.filters.AcProviderFilter;
 import eu.trentorise.smartcampus.profileservice.ProfileConnector;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
-import eu.trentorise.smartcampus.vas.ifame.model.GiudizioNew;
+import eu.trentorise.smartcampus.vas.ifame.model.Giudizio;
 import eu.trentorise.smartcampus.vas.ifame.model.Likes;
-import eu.trentorise.smartcampus.vas.ifame.repository.GiudizioNewRepository;
+import eu.trentorise.smartcampus.vas.ifame.repository.GiudizioRepository;
 import eu.trentorise.smartcampus.vas.ifame.repository.LikesRepository;
 
 @Controller("LikeController")
 public class LikeController {
 
 	private static final Logger logger = Logger
-			.getLogger(GiudizioController.class);
+			.getLogger(IGraditoController.class);
 	@Autowired
 	private AcService acService;
 
 	@Autowired
-	GiudizioNewRepository giudizioNewRepository;
+	GiudizioRepository giudizioNewRepository;
 
 	@Autowired
 	LikesRepository likeRepository;
@@ -54,7 +54,7 @@ public class LikeController {
 	@Value("${webapp.name}")
 	private String appName;
 
-	@RequestMapping(method = RequestMethod.POST, value = "giudizio/{giudizio_id}/like")
+	@RequestMapping(method = RequestMethod.POST, value = "/giudizio/{giudizio_id}/like")
 	public @ResponseBody
 	void doLike(HttpServletRequest request, HttpServletResponse response,
 			HttpSession session, @PathVariable("giudizio_id") Long giudizio_id,
@@ -102,7 +102,7 @@ public class LikeController {
 		return;
 	}
 
-	@RequestMapping(method = RequestMethod.POST, value = "giudizio/{giudizio_id}/like/delete")
+	@RequestMapping(method = RequestMethod.POST, value = "/giudizio/{giudizio_id}/like/delete")
 	public @ResponseBody
 	void deleteLike(HttpServletRequest request, HttpServletResponse response,
 			HttpSession session, @PathVariable("giudizio_id") Long giudizio_id,

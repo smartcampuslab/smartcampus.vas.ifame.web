@@ -2,7 +2,6 @@ package eu.trentorise.smartcampus.vas.ifame.webtemplate.controllers;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
@@ -21,7 +20,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -35,10 +33,8 @@ import eu.trentorise.smartcampus.vas.ifame.model.MenuDelGiorno;
 import eu.trentorise.smartcampus.vas.ifame.model.MenuDelMese;
 import eu.trentorise.smartcampus.vas.ifame.model.MenuDellaSettimana;
 import eu.trentorise.smartcampus.vas.ifame.model.Piatto;
-//import eu.trentorise.smartcampus.vas.ifame.model.Piatto_Mensa;
 import eu.trentorise.smartcampus.vas.ifame.repository.MensaRepository;
 import eu.trentorise.smartcampus.vas.ifame.repository.PiattoRepository;
-//import eu.trentorise.smartcampus.vas.ifame.repository.Piatto_MensaRepository;
 import eu.trentorise.smartcampus.vas.ifame.utils.MenuXlsUtil;
 
 @Controller("MenuController")
@@ -70,33 +66,6 @@ public class MenuController {
 	@Autowired
 	@Value("${webapp.name}")
 	private String appName;
-
-	/*
-	 * 
-	 * 
-	 * old method no more used
-	 */
-	@RequestMapping(method = RequestMethod.GET, value = "/getpiatti")
-	public @ResponseBody
-	List<Piatto> getAllPiatti(HttpServletRequest request,
-			HttpServletResponse response, HttpSession session)
-			throws IOException {
-		try {
-			logger.info("/getallpiatti");
-
-			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-			ProfileConnector profileConnector = new ProfileConnector(
-					serverAddress);
-			BasicProfile profile = profileConnector.getBasicProfile(token);
-			if (profile != null) {
-
-				return piattoRepository.findAll();
-			}
-		} catch (Exception e) {
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		}
-		return null;
-	}
 
 	/*
 	 * 
@@ -170,6 +139,9 @@ public class MenuController {
 	 * 
 	 * 
 	 * ALTERNATIVE CONTROLLER
+	 * 
+	 * restituisce le alternative al menu del giorno che sono sempre fisse
+	 * leggendo l'excel
 	 */
 
 	@RequestMapping(method = RequestMethod.GET, value = "/getalternative")
@@ -218,25 +190,6 @@ public class MenuController {
 
 	/*
 	 * 
-	 * SOLO PER INIZIALIZZARE LE TABELLE
-	 */
-	private Workbook getWorkbook() {
-		InputStream is = getClass().getResourceAsStream("/Menu.xls");
-		WorkbookSettings xlsSettings = new WorkbookSettings();
-		xlsSettings.setDrawingsDisabled(true);
-		Workbook w = null;
-		try {
-			w = Workbook.getWorkbook(is, xlsSettings);
-		} catch (BiffException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return w;
-	}
-
-	/*
-	 * 
 	 * 
 	 * 
 	 * 
@@ -244,14 +197,32 @@ public class MenuController {
 	 */
 
 	@PostConstruct
-	private void inizializzaDatabaseTabelle() {
+	private void inizializzaDatabase() {
 
 		/*
 		 * 
-		 * Inizializzo i piatti
+		 * Inizializzo i piatti leggendo il file excel
 		 */
-		List<MenuDellaSettimana> mdslist = MenuXlsUtil.getMenuDelMese(
-				getWorkbook()).getMenuDellaSettimana();
+		InputStream is = getClass().getResourceAsStream("/Menu.xls");
+
+		WorkbookSettings xlsSettings = new WorkbookSettings();
+
+		xlsSettings.setDrawingsDisabled(true);
+
+		Workbook w = null;
+
+		try {
+
+			w = Workbook.getWorkbook(is, xlsSettings);
+
+		} catch (BiffException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		List<MenuDellaSettimana> mdslist = MenuXlsUtil.getMenuDelMese(w)
+				.getMenuDellaSettimana();
 
 		Set<Piatto> setPiatti = new HashSet<Piatto>();
 

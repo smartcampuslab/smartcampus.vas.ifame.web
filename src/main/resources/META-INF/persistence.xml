@@ -5,11 +5,7 @@
 	<persistence-unit name="corsi.db">
 		<class>eu.trentorise.smartcampus.vas.ifame.model.Mensa</class>
 		<class>eu.trentorise.smartcampus.vas.ifame.model.Piatto</class>
-		<class>eu.trentorise.smartcampus.vas.ifame.model.GiudizioNew</class>
-		<!--
 		<class>eu.trentorise.smartcampus.vas.ifame.model.Giudizio</class>
-		<class>eu.trentorise.smartcampus.vas.ifame.model.Piatto_Mensa</class>
-		-->
 		<class>eu.trentorise.smartcampus.vas.ifame.model.Likes</class>
 	</persistence-unit>
 </persistence>

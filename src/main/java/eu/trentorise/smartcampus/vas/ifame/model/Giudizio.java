@@ -1,23 +1,22 @@
-/*
 package eu.trentorise.smartcampus.vas.ifame.model;
 
 import java.util.Date;
+import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.FetchType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 
-
- @Entity
- @XmlRootElement(name = "Giudizio")
-
-
+@Entity
+@XmlRootElement(name = "Giudizio")
+@NamedQueries({
+		@NamedQuery(name = "Giudizio.getGiudizi", query = "from Giudizio where mensa_id = ?1 and piatto_id = ?2"),
+		@NamedQuery(name = "Giudizio.getUserGiudizio", query = "from Giudizio where mensa_id = ?1 and piatto_id = ?2 and user_id = ?3") })
 public class Giudizio {
 
 	@Id
@@ -36,10 +35,14 @@ public class Giudizio {
 	@Column(name = "USER_ID")
 	private Long user_id;
 
-	@ManyToOne
-	// (fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn(name = "PIATTO_MENSA_ID")
-	private Piatto_Mensa piatto_mensa;
+	@Column(name = "MENSA_ID")
+	private Long mensa_id;
+
+	@Column(name = "PIATTO_ID")
+	private Long piatto_id;
+
+	@Transient
+	private List<Likes> likes;
 
 	public Giudizio() {
 		super();
@@ -85,21 +88,28 @@ public class Giudizio {
 		this.user_id = user_id;
 	}
 
-	public Piatto_Mensa getPiatto_mensa() {
-		return piatto_mensa;
+	public Long getMensa_id() {
+		return mensa_id;
 	}
 
-	public void setPiatto_mensa(Piatto_Mensa piatto_mensa) {
-		this.piatto_mensa = piatto_mensa;
+	public void setMensa_id(Long mensa_id) {
+		this.mensa_id = mensa_id;
 	}
 
-	@Override
-	public String toString() {
-		return "Giudizio [giudizio_id=" + giudizio_id + ", voto=" + voto
-				+ ", commento=" + commento + ", ultimo_aggiornamento="
-				+ ultimo_aggiornamento + ", user_id=" + user_id
-				+ ", piatto_mensa=" + piatto_mensa + "]";
+	public Long getPiatto_id() {
+		return piatto_id;
+	}
+
+	public void setPiatto_id(Long piatto_id) {
+		this.piatto_id = piatto_id;
+	}
+
+	public List<Likes> getLikes() {
+		return likes;
+	}
+
+	public void setLikes(List<Likes> likes) {
+		this.likes = likes;
 	}
 
 }
-*/

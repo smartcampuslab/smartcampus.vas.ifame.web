@@ -15,12 +15,6 @@ import eu.trentorise.smartcampus.vas.ifame.model.Piatto;
 
 public class MenuXlsUtil {
 	/*
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
 	 * ALTERNATIVE
 	 */
 
@@ -34,8 +28,8 @@ public class MenuXlsUtil {
 
 		final int COLONNA_INIZIALE = 0;
 		final int COLONNA_FINALE = 7;
-		final int RIGA_INIZIALE = 15;
-		final int RIGA_FINALE = 18;
+		final int RIGA_INIZIALE = 16;
+		final int RIGA_FINALE = 19;
 
 		Sheet sheet = workbook.getSheet(SHEET);
 		for (int colonna = COLONNA_INIZIALE; colonna <= COLONNA_FINALE; colonna = colonna + 2) {
@@ -55,28 +49,29 @@ public class MenuXlsUtil {
 	}
 
 	/*
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
 	 * GET MENU DEL GIORNO
 	 */
 
 	public static MenuDelGiorno getMenuDelGiorno(Integer targetDay,
 			Workbook workbook) {
 
+		final int COLONNA_INIZIALE = 0;
+		final int COLONNA_FINALE = 14; // shhet.getColumns();
+		final int RIGA_INIZIALE = 5;
+		final int RIGA_FINALE = 13;
+		final int SHEET_INIZIALE = 0;
+		final int SHEET_FINALE = 5;
+
 		List<Piatto> listaPiatti = new ArrayList<Piatto>();
 		Integer currentDay = 0;
 
 		// ciclo sui fogli desiderati (evito la cena)
-		for (int numSettimana = 0; numSettimana < 5; numSettimana++) {
+		for (int numSettimana = SHEET_INIZIALE; numSettimana < SHEET_FINALE; numSettimana++) {
 			Sheet sheet = workbook.getSheet(numSettimana);
 
 			// controllo ogni due colonne (evitando le kcal)
-			for (int colonnaGiorno = 0; colonnaGiorno < sheet.getColumns(); colonnaGiorno = colonnaGiorno + 2) {
-				Cell current_day = sheet.getCell(colonnaGiorno, 3);
+			for (int colonnaGiorno = COLONNA_INIZIALE; colonnaGiorno < COLONNA_FINALE; colonnaGiorno = colonnaGiorno + 2) {
+				Cell current_day = sheet.getCell(colonnaGiorno, RIGA_INIZIALE);
 				CellType day_type = current_day.getType(); // se
 
 				// il giorno esiste aumento il contatore
@@ -85,7 +80,7 @@ public class MenuXlsUtil {
 
 				// se il giorno ricercato è quello che corrente
 				if (currentDay == targetDay) {
-					for (int i = 4; i < 12; i++) {
+					for (int i = RIGA_INIZIALE; i < RIGA_FINALE; i++) {
 						Cell cell = sheet.getCell(colonnaGiorno, i);
 						CellType type = cell.getType();
 						if (type == CellType.LABEL) {
@@ -106,91 +101,17 @@ public class MenuXlsUtil {
 	}
 
 	/*
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * GET MENU DELLA SETTIMANA
-	 */
-
-	public static MenuDellaSettimana getMenuDellaSettimana(Integer targetDay,
-			Workbook workbook) {
-
-		MenuDellaSettimana mds = new MenuDellaSettimana();
-		List<MenuDelGiorno> mdglist = new ArrayList<MenuDelGiorno>();
-
-		Integer currentDay = 0;
-		// ciclo sui fogli desiderati (evito la cena)
-		for (int numSettimana = 0; numSettimana < 5; numSettimana++) {
-			// -1 è perchè in tutti sti for si fa un ciclo in piu
-			int giorniDaInizioSettimanaCorrente = -1;
-			Sheet sheet = workbook.getSheet(numSettimana);
-
-			// controllo ogni due colonne (evitando le kcal)
-			for (int colonnaGiorno = 0; colonnaGiorno < sheet.getColumns(); colonnaGiorno = colonnaGiorno + 2) {
-				Cell current_day = sheet.getCell(colonnaGiorno, 3);
-				CellType day_type = current_day.getType();
-
-				// se il giorno esiste aumento il contatore
-				if (day_type == CellType.LABEL) {
-					currentDay++;
-					giorniDaInizioSettimanaCorrente++;
-				}
-
-				// il giorno ricercato è quello che esamino
-				if (currentDay == targetDay) {
-					int primoGiornoSettimanaCorrente = currentDay
-							- giorniDaInizioSettimanaCorrente;
-					// set giorno di inizio di settimana in menu della
-					// settimana
-					mds.setStart_day(primoGiornoSettimanaCorrente);
-					// ciclo per i giorni della settimana che mi interessa
-					for (int colonnaMenuDelGiorno = 0; colonnaMenuDelGiorno < sheet
-							.getColumns(); colonnaMenuDelGiorno = colonnaMenuDelGiorno + 2) {
-
-						// ogni piatto li inserisco nella lista
-						List<Piatto> piattiDelGiornoList = new ArrayList<Piatto>();
-						for (int i = 4; i < 12; i++) {
-							Cell cell = sheet.getCell(colonnaMenuDelGiorno, i);
-							CellType type = cell.getType();
-							if (type == CellType.LABEL) {
-								Cell kcal = sheet.getCell(
-										colonnaMenuDelGiorno + 1, i);
-								piattiDelGiornoList.add(new Piatto(cell
-										.getContents(), kcal.getContents()));
-
-							}
-						}
-						// ogni giorno ho un nuovo menu del giorno
-						MenuDelGiorno mdg = new MenuDelGiorno();
-						mdg.setDay(primoGiornoSettimanaCorrente);
-						mdg.setPiattiDelGiorno(piattiDelGiornoList);
-						mdglist.add(mdg);
-						// incremento il giorno della settimana
-						primoGiornoSettimanaCorrente++;
-					}
-				}
-			}
-		}
-
-		mds.setMenuDelGiorno(mdglist);
-
-		return mds;
-	}
-
-	/*
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
 	 * GET MENU DEL MESE
 	 */
 
 	public static MenuDelMese getMenuDelMese(Workbook workbook) {
+
+		final int COLONNA_INIZIALE = 0;
+		final int COLONNA_FINALE = 14; // shhet.getColumns();
+		final int RIGA_INIZIALE = 5;
+		final int RIGA_FINALE = 13;
+		final int SHEET_INIZIALE = 0;
+		final int SHEET_FINALE = 5;
 
 		// variabile per tenere il giorno corrente tracciato
 		int giornoDelMese = 0;
@@ -198,7 +119,7 @@ public class MenuXlsUtil {
 		MenuDelMese mdm = new MenuDelMese();
 		ArrayList<MenuDellaSettimana> mdslist = new ArrayList<MenuDellaSettimana>();
 		// ciclo sui fogli desiderati (evito la cena)
-		for (int numSettimana = 0; numSettimana < 5; numSettimana++) {
+		for (int numSettimana = SHEET_INIZIALE; numSettimana < SHEET_FINALE; numSettimana++) {
 			// ogni foglio ha una settimana
 			Sheet sheet = workbook.getSheet(numSettimana);
 			// variabile per tracciare qual'e' il primo giorno della settimana
@@ -209,8 +130,8 @@ public class MenuXlsUtil {
 			MenuDellaSettimana mds = new MenuDellaSettimana();
 			List<MenuDelGiorno> mdglist = new ArrayList<MenuDelGiorno>();
 			// controllo per ogni giorno due colonne (evitando le kcal)
-			for (int colonnaGiorno = 0; colonnaGiorno < sheet.getColumns(); colonnaGiorno = colonnaGiorno + 2) {
-				Cell current_day = sheet.getCell(colonnaGiorno, 3);
+			for (int colonnaGiorno = COLONNA_INIZIALE; colonnaGiorno < COLONNA_FINALE; colonnaGiorno = colonnaGiorno + 2) {
+				Cell current_day = sheet.getCell(colonnaGiorno, RIGA_INIZIALE);
 				CellType day_type = current_day.getType();
 				// se ho scritte nella label il giorno esiste e aumento il
 				// contatore ho un giorno in piu
@@ -229,7 +150,8 @@ public class MenuXlsUtil {
 					MenuDelGiorno mdg = new MenuDelGiorno();
 					List<Piatto> piattiDelGiornoList = new ArrayList<Piatto>();
 					// ciclo sulle right del giorno considerato
-					for (int riga = 4; riga < 12; riga++) {
+					for (int riga = RIGA_INIZIALE; riga < RIGA_FINALE; riga++) {
+
 						Cell piattoNameCell = sheet
 								.getCell(colonnaGiorno, riga);
 						CellType piattoNameCellType = piattoNameCell.getType();

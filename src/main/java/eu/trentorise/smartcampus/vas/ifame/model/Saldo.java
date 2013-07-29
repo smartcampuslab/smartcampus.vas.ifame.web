@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "iSoldi")
+@XmlRootElement(name = "Saldo")
 public class Saldo {
 
 	private Long user_id;
