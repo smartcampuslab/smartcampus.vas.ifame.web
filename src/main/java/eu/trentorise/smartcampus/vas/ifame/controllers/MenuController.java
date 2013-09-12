@@ -1,4 +1,4 @@
-package eu.trentorise.smartcampus.vas.ifame.webtemplate.controllers;
+package eu.trentorise.smartcampus.vas.ifame.controllers;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,14 +19,13 @@ import jxl.read.biff.BiffException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import eu.trentorise.smartcampus.ac.provider.AcService;
-import eu.trentorise.smartcampus.ac.provider.filters.AcProviderFilter;
-import eu.trentorise.smartcampus.profileservice.ProfileConnector;
+import eu.trentorise.smartcampus.profileservice.BasicProfileService;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 import eu.trentorise.smartcampus.vas.ifame.model.Mensa;
 import eu.trentorise.smartcampus.vas.ifame.model.MenuDelGiorno;
@@ -50,9 +49,6 @@ public class MenuController {
 	@Autowired
 	MensaRepository mensaRepository;
 
-	@Autowired
-	private AcService acService;
-
 	/*
 	 * the base url of the service. Configure it in webtemplate.properties
 	 */
@@ -75,6 +71,15 @@ public class MenuController {
 	 * MENU DEL GIORNO CONTROLLER
 	 */
 
+	@Autowired
+	@Value("${profile.address}")
+	private String profileaddress;
+
+	private String getToken(HttpServletRequest request) {
+		return (String) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+	}
+
 	@RequestMapping(method = RequestMethod.GET, value = "/getmenudelgiorno")
 	public @ResponseBody
 	MenuDelGiorno getMenuDelGiornoStringList(HttpServletRequest request,
@@ -83,10 +88,11 @@ public class MenuController {
 		try {
 			logger.info("/getmenudelgiorno");
 
-			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-			ProfileConnector profileConnector = new ProfileConnector(
-					serverAddress);
-			BasicProfile profile = profileConnector.getBasicProfile(token);
+			String token = getToken(request);
+			BasicProfileService service = new BasicProfileService(
+					profileaddress);
+			BasicProfile profile = service.getBasicProfile(token);
+			Long userId = Long.valueOf(profile.getUserId());
 			if (profile != null) {
 
 				Calendar data = Calendar.getInstance();
@@ -116,10 +122,11 @@ public class MenuController {
 		try {
 
 			logger.info("/getmenudelmese");
-			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-			ProfileConnector profileConnector = new ProfileConnector(
-					serverAddress);
-			BasicProfile profile = profileConnector.getBasicProfile(token);
+			String token = getToken(request);
+			BasicProfileService service = new BasicProfileService(
+					profileaddress);
+			BasicProfile profile = service.getBasicProfile(token);
+			Long userId = Long.valueOf(profile.getUserId());
 			if (profile != null) {
 
 				MenuDelMese mdm = MenuXlsUtil.getMenuDelMese(workbook);
@@ -152,10 +159,11 @@ public class MenuController {
 		try {
 
 			logger.info("/getalternative");
-			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-			ProfileConnector profileConnector = new ProfileConnector(
-					serverAddress);
-			BasicProfile profile = profileConnector.getBasicProfile(token);
+			String token = getToken(request);
+			BasicProfileService service = new BasicProfileService(
+					profileaddress);
+			BasicProfile profile = service.getBasicProfile(token);
+			Long userId = Long.valueOf(profile.getUserId());
 			if (profile != null) {
 
 				return MenuXlsUtil.getAlternative(workbook);

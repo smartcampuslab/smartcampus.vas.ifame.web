@@ -1,4 +1,4 @@
-package eu.trentorise.smartcampus.vas.ifame.webtemplate.controllers;
+package eu.trentorise.smartcampus.vas.ifame.controllers;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -12,14 +12,13 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import eu.trentorise.smartcampus.ac.provider.AcService;
-import eu.trentorise.smartcampus.ac.provider.filters.AcProviderFilter;
-import eu.trentorise.smartcampus.profileservice.ProfileConnector;
+import eu.trentorise.smartcampus.profileservice.BasicProfileService;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 import eu.trentorise.smartcampus.vas.ifame.model.Saldo;
 import eu.trentorise.smartcampus.vas.ifame.model.Transaction;
@@ -29,8 +28,6 @@ public class ISoldiController {
 
 	private static final Logger logger = Logger
 			.getLogger(ISoldiController.class);
-	@Autowired
-	private AcService acService;
 
 	/*
 	 * the base url of the service. Configure it in webtemplate.properties
@@ -46,6 +43,15 @@ public class ISoldiController {
 	@Value("${webapp.name}")
 	private String appName;
 
+	@Autowired
+	@Value("${profile.address}")
+	private String profileaddress;
+
+	private String getToken(HttpServletRequest request) {
+		return (String) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+	}
+
 	@RequestMapping(method = RequestMethod.GET, value = "/isoldi/getsoldi")
 	public @ResponseBody
 	Saldo getSoldi(HttpServletRequest request, HttpServletResponse response,
@@ -55,10 +61,11 @@ public class ISoldiController {
 
 			logger.info("/isoldi/getsoldi");
 
-			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-			ProfileConnector profileConnector = new ProfileConnector(
-					serverAddress);
-			BasicProfile profile = profileConnector.getBasicProfile(token);
+			String token = getToken(request);
+			BasicProfileService service = new BasicProfileService(
+					profileaddress);
+			BasicProfile profile = service.getBasicProfile(token);
+			Long userId = Long.valueOf(profile.getUserId());
 			if (profile != null) {
 				/*
 				 * ritorna un oggetto saldo inizializzato a random

@@ -2,7 +2,6 @@ package eu.trentorise.smartcampus.vas.ifame.model;
 
 import java.util.List;
 
-
 public class MenuDelGiorno {
 
 	private List<Piatto> piattiDelGiorno;

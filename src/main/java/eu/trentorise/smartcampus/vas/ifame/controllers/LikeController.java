@@ -1,7 +1,6 @@
-package eu.trentorise.smartcampus.vas.ifame.webtemplate.controllers;
+package eu.trentorise.smartcampus.vas.ifame.controllers;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,11 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import eu.trentorise.smartcampus.ac.provider.AcService;
-import eu.trentorise.smartcampus.ac.provider.filters.AcProviderFilter;
-import eu.trentorise.smartcampus.profileservice.ProfileConnector;
+import eu.trentorise.smartcampus.profileservice.BasicProfileService;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
-import eu.trentorise.smartcampus.vas.ifame.model.Giudizio;
 import eu.trentorise.smartcampus.vas.ifame.model.Likes;
 import eu.trentorise.smartcampus.vas.ifame.repository.GiudizioRepository;
 import eu.trentorise.smartcampus.vas.ifame.repository.LikesRepository;
@@ -31,8 +28,6 @@ public class LikeController {
 
 	private static final Logger logger = Logger
 			.getLogger(IGraditoController.class);
-	@Autowired
-	private AcService acService;
 
 	@Autowired
 	GiudizioRepository giudizioNewRepository;
@@ -54,6 +49,15 @@ public class LikeController {
 	@Value("${webapp.name}")
 	private String appName;
 
+	@Autowired
+	@Value("${profile.address}")
+	private String profileaddress;
+
+	private String getToken(HttpServletRequest request) {
+		return (String) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+	}
+
 	@RequestMapping(method = RequestMethod.POST, value = "/giudizio/{giudizio_id}/like")
 	public @ResponseBody
 	void doLike(HttpServletRequest request, HttpServletResponse response,
@@ -62,10 +66,11 @@ public class LikeController {
 		try {
 			logger.info("giudizio/" + giudizio_id + "/like");
 
-			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-			ProfileConnector profileConnector = new ProfileConnector(
-					serverAddress);
-			BasicProfile profile = profileConnector.getBasicProfile(token);
+			String token = getToken(request);
+			BasicProfileService service = new BasicProfileService(
+					profileaddress);
+			BasicProfile profile = service.getBasicProfile(token);
+			Long userId = Long.valueOf(profile.getUserId());
 			if (profile != null) {
 				// se l'id del giudizio non esiste torno BAD REQUEST
 				if (giudizioNewRepository.exists(giudizio_id)) {
@@ -73,7 +78,7 @@ public class LikeController {
 						if (like.getIs_like() != null) {
 							// ho tutti i dati compreso like
 
-							// controllo se c'era già il like
+							// controllo se c'era giï¿½ il like
 							Likes old_like = likeRepository.alreadyLiked(
 									giudizio_id, like.getUser_id());
 
@@ -109,12 +114,11 @@ public class LikeController {
 			@RequestBody Likes like) throws IOException {
 		try {
 			logger.info("giudizio/" + giudizio_id + "/like -> delete");
-
-			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-			ProfileConnector profileConnector = new ProfileConnector(
-					serverAddress);
-
-			BasicProfile profile = profileConnector.getBasicProfile(token);
+			String token = getToken(request);
+			BasicProfileService service = new BasicProfileService(
+					profileaddress);
+			BasicProfile profile = service.getBasicProfile(token);
+			Long userId = Long.valueOf(profile.getUserId());
 			if (profile != null) {
 				// se l'id del giudizio o del like non esiste torno BAD REQUEST
 				if (giudizioNewRepository.exists(giudizio_id)) {

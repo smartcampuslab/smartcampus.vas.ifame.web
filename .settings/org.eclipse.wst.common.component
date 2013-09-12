@@ -4,6 +4,15 @@
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+        <dependent-module archiveName="aac.client-1.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/aac.client/aac.client">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="smartcampus.client.commons-2.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/smartcampus.client.commons/smartcampus.client.commons">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="communicator.client-2.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/communicator.client/communicator.client">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <property name="context-root" value="web-ifame"/>
         <property name="java-output-path" value="/vas-ifame-SmartcampusVasIfameWeb/target/classes"/>
     </wb-module>

@@ -18,14 +18,11 @@
 	<mvc:annotation-driven/>
 
 	<!-- Scan controllers in this package -->
-	<context:component-scan base-package="eu.trentorise.smartcampus.vas.ifame.webtemplate.controllers"/>
+	<context:component-scan base-package="eu.trentorise.smartcampus.vas.ifame.controllers"/>
 
 	<context:property-placeholder location="classpath:ifame.properties"/>
 
-
-	<bean id="acClient" class="eu.trentorise.smartcampus.ac.provider.filters.AcClient">
-		<property name="endpointUrl" value="https://vas-dev.smartcampuslab.it/acService"/>
-	</bean>
+	
 	<context:annotation-config />
 	
 		<import resource="datalayer.xml"/>

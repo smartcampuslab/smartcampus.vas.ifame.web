@@ -1,4 +1,4 @@
-package eu.trentorise.smartcampus.vas.ifame.webtemplate.controllers;
+package eu.trentorise.smartcampus.vas.ifame.controllers;
 
 import java.io.IOException;
 import java.util.Date;
@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,12 +19,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import eu.trentorise.smartcampus.ac.provider.AcService;
-import eu.trentorise.smartcampus.ac.provider.filters.AcProviderFilter;
-import eu.trentorise.smartcampus.profileservice.ProfileConnector;
+import eu.trentorise.smartcampus.profileservice.BasicProfileService;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
-import eu.trentorise.smartcampus.vas.ifame.model.GiudizioDataToPost;
 import eu.trentorise.smartcampus.vas.ifame.model.Giudizio;
+import eu.trentorise.smartcampus.vas.ifame.model.GiudizioDataToPost;
 import eu.trentorise.smartcampus.vas.ifame.model.Likes;
 import eu.trentorise.smartcampus.vas.ifame.model.Piatto;
 import eu.trentorise.smartcampus.vas.ifame.repository.GiudizioRepository;
@@ -36,8 +35,6 @@ public class IGraditoController {
 
 	private static final Logger logger = Logger
 			.getLogger(IGraditoController.class);
-	@Autowired
-	private AcService acService;
 
 	@Autowired
 	PiattoRepository piattoRepository;
@@ -65,6 +62,15 @@ public class IGraditoController {
 	@Value("${webapp.name}")
 	private String appName;
 
+	@Autowired
+	@Value("${profile.address}")
+	private String profileaddress;
+
+	private String getToken(HttpServletRequest request) {
+		return (String) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+	}
+
 	/*
 	 * 
 	 * 
@@ -77,11 +83,11 @@ public class IGraditoController {
 			throws IOException {
 		try {
 			logger.info("/getpiatti");
-
-			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-			ProfileConnector profileConnector = new ProfileConnector(
-					serverAddress);
-			BasicProfile profile = profileConnector.getBasicProfile(token);
+			String token = getToken(request);
+			BasicProfileService service = new BasicProfileService(
+					profileaddress);
+			BasicProfile profile = service.getBasicProfile(token);
+			Long userId = Long.valueOf(profile.getUserId());
 			if (profile != null) {
 
 				return piattoRepository.findAll();
@@ -107,10 +113,11 @@ public class IGraditoController {
 			logger.info("/mensa/" + mensa_id + "/piatto/" + piatto_id
 					+ "/giudizio");
 
-			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-			ProfileConnector profileConnector = new ProfileConnector(
-					serverAddress);
-			BasicProfile profile = profileConnector.getBasicProfile(token);
+			String token = getToken(request);
+			BasicProfileService service = new BasicProfileService(
+					profileaddress);
+			BasicProfile profile = service.getBasicProfile(token);
+			Long userId = Long.valueOf(profile.getUserId());
 			if (profile != null) {
 
 				if (mensaRepository.exists(mensa_id)
@@ -161,10 +168,11 @@ public class IGraditoController {
 			logger.info("/mensa/" + mensa_id + "/piatto/" + piatto_id
 					+ "/user_id/" + user_id + "/giudizio");
 
-			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-			ProfileConnector profileConnector = new ProfileConnector(
-					serverAddress);
-			BasicProfile profile = profileConnector.getBasicProfile(token);
+			String token = getToken(request);
+			BasicProfileService service = new BasicProfileService(
+					profileaddress);
+			BasicProfile profile = service.getBasicProfile(token);
+			Long userId = Long.valueOf(profile.getUserId());
 			if (profile != null) {
 
 				if (mensaRepository.exists(mensa_id)
@@ -207,17 +215,17 @@ public class IGraditoController {
 		try {
 			logger.info("/mensa/" + mensa_id + "/piatto/" + piatto_id
 					+ "/giudizio/add");
-			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-
-			ProfileConnector profileConnector = new ProfileConnector(
-					serverAddress);
-			BasicProfile profile = profileConnector.getBasicProfile(token);
+			String token = getToken(request);
+			BasicProfileService service = new BasicProfileService(
+					profileaddress);
+			BasicProfile profile = service.getBasicProfile(token);
+			Long userId = Long.valueOf(profile.getUserId());
 			if (profile != null) {
 
 				if (mensaRepository.exists(mensa_id)
 						&& piattoRepository.exists(piatto_id)) {
 					/*
-					 * controllo se ha già inserito un giudizio
+					 * controllo se ha giï¿½ inserito un giudizio
 					 */
 					Giudizio giudizio_old = giudizioNewRepository
 							.getUserGiudizio(mensa_id, piatto_id, data.userId);
@@ -307,11 +315,11 @@ public class IGraditoController {
 			logger.info("/mensa/" + mensa_id + "/piatto/" + piatto_id
 					+ "/giudizio/" + giudizio_id + "/delete");
 
-			String token = request.getHeader(AcProviderFilter.TOKEN_HEADER);
-
-			ProfileConnector profileConnector = new ProfileConnector(
-					serverAddress);
-			BasicProfile profile = profileConnector.getBasicProfile(token);
+			String token = getToken(request);
+			BasicProfileService service = new BasicProfileService(
+					profileaddress);
+			BasicProfile profile = service.getBasicProfile(token);
+			Long userId = Long.valueOf(profile.getUserId());
 			if (profile != null) {
 				if (mensaRepository.exists(mensa_id)
 						&& piattoRepository.exists(piatto_id)
