@@ -15,8 +15,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @XmlRootElement(name = "Giudizio")
 @NamedQueries({
-		@NamedQuery(name = "Giudizio.getGiudizi", query = "from Giudizio where mensa_id = ?1 and piatto_id = ?2"),
-		@NamedQuery(name = "Giudizio.getUserGiudizio", query = "from Giudizio where mensa_id = ?1 and piatto_id = ?2 and user_id = ?3") })
+		@NamedQuery(name = "Giudizio.getGiudiziApproved", query = "from Giudizio where mensa_id = ?1 and piatto_id = ?2 and approved=1"),
+		@NamedQuery(name = "Giudizio.getUserGiudizioApproved", query = "from Giudizio where mensa_id = ?1 and piatto_id = ?2 and user_id = ?3 "),
+		@NamedQuery(name = "Giudizio.getGiudiziAll", query = "from Giudizio where mensa_id = ?1 and piatto_id = ?2 and approved=1"),
+		@NamedQuery(name = "Giudizio.getUserGiudizioAll", query = "from Giudizio where mensa_id = ?1 and piatto_id = ?2 and user_id = ?3 ")		
+
+
+})
 public class Giudizio {
 
 	@Id
@@ -25,6 +30,17 @@ public class Giudizio {
 
 	@Column(name = "VOTO")
 	private Float voto;
+	
+	@Column(name = "APPROVED")
+	private boolean  approved;
+
+	public boolean isApproved() {
+		return approved;
+	}
+
+	public void setApproved(boolean approved) {
+		this.approved = approved;
+	}
 
 	@Column(name = "COMMENTO")
 	private String commento;

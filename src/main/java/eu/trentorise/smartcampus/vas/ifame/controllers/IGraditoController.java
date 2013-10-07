@@ -124,7 +124,7 @@ public class IGraditoController {
 						&& piattoRepository.exists(piatto_id)) {
 
 					List<Giudizio> giudizi_list = giudizioNewRepository
-							.getGiudizi(mensa_id, piatto_id);
+							.getGiudiziApproved(mensa_id, piatto_id);
 
 					for (Giudizio giudizio : giudizi_list) {
 						giudizio.setLikes(likeRepository
@@ -178,7 +178,7 @@ public class IGraditoController {
 				if (mensaRepository.exists(mensa_id)
 						&& piattoRepository.exists(piatto_id)) {
 
-					return giudizioNewRepository.getUserGiudizio(mensa_id,
+					return giudizioNewRepository.getUserGiudizioApproved(mensa_id,
 							piatto_id, user_id);
 
 				} else {
@@ -228,7 +228,7 @@ public class IGraditoController {
 					 * controllo se ha gi� inserito un giudizio
 					 */
 					Giudizio giudizio_old = giudizioNewRepository
-							.getUserGiudizio(mensa_id, piatto_id, data.userId);
+							.getUserGiudizioApproved(mensa_id, piatto_id, data.userId);
 
 					if (giudizio_old != null) {
 						/*
@@ -260,6 +260,7 @@ public class IGraditoController {
 						giudizio.setVoto(data.voto);
 						giudizio.setMensa_id(mensa_id);
 						giudizio.setPiatto_id(piatto_id);
+						giudizio.setApproved(true); // if giudizio is approved false,is not possible to update
 
 						giudizioNewRepository.save(giudizio);
 					}
@@ -268,7 +269,7 @@ public class IGraditoController {
 					 * ritorno la lista di giudizi con anche i likes associati
 					 */
 					List<Giudizio> giudizi_list = giudizioNewRepository
-							.getGiudizi(mensa_id, piatto_id);
+							.getGiudiziApproved(mensa_id, piatto_id);
 
 					for (Giudizio giudizio : giudizi_list) {
 						giudizio.setLikes(likeRepository
@@ -326,7 +327,7 @@ public class IGraditoController {
 						&& giudizioNewRepository.exists(giudizio_id)) {
 
 					Giudizio giudizio_old = giudizioNewRepository
-							.getUserGiudizio(mensa_id, piatto_id, data.userId);
+							.getUserGiudizioApproved(mensa_id, piatto_id, data.userId);
 					if (giudizio_old != null) {
 						// se 3esiste elimino i likes
 						List<Likes> like_list = likeRepository
@@ -343,7 +344,7 @@ public class IGraditoController {
 					 */
 
 					List<Giudizio> giudizi_list = giudizioNewRepository
-							.getGiudizi(mensa_id, piatto_id);
+							.getGiudiziApproved(mensa_id, piatto_id);
 
 					for (Giudizio giudizio : giudizi_list) {
 						giudizio.setLikes(likeRepository
