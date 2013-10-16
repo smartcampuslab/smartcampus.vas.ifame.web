@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import eu.trentorise.smartcampus.mediation.engine.MediationParserImpl;
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 import eu.trentorise.smartcampus.vas.ifame.model.Giudizio;
@@ -47,6 +48,9 @@ public class IGraditoController {
 
 	@Autowired
 	LikesRepository likeRepository;
+	
+	@Autowired
+	private MediationParserImpl mediationParserImpl;
 
 	/*
 	 * the base url of the service. Configure it in webtemplate.properties
@@ -229,6 +233,10 @@ public class IGraditoController {
 					 */
 					Giudizio giudizio_old = giudizioNewRepository
 							.getUserGiudizioApproved(mensa_id, piatto_id, data.userId);
+					
+
+					
+					
 
 					if (giudizio_old != null) {
 						/*
@@ -239,7 +247,8 @@ public class IGraditoController {
 
 						giudizio_old.setVoto(data.voto);
 						giudizio_old.setCommento(data.commento);
-
+						giudizio_old.setApproved(mediationParserImpl.validateComment(giudizio_old.getCommento(),giudizio_old.getGiudizio_id().intValue(),userId,token));
+						
 						giudizio_old = giudizioNewRepository.save(giudizio_old);
 
 						List<Likes> like_list = likeRepository
@@ -261,7 +270,9 @@ public class IGraditoController {
 						giudizio.setMensa_id(mensa_id);
 						giudizio.setPiatto_id(piatto_id);
 						giudizio.setApproved(true); // if giudizio is approved false,is not possible to update
-
+						
+						giudizio=giudizioNewRepository.save(giudizio);
+						giudizio.setApproved(mediationParserImpl.validateComment(giudizio.getCommento(),giudizio.getGiudizio_id().intValue(),userId,token));
 						giudizioNewRepository.save(giudizio);
 					}
 
