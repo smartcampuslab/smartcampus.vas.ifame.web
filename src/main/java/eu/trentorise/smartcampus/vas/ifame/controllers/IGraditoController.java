@@ -247,7 +247,7 @@ public class IGraditoController {
 
 						giudizio_old.setVoto(data.voto);
 						giudizio_old.setCommento(data.commento);
-						giudizio_old.setApproved(mediationParserImpl.validateComment(giudizio_old.getCommento(),giudizio_old.getGiudizio_id().intValue(),userId,token));
+						giudizio_old.setApproved(mediationParserImpl.fastValidateComment(giudizio_old.getCommento(),giudizio_old.getGiudizio_id().intValue(),userId,token));
 						
 						giudizio_old = giudizioNewRepository.save(giudizio_old);
 
@@ -272,7 +272,7 @@ public class IGraditoController {
 						giudizio.setApproved(true); // if giudizio is approved false,is not possible to update
 						
 						giudizio=giudizioNewRepository.save(giudizio);
-						giudizio.setApproved(mediationParserImpl.validateComment(giudizio.getCommento(),giudizio.getGiudizio_id().intValue(),userId,token));
+						giudizio.setApproved(mediationParserImpl.fastValidateComment(giudizio.getCommento(),giudizio.getGiudizio_id().intValue(),userId,token));
 						giudizioNewRepository.save(giudizio);
 					}
 
