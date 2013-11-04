@@ -204,7 +204,7 @@ public class MenuController {
 	 * INIZIALIZZO TUTTE LE TABELLE
 	 */
 
-	@PostConstruct
+	//@PostConstruct
 	private void inizializzaDatabase() {
 
 		/*

@@ -99,6 +99,7 @@ public class ISoldiController {
 				return saldo;
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return null;
