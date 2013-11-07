@@ -248,7 +248,7 @@ public class IGraditoController {
 						giudizio_old.setVoto(data.voto);
 						giudizio_old.setCommento(data.commento);
 						giudizio_old.setApproved(mediationParserImpl.localValidationComment(giudizio_old.getCommento(),giudizio_old.getGiudizio_id().intValue(),userId,token));
-						
+						giudizio_old.setUser_name(profile.getName());
 						giudizio_old = giudizioNewRepository.save(giudizio_old);
 
 						List<Likes> like_list = likeRepository
@@ -270,7 +270,7 @@ public class IGraditoController {
 						giudizio.setMensa_id(mensa_id);
 						giudizio.setPiatto_id(piatto_id);
 						giudizio.setApproved(true); // if giudizio is approved false,is not possible to update
-						
+						giudizio.setUser_name(profile.getName());
 						giudizio=giudizioNewRepository.save(giudizio);
 						giudizio.setApproved(mediationParserImpl.localValidationComment(giudizio.getCommento(),giudizio.getGiudizio_id().intValue(),userId,token));
 						giudizioNewRepository.save(giudizio);

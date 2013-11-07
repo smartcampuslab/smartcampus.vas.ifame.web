@@ -50,6 +50,9 @@ public class Giudizio {
 
 	@Column(name = "USER_ID")
 	private Long user_id;
+	
+	@Column(name = "USER_NAME")
+	private String user_name;
 
 	@Column(name = "MENSA_ID")
 	private Long mensa_id;
@@ -126,6 +129,14 @@ public class Giudizio {
 
 	public void setLikes(List<Likes> likes) {
 		this.likes = likes;
+	}
+
+	public String getUser_name() {
+		return user_name;
+	}
+
+	public void setUser_name(String user_name) {
+		this.user_name = user_name;
 	}
 
 }
