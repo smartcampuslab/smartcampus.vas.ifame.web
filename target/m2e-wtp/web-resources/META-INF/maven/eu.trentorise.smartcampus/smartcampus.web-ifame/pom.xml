@@ -90,7 +90,7 @@
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
-	<!-- Smartcampus libs -->
+		<!-- Smartcampus libs -->
 		<dependency>
 			<groupId>eu.trentorise.smartcampus</groupId>
 			<artifactId>aac.client</artifactId>
@@ -116,7 +116,11 @@
 			<artifactId>mobilityservice.client</artifactId>
 			<version>1.0</version>
 		</dependency>
-
+		<dependency>
+			<groupId>eu.trentorise.smartcampus</groupId>
+			<artifactId>unidataservice.client</artifactId>
+			<version>1.0</version>
+		</dependency>
 		<dependency>
 			<groupId>eu.trentorise.smartcampus</groupId>
 			<artifactId>territoryservice.client</artifactId>
@@ -134,8 +138,12 @@
 			<artifactId>socialservice.client</artifactId>
 			<version>2.0</version>
 		</dependency>
-		
 
+		<dependency>
+			<groupId>eu.trentorise.smartcampus</groupId>
+			<artifactId>mediation.api</artifactId>
+			<version>1.0</version>
+		</dependency>
 		<!-- DB -->
 
 		<dependency>

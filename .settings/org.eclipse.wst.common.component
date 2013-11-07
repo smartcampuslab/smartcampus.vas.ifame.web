@@ -7,10 +7,10 @@
         <dependent-module archiveName="aac.client-1.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/aac.client/aac.client">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="smartcampus.client.commons-2.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/smartcampus.client.commons/smartcampus.client.commons">
+        <dependent-module archiveName="unidataservice.client-1.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/unidataservice.client/unidataservice.client">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="communicator.client-2.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/communicator.client/communicator.client">
+        <dependent-module archiveName="mediation.api-1.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/mediation.api/mediation.api">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <property name="context-root" value="web-ifame"/>
