@@ -204,8 +204,11 @@ public class MenuController {
 	 * INIZIALIZZO TUTTE LE TABELLE
 	 */
 
-	//@PostConstruct
+	@PostConstruct
 	private void inizializzaDatabase() {
+		
+		
+		piattoRepository.deleteAll();
 
 		/*
 		 * 
@@ -246,6 +249,7 @@ public class MenuController {
 
 		piattoRepository.save(setPiatti);
 
+		mensaRepository.deleteAll();
 		/*
 		 * 
 		 * Inizializzo le mense

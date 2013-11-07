@@ -1,7 +1,9 @@
 package eu.trentorise.smartcampus.vas.ifame.utils;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import jxl.Cell;
 import jxl.CellType;
@@ -159,8 +161,19 @@ public class MenuXlsUtil {
 						if (piattoNameCellType == CellType.LABEL) {
 							Cell kcalCell = sheet.getCell(colonnaGiorno + 1,
 									riga);
-							piattiDelGiornoList.add(new Piatto(piattoNameCell
-									.getContents(), kcalCell.getContents()));
+							
+							
+							String value=piattoNameCell
+									.getContents();
+							
+							try {
+								value=new String(value.getBytes(),"UTF-8");
+							} catch (UnsupportedEncodingException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						
+							piattiDelGiornoList.add(new Piatto(value, kcalCell.getContents()));
 						}
 					}
 					// setto il giorno corrente al menu del giorno
