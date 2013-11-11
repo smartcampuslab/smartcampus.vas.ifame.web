@@ -92,7 +92,7 @@ public class MenuController {
 			BasicProfileService service = new BasicProfileService(
 					profileaddress);
 			BasicProfile profile = service.getBasicProfile(token);
-			Long userId = Long.valueOf(profile.getUserId());
+			// Long userId = Long.valueOf(profile.getUserId());
 			if (profile != null) {
 
 				Calendar data = Calendar.getInstance();
@@ -126,7 +126,7 @@ public class MenuController {
 			BasicProfileService service = new BasicProfileService(
 					profileaddress);
 			BasicProfile profile = service.getBasicProfile(token);
-			Long userId = Long.valueOf(profile.getUserId());
+			// Long userId = Long.valueOf(profile.getUserId());
 			if (profile != null) {
 
 				MenuDelMese mdm = MenuXlsUtil.getMenuDelMese(workbook);
@@ -163,7 +163,7 @@ public class MenuController {
 			BasicProfileService service = new BasicProfileService(
 					profileaddress);
 			BasicProfile profile = service.getBasicProfile(token);
-			Long userId = Long.valueOf(profile.getUserId());
+			// Long userId = Long.valueOf(profile.getUserId());
 			if (profile != null) {
 
 				return MenuXlsUtil.getAlternative(workbook);
@@ -245,7 +245,6 @@ public class MenuController {
 				}
 			}
 		}
-
 		piattoRepository.save(setPiatti);
 
 		mensaRepository.deleteAll();
@@ -274,10 +273,10 @@ public class MenuController {
 		final String name_mesiano_1 = "Mesiano 1";
 		final String name_mesiano_2 = "Mesiano 2";
 
-		Mensa povo_0 = new Mensa(name_povo_mensa, url_povo_mensa_online,
+		Mensa povo_mensa = new Mensa(name_povo_mensa, url_povo_mensa_online,
 				url_povo_mensa_offline);
-		Mensa povo_1 = new Mensa(name_povo_mensa_veloce, url_povo_mensa_veloce_online,
-				url_povo_mensa_veloce_offline);
+		Mensa povo_mensa_veloce = new Mensa(name_povo_mensa_veloce,
+				url_povo_mensa_veloce_online, url_povo_mensa_veloce_offline);
 		Mensa tommaso_gar = new Mensa(name_tommaso_gar, url_tommaso_gar_online,
 				url_tommaso_gar_offline);
 		Mensa zanella = new Mensa(name_zanella, url_zanella_online,
@@ -287,8 +286,8 @@ public class MenuController {
 		Mensa mesiano_2 = new Mensa(name_mesiano_2, url_mesiano_2_online,
 				url_mesiano_2_offline);
 
-		mensaRepository.save(povo_0);
-		mensaRepository.save(povo_1);
+		mensaRepository.save(povo_mensa);
+		mensaRepository.save(povo_mensa_veloce);
 		mensaRepository.save(tommaso_gar);
 		mensaRepository.save(zanella);
 		mensaRepository.save(mesiano_1);

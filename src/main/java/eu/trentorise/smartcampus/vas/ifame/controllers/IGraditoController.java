@@ -1,6 +1,7 @@
 package eu.trentorise.smartcampus.vas.ifame.controllers;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import eu.trentorise.smartcampus.mediation.engine.MediationParserImpl;
+import eu.trentorise.smartcampus.mediation.model.CommentBaseEntity;
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 import eu.trentorise.smartcampus.vas.ifame.model.Giudizio;
@@ -34,7 +36,7 @@ import eu.trentorise.smartcampus.vas.ifame.repository.PiattoRepository;
 @Controller("GiudizioController")
 public class IGraditoController {
 
-	private static final Logger logger = Logger
+	private static final Logger log = Logger
 			.getLogger(IGraditoController.class);
 
 	@Autowired
@@ -48,7 +50,7 @@ public class IGraditoController {
 
 	@Autowired
 	LikesRepository likeRepository;
-	
+
 	@Autowired
 	private MediationParserImpl mediationParserImpl;
 
@@ -86,12 +88,12 @@ public class IGraditoController {
 			HttpServletResponse response, HttpSession session)
 			throws IOException {
 		try {
-			logger.info("/getpiatti");
+			log.info("/getpiatti");
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
 					profileaddress);
 			BasicProfile profile = service.getBasicProfile(token);
-			Long userId = Long.valueOf(profile.getUserId());
+			// Long userId = Long.valueOf(profile.getUserId());
 			if (profile != null) {
 
 				return piattoRepository.findAll();
@@ -114,14 +116,14 @@ public class IGraditoController {
 			@PathVariable("mensa_id") Long mensa_id,
 			@PathVariable("piatto_id") Long piatto_id) throws IOException {
 		try {
-			logger.info("/mensa/" + mensa_id + "/piatto/" + piatto_id
+			log.info("/mensa/" + mensa_id + "/piatto/" + piatto_id
 					+ "/giudizio");
 
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
 					profileaddress);
 			BasicProfile profile = service.getBasicProfile(token);
-			Long userId = Long.valueOf(profile.getUserId());
+			// Long userId = Long.valueOf(profile.getUserId());
 			if (profile != null) {
 
 				if (mensaRepository.exists(mensa_id)
@@ -132,7 +134,7 @@ public class IGraditoController {
 
 					for (Giudizio giudizio : giudizi_list) {
 						giudizio.setLikes(likeRepository
-								.getGiudizioLikes(giudizio.getGiudizio_id()));
+								.getGiudizioLikes((long) giudizio.getId()));
 					}
 
 					return giudizi_list;
@@ -169,21 +171,21 @@ public class IGraditoController {
 			@PathVariable("piatto_id") Long piatto_id,
 			@PathVariable("user_id") Long user_id) throws IOException {
 		try {
-			logger.info("/mensa/" + mensa_id + "/piatto/" + piatto_id
+			log.info("/mensa/" + mensa_id + "/piatto/" + piatto_id
 					+ "/user_id/" + user_id + "/giudizio");
 
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
 					profileaddress);
 			BasicProfile profile = service.getBasicProfile(token);
-			Long userId = Long.valueOf(profile.getUserId());
+			// Long userId = Long.valueOf(profile.getUserId());
 			if (profile != null) {
 
 				if (mensaRepository.exists(mensa_id)
 						&& piattoRepository.exists(piatto_id)) {
 
-					return giudizioNewRepository.getUserGiudizioApproved(mensa_id,
-							piatto_id, user_id);
+					return giudizioNewRepository.getUserGiudizioApproved(
+							mensa_id, piatto_id, user_id);
 
 				} else {
 					/*
@@ -217,13 +219,16 @@ public class IGraditoController {
 			@PathVariable("piatto_id") Long piatto_id,
 			@RequestBody GiudizioDataToPost data) throws IOException {
 		try {
-			logger.info("/mensa/" + mensa_id + "/piatto/" + piatto_id
+
+			log.info("/mensa/" + mensa_id + "/piatto/" + piatto_id
 					+ "/giudizio/add");
+
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
 					profileaddress);
 			BasicProfile profile = service.getBasicProfile(token);
 			Long userId = Long.valueOf(profile.getUserId());
+
 			if (profile != null) {
 
 				if (mensaRepository.exists(mensa_id)
@@ -232,13 +237,14 @@ public class IGraditoController {
 					 * controllo se ha gi� inserito un giudizio
 					 */
 					Giudizio giudizio_old = giudizioNewRepository
-							.getUserGiudizioApproved(mensa_id, piatto_id, data.userId);
-					
+							.getUserGiudizioApproved(mensa_id, piatto_id,
+									data.userId);
+
 					mediationParserImpl.updateKeyWord(token);
-					
-					
 
 					if (giudizio_old != null) {
+
+						log.info("Aggiorno il giudizio");
 						/*
 						 * lo aggiorno
 						 */
@@ -246,15 +252,34 @@ public class IGraditoController {
 								.currentTimeMillis()));
 
 						giudizio_old.setVoto(data.voto);
-						giudizio_old.setCommento(data.commento);
-						giudizio_old.setApproved(mediationParserImpl.localValidationComment(giudizio_old.getCommento(),giudizio_old.getGiudizio_id().intValue(),userId,token));
-						giudizio_old.setUser_name(profile.getName()+"."+profile.getSurname());
-						giudizio_old = giudizioNewRepository.save(giudizio_old);
+						giudizio_old.setTesto(data.commento);
+						giudizio_old.setApproved(mediationParserImpl
+								.localValidationComment(
+										giudizio_old.getTesto(), giudizio_old
+												.getId().intValue(), userId,
+										token));
 
-						List<Likes> like_list = likeRepository
-								.getGiudizioLikes(giudizio_old.getGiudizio_id());
+						if (giudizio_old.isApproved()) {
+							giudizio_old.setApproved(mediationParserImpl
+									.remoteValidationComment(
+											giudizio_old.getTesto(),
+											giudizio_old.getId().intValue(),
+											userId, token));
+						}
 
-						likeRepository.delete(like_list);
+						if (giudizio_old.isApproved()) {
+							giudizio_old.setUser_name(profile.getName() + "."
+									+ profile.getSurname());
+
+							giudizio_old = giudizioNewRepository
+									.save(giudizio_old);
+
+							List<Likes> like_list = likeRepository
+									.getGiudizioLikes((long) giudizio_old
+											.getId());
+
+							likeRepository.delete(like_list);
+						}
 
 					} else {
 						/*
@@ -264,19 +289,54 @@ public class IGraditoController {
 
 						giudizio.setUltimo_aggiornamento(new Date(System
 								.currentTimeMillis()));
-						giudizio.setCommento(data.commento);
+						giudizio.setTesto(data.commento);
 						giudizio.setUser_id(data.userId);
 						giudizio.setVoto(data.voto);
 						giudizio.setMensa_id(mensa_id);
 						giudizio.setPiatto_id(piatto_id);
-						giudizio.setApproved(true); // if giudizio is approved false,is not possible to update
-						giudizio.setUser_name(profile.getName()+"."+profile.getSurname());
-						giudizio=giudizioNewRepository.save(giudizio);
-						giudizio.setApproved(mediationParserImpl.localValidationComment(giudizio.getCommento(),giudizio.getGiudizio_id().intValue(),userId,token));
-						giudizioNewRepository.save(giudizio);
+
+						giudizio.setApproved(true);
+
+						giudizio.setUser_name(profile.getName() + "."
+								+ profile.getSurname());
+
+						giudizio = giudizioNewRepository.save(giudizio);
+
+						giudizio.setApproved(mediationParserImpl
+								.localValidationComment(giudizio.getTesto(),
+										giudizio.getId().intValue(), userId,
+										token));
+
+						giudizio = giudizioNewRepository.save(giudizio);
+
+						if (giudizio.isApproved()) {
+							giudizio.setApproved(mediationParserImpl
+									.remoteValidationComment(giudizio
+											.getTesto(), giudizio.getId()
+											.intValue(), userId, token));
+						}
+
+						if (giudizio.isApproved()) {
+							giudizioNewRepository.save(giudizio);
+						} else {
+							giudizioNewRepository.delete(giudizio);
+						}
 					}
-					
-					
+
+					// aggiorno i commenti
+					List<CommentBaseEntity> updatedCommentList = (List<CommentBaseEntity>) mediationParserImpl
+							.updateCommentToMediationService(
+									getCommentBase(giudizioNewRepository
+											.findAll()), token);
+
+					for (CommentBaseEntity updatedEntity : updatedCommentList) {
+
+						Giudizio g = giudizioNewRepository
+								.findOne(updatedEntity.getId());
+						g.setApproved(updatedEntity.isApproved());
+						giudizioNewRepository.saveAndFlush(g);
+
+					}
 
 					/*
 					 * ritorno la lista di giudizi con anche i likes associati
@@ -286,7 +346,7 @@ public class IGraditoController {
 
 					for (Giudizio giudizio : giudizi_list) {
 						giudizio.setLikes(likeRepository
-								.getGiudizioLikes(giudizio.getGiudizio_id()));
+								.getGiudizioLikes(giudizio.getId()));
 					}
 
 					return giudizi_list;
@@ -296,18 +356,32 @@ public class IGraditoController {
 					 * SE NON TROVO PIATTO e/o MENSA CORRISPONDENTI AI VALORI
 					 * PASSATI NELL URL
 					 */
+					log.info("Mensa or piatto not found");
 					response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 					return null;
 				}
 			}
+
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		/*
 		 * BAD REQUEST SE HO ERRORI NEI CONTROLLI
 		 */
+		log.info("Bad request");
 		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		return null;
+
+	}
+
+	public List<CommentBaseEntity> getCommentBase(List<Giudizio> giudizi) {
+
+		ArrayList<CommentBaseEntity> commentList = new ArrayList<CommentBaseEntity>(
+				giudizi.size());
+
+		commentList.addAll(giudizi);
+
+		return commentList;
 	}
 
 	/*
@@ -326,25 +400,26 @@ public class IGraditoController {
 			@PathVariable("giudizio_id") Long giudizio_id,
 			@RequestBody GiudizioDataToPost data) throws IOException {
 		try {
-			logger.info("/mensa/" + mensa_id + "/piatto/" + piatto_id
+			log.info("/mensa/" + mensa_id + "/piatto/" + piatto_id
 					+ "/giudizio/" + giudizio_id + "/delete");
 
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
 					profileaddress);
 			BasicProfile profile = service.getBasicProfile(token);
-			Long userId = Long.valueOf(profile.getUserId());
+			// Long userId = Long.valueOf(profile.getUserId());
 			if (profile != null) {
 				if (mensaRepository.exists(mensa_id)
 						&& piattoRepository.exists(piatto_id)
 						&& giudizioNewRepository.exists(giudizio_id)) {
 
 					Giudizio giudizio_old = giudizioNewRepository
-							.getUserGiudizioApproved(mensa_id, piatto_id, data.userId);
+							.getUserGiudizioApproved(mensa_id, piatto_id,
+									data.userId);
 					if (giudizio_old != null) {
 						// se 3esiste elimino i likes
 						List<Likes> like_list = likeRepository
-								.getGiudizioLikes(giudizio_old.getGiudizio_id());
+								.getGiudizioLikes((long) giudizio_old.getId());
 
 						likeRepository.delete(like_list);
 
@@ -361,7 +436,7 @@ public class IGraditoController {
 
 					for (Giudizio giudizio : giudizi_list) {
 						giudizio.setLikes(likeRepository
-								.getGiudizioLikes(giudizio.getGiudizio_id()));
+								.getGiudizioLikes((long) giudizio.getId()));
 					}
 
 					return giudizi_list;

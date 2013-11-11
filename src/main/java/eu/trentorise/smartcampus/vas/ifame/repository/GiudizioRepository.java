@@ -13,7 +13,7 @@ public interface GiudizioRepository extends JpaRepository<Giudizio, Long> {
 	List<Giudizio> getGiudiziApproved(Long mensa_id, Long piatto_id);
 
 	Giudizio getUserGiudizioApproved(Long mensa_id, Long piatto_id, Long user_id);
-	
+
 	List<Giudizio> getGiudiziAll(Long mensa_id, Long piatto_id);
 
 	Giudizio getUserGiudizioAll(Long mensa_id, Long piatto_id, Long user_id);
