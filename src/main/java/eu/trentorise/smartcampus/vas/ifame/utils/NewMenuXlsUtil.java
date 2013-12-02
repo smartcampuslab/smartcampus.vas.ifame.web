@@ -97,7 +97,11 @@ public class NewMenuXlsUtil {
 		final int RIGA_INIZIALE = 5;
 		final int RIGA_FINALE = 13;
 		final int SHEET_INIZIALE = 0;
-		final int SHEET_FINALE = 5;
+		// ***************************************************************
+		// IMPORTANTE: DA CAMBIARE IN BASE AL NUMERO DI SETTIMANE DEL MESE
+		// final int SHEET_FINALE = 5; // NOVEMBRE
+		final int SHEET_FINALE = 6; // DICEMBRE
+		// ***************************************************************
 
 		List<Piatto> listaPiatti = new ArrayList<Piatto>();
 		Integer currentDay = 0;
@@ -149,7 +153,11 @@ public class NewMenuXlsUtil {
 		final int RIGA_INIZIALE = 5;
 		final int RIGA_FINALE = 13;
 		final int SHEET_INIZIALE = 0;
-		final int SHEET_FINALE = 5;
+		// ***************************************************************
+		// IMPORTANTE: DA CAMBIARE IN BASE AL NUMERO DI SETTIMANE DEL MESE
+		// final int SHEET_FINALE = 5; // NOVEMBRE
+		final int SHEET_FINALE = 6; // DICEMBRE
+		// ***************************************************************
 
 		// variabile per tenere il giorno corrente tracciato
 		int giornoDelMese = 0;

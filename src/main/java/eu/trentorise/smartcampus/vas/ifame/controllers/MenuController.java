@@ -208,17 +208,17 @@ public class MenuController {
 		// multiple piatti with the same name with only differnet case letters
 		// --------------------------------------------------------------------
 		// get all the piatti
-		List<Piatto> listDbPiatti = piattoRepository.findAll();
-		for (Piatto piatto : listDbPiatti) {
-			// format the name
-			piatto.setPiatto_nome(NewMenuXlsUtil.format(piatto.getPiatto_nome()));
-			// update the database
-			piattoRepository.saveAndFlush(piatto);
-		}
+		// List<Piatto> listDbPiatti = piattoRepository.findAll();
+		// for (Piatto piatto : listDbPiatti) {
+		// // format the name
+		// piatto.setPiatto_nome(NewMenuXlsUtil.format(piatto.getPiatto_nome()));
+		// // update the database
+		// piattoRepository.saveAndFlush(piatto);
+		// }
 		// ********************************************************************
 
 		// get the updated piatti and now do what you want
-		listDbPiatti = piattoRepository.findAll();
+		List<Piatto> listDbPiatti = piattoRepository.findAll();
 
 		// get the new set of piatti
 		Workbook excel = NewMenuXlsUtil.getWorkbook(getClass()
