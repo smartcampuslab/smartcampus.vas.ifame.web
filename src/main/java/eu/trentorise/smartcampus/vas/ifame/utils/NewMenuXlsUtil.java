@@ -41,7 +41,7 @@ public class NewMenuXlsUtil {
 	}
 
 	/**
-	 * remove whitespace charachters at start and at the end upper case first
+	 * Remove whitespace charachters at start and at the end upper case first
 	 * char and lowercase the rest
 	 */
 	public static String format(String name) {
