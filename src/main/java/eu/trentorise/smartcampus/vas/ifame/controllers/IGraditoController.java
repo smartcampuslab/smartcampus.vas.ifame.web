@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import eu.trentorise.smartcampus.aac.AACException;
 import eu.trentorise.smartcampus.mediation.engine.MediationParserImpl;
 import eu.trentorise.smartcampus.mediation.model.CommentBaseEntity;
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
@@ -32,6 +35,7 @@ import eu.trentorise.smartcampus.vas.ifame.repository.GiudizioRepository;
 import eu.trentorise.smartcampus.vas.ifame.repository.LikesRepository;
 import eu.trentorise.smartcampus.vas.ifame.repository.MensaRepository;
 import eu.trentorise.smartcampus.vas.ifame.repository.PiattoRepository;
+import eu.trentorise.smartcampus.vas.ifame.utils.EasyTokenManger;
 
 @Controller("GiudizioController")
 public class IGraditoController {
@@ -71,6 +75,20 @@ public class IGraditoController {
 	@Autowired
 	@Value("${profile.address}")
 	private String profileaddress;
+	@Autowired
+	@Value("${client.id.sc}")
+	private String clientId;
+	@Autowired
+	@Value("${client.secret.sc}")
+	private String clientSecret;
+	
+	private eu.trentorise.smartcampus.vas.ifame.utils.EasyTokenManger tkm;
+
+	@PostConstruct
+	private void init() {
+		tkm = new EasyTokenManger(profileaddress, clientId, clientSecret);
+
+	}
 
 	private String getToken(HttpServletRequest request) {
 		return (String) SecurityContextHolder.getContext().getAuthentication()
@@ -206,6 +224,26 @@ public class IGraditoController {
 		return null;
 	}
 
+	@Scheduled(fixedDelay = 900000)//15min
+	public void updateRemoteComment() throws AACException{
+		log.debug("Update comment in local");
+		// aggiorno i commenti
+		List<CommentBaseEntity> updatedCommentList = (List<CommentBaseEntity>) mediationParserImpl
+				.updateCommentToMediationServiceClientCredential(
+						getCommentBase(giudizioNewRepository
+								.findAll()),tkm.getClientSmartCampusToken());
+
+		for (CommentBaseEntity updatedEntity : updatedCommentList) {
+			
+			Giudizio g = giudizioNewRepository
+					.findOne(updatedEntity.getId());
+			g.setApproved(updatedEntity.isApproved());
+			giudizioNewRepository.saveAndFlush(g);
+
+		}
+	}
+	
+	
 	/*
 	 * 
 	 * 
@@ -322,21 +360,21 @@ public class IGraditoController {
 							giudizioNewRepository.delete(giudizio);
 						}
 					}
-
-					// aggiorno i commenti
-					List<CommentBaseEntity> updatedCommentList = (List<CommentBaseEntity>) mediationParserImpl
-							.updateCommentToMediationService(
-									getCommentBase(giudizioNewRepository
-											.findAll()), token);
-
-					for (CommentBaseEntity updatedEntity : updatedCommentList) {
-
-						Giudizio g = giudizioNewRepository
-								.findOne(updatedEntity.getId());
-						g.setApproved(updatedEntity.isApproved());
-						giudizioNewRepository.saveAndFlush(g);
-
-					}
+//
+//					// aggiorno i commenti
+//					List<CommentBaseEntity> updatedCommentList = (List<CommentBaseEntity>) mediationParserImpl
+//							.updateCommentToMediationService(
+//									getCommentBase(giudizioNewRepository
+//											.findAll()), token);
+//
+//					for (CommentBaseEntity updatedEntity : updatedCommentList) {
+//
+//						Giudizio g = giudizioNewRepository
+//								.findOne(updatedEntity.getId());
+//						g.setApproved(updatedEntity.isApproved());
+//						giudizioNewRepository.saveAndFlush(g);
+//
+//					}
 
 					/*
 					 * ritorno la lista di giudizi con anche i likes associati
