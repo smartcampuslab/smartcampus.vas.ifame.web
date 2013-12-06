@@ -7,5 +7,6 @@
 		<class>eu.trentorise.smartcampus.vas.ifame.model.Piatto</class>
 		<class>eu.trentorise.smartcampus.vas.ifame.model.Giudizio</class>
 		<class>eu.trentorise.smartcampus.vas.ifame.model.Likes</class>
+		<class>eu.trentorise.smartcampus.vas.ifame.model.PiattoGiorno</class>
 	</persistence-unit>
 </persistence>

@@ -1,11 +1,8 @@
 package eu.trentorise.smartcampus.vas.ifame.controllers;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Calendar;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -28,10 +25,11 @@ import eu.trentorise.smartcampus.profileservice.BasicProfileService;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 import eu.trentorise.smartcampus.vas.ifame.model.MenuDelGiorno;
 import eu.trentorise.smartcampus.vas.ifame.model.MenuDelMese;
-import eu.trentorise.smartcampus.vas.ifame.model.MenuDellaSettimana;
 import eu.trentorise.smartcampus.vas.ifame.model.Piatto;
 import eu.trentorise.smartcampus.vas.ifame.repository.MensaRepository;
+import eu.trentorise.smartcampus.vas.ifame.repository.PiattoGiornoRepository;
 import eu.trentorise.smartcampus.vas.ifame.repository.PiattoRepository;
+import eu.trentorise.smartcampus.vas.ifame.utils.MenuCreator;
 import eu.trentorise.smartcampus.vas.ifame.utils.NewMenuXlsUtil;
 
 @Controller("MenuController")
@@ -39,13 +37,14 @@ public class MenuController {
 
 	private static final Logger logger = Logger.getLogger(MenuController.class);
 
-	private static Workbook workbook = null;
-
 	@Autowired
 	PiattoRepository piattoRepository;
 
 	@Autowired
 	MensaRepository mensaRepository;
+
+	@Autowired
+	PiattoGiornoRepository piattoGiornoRepo;
 
 	/*
 	 * the base url of the service. Configure it in webtemplate.properties
@@ -90,13 +89,12 @@ public class MenuController {
 			BasicProfileService service = new BasicProfileService(
 					profileaddress);
 			BasicProfile profile = service.getBasicProfile(token);
-			// Long userId = Long.valueOf(profile.getUserId());
 			if (profile != null) {
 
-				Calendar data = Calendar.getInstance();
-				int day = data.get(Calendar.DAY_OF_MONTH);
+				int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
 
-				return NewMenuXlsUtil.getMenuDelGiorno(day, workbook);
+				return MenuCreator.getMenuDelGiorno(piattoGiornoRepo,
+						piattoRepository, day);
 			}
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -118,24 +116,43 @@ public class MenuController {
 			HttpServletResponse response, HttpSession session)
 			throws IOException {
 		try {
-
 			logger.info("/getmenudelmese");
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
 					profileaddress);
 			BasicProfile profile = service.getBasicProfile(token);
-			// Long userId = Long.valueOf(profile.getUserId());
 			if (profile != null) {
 
-				MenuDelMese mdm = NewMenuXlsUtil.getMenuDelMese(workbook);
+				int max = Calendar.getInstance().getActualMaximum(
+						Calendar.DAY_OF_MONTH);
+				int monday = getFirstMondayOfCurrentMonth();
 
-				return mdm;
+				return MenuCreator.getMenuDelMese(piattoGiornoRepo,
+						piattoRepository, monday, max);
 
 			}
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return null;
+	}
+
+	private int getFirstMondayOfCurrentMonth() {
+		Calendar c = Calendar.getInstance();
+		c.set(Calendar.DAY_OF_MONTH, 1);
+
+		int firstMonday = -1;
+		for (int i = 0; i < 7; i++) {
+
+			int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+			if (Calendar.MONDAY == dayOfWeek) {
+
+				firstMonday = c.get(Calendar.DAY_OF_MONTH);
+				break;
+			}
+			c.add(Calendar.DAY_OF_MONTH, 1);
+		}
+		return firstMonday;
 	}
 
 	/*
@@ -161,10 +178,10 @@ public class MenuController {
 			BasicProfileService service = new BasicProfileService(
 					profileaddress);
 			BasicProfile profile = service.getBasicProfile(token);
-			// Long userId = Long.valueOf(profile.getUserId());
 			if (profile != null) {
 
-				return NewMenuXlsUtil.getAlternative(workbook);
+				return MenuCreator.getAlternative(piattoGiornoRepo,
+						piattoRepository);
 			}
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -176,29 +193,20 @@ public class MenuController {
 	 * 
 	 * 
 	 * 
-	 * INIZIALIZZO IL WORKBOOK
+	 * 
+	 * INIZIALIZZO / AGGIORNO IL DATABASE
 	 */
-	@PostConstruct
-	private void initXls() throws BiffException, IOException {
-
-		InputStream stream = getClass().getResourceAsStream("/Dicembre.xls");
-
-		MenuController.workbook = NewMenuXlsUtil.getWorkbook(stream);
-	}
-
-	/*
-	 * 
-	 * 
-	 * 
-	 * 
-	 * INIZIALIZZO TUTTE LE TABELLE
-	 */
-
 	@PostConstruct
 	private void inizializzaDatabase() throws BiffException, IOException {
 
 		logger.info("Called: inizializzaDatabase()");
 		// piattoRepository.deleteAll();
+
+		Workbook workbook = NewMenuXlsUtil.getWorkbook(getClass()
+				.getResourceAsStream("/Dicembre.xls"));
+
+		MenuCreator.inizializzazioneMenuDatabase(piattoGiornoRepo,
+				piattoRepository, workbook);
 
 		// ********************************************************************
 		// Only from november to december to uniformate all piatto's name. After
@@ -217,41 +225,10 @@ public class MenuController {
 		// }
 		// ********************************************************************
 
-		// get the updated piatti and now do what you want
-		List<Piatto> listDbPiatti = piattoRepository.findAll();
-
-		// get the new set of piatti
-		Workbook excel = NewMenuXlsUtil.getWorkbook(getClass()
-				.getResourceAsStream("/Dicembre.xls"));
-		MenuDelMese menuDelMese = NewMenuXlsUtil.getMenuDelMese(excel);
-
-		Set<Piatto> setPiatti = new HashSet<Piatto>();
-
-		for (MenuDellaSettimana mds : menuDelMese.getMenuDellaSettimana()) {
-			List<MenuDelGiorno> mdglist = mds.getMenuDelGiorno();
-			for (MenuDelGiorno mdg : mdglist) {
-				List<Piatto> piattiDelGiorno = mdg.getPiattiDelGiorno();
-				for (Piatto p : piattiDelGiorno) {
-					setPiatti.add(p);
-				}
-			}
-		}
-
-		int counterNuoviPiatti = 0;
-		// for each new piatto in the new menu check if it's in the db
-		for (Piatto nuovoPiatto : setPiatti) {
-			if (!listDbPiatti.contains(nuovoPiatto)) {
-				// is not in the db so save it
-				piattoRepository.saveAndFlush(nuovoPiatto);
-				logger.info(++counterNuoviPiatti + ". Saved: "
-						+ nuovoPiatto.getPiatto_nome());
-			}
-		}
-
-		// *************************************************************
+		// ********************************************************************
 		// finche non ci sono aggiornamenti sui link delle webcam o nomi delle
 		// mense lasciare tutto commentato
-		// *************************************************************
+		// ********************************************************************
 		// /*
 		// *
 		// * Inizializzo le mense
@@ -309,5 +286,6 @@ public class MenuController {
 		// mensaRepository.save(zanella);
 		// mensaRepository.save(mesiano_1);
 		// mensaRepository.save(mesiano_2);
+		// ********************************************************************
 	}
 }
