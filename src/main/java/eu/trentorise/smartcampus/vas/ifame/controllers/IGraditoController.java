@@ -81,7 +81,7 @@ public class IGraditoController {
 	@Autowired
 	@Value("${client.secret.sc}")
 	private String clientSecret;
-	
+
 	private eu.trentorise.smartcampus.vas.ifame.utils.EasyTokenManger tkm;
 
 	@PostConstruct
@@ -224,26 +224,27 @@ public class IGraditoController {
 		return null;
 	}
 
-	@Scheduled(fixedDelay = 900000)//15min
-	public void updateRemoteComment() throws AACException{
+	@Scheduled(fixedDelay = 900000)
+	// 15min
+	public void updateRemoteComment() throws AACException {
 		log.debug("Update comment in local");
 		// aggiorno i commenti
 		List<CommentBaseEntity> updatedCommentList = (List<CommentBaseEntity>) mediationParserImpl
 				.updateCommentToMediationServiceClientCredential(
-						getCommentBase(giudizioNewRepository
-								.findAll()),tkm.getClientSmartCampusToken());
+						getCommentBase(giudizioNewRepository.findAll()),
+						tkm.getClientSmartCampusToken());
+		if (updatedCommentList != null && !updatedCommentList.isEmpty()) {
+			for (CommentBaseEntity updatedEntity : updatedCommentList) {
 
-		for (CommentBaseEntity updatedEntity : updatedCommentList) {
-			
-			Giudizio g = giudizioNewRepository
-					.findOne(updatedEntity.getId());
-			g.setApproved(updatedEntity.isApproved());
-			giudizioNewRepository.saveAndFlush(g);
+				Giudizio g = giudizioNewRepository.findOne(updatedEntity
+						.getId());
+				g.setApproved(updatedEntity.isApproved());
+				giudizioNewRepository.saveAndFlush(g);
 
+			}
 		}
 	}
-	
-	
+
 	/*
 	 * 
 	 * 
@@ -360,21 +361,23 @@ public class IGraditoController {
 							giudizioNewRepository.delete(giudizio);
 						}
 					}
-//
-//					// aggiorno i commenti
-//					List<CommentBaseEntity> updatedCommentList = (List<CommentBaseEntity>) mediationParserImpl
-//							.updateCommentToMediationService(
-//									getCommentBase(giudizioNewRepository
-//											.findAll()), token);
-//
-//					for (CommentBaseEntity updatedEntity : updatedCommentList) {
-//
-//						Giudizio g = giudizioNewRepository
-//								.findOne(updatedEntity.getId());
-//						g.setApproved(updatedEntity.isApproved());
-//						giudizioNewRepository.saveAndFlush(g);
-//
-//					}
+					//
+					// // aggiorno i commenti
+					// List<CommentBaseEntity> updatedCommentList =
+					// (List<CommentBaseEntity>) mediationParserImpl
+					// .updateCommentToMediationService(
+					// getCommentBase(giudizioNewRepository
+					// .findAll()), token);
+					//
+					// for (CommentBaseEntity updatedEntity :
+					// updatedCommentList) {
+					//
+					// Giudizio g = giudizioNewRepository
+					// .findOne(updatedEntity.getId());
+					// g.setApproved(updatedEntity.isApproved());
+					// giudizioNewRepository.saveAndFlush(g);
+					//
+					// }
 
 					/*
 					 * ritorno la lista di giudizi con anche i likes associati
