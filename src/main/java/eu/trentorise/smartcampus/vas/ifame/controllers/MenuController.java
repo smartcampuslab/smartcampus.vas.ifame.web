@@ -29,7 +29,7 @@ import eu.trentorise.smartcampus.vas.ifame.model.Piatto;
 import eu.trentorise.smartcampus.vas.ifame.repository.MensaRepository;
 import eu.trentorise.smartcampus.vas.ifame.repository.PiattoGiornoRepository;
 import eu.trentorise.smartcampus.vas.ifame.repository.PiattoRepository;
-import eu.trentorise.smartcampus.vas.ifame.utils.MenuCreator;
+import eu.trentorise.smartcampus.vas.ifame.utils.GestoreMenu;
 import eu.trentorise.smartcampus.vas.ifame.utils.NewMenuXlsUtil;
 
 @Controller("MenuController")
@@ -93,7 +93,7 @@ public class MenuController {
 
 				int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
 
-				return MenuCreator.getMenuDelGiorno(piattoGiornoRepo,
+				return GestoreMenu.getMenuDelGiorno(piattoGiornoRepo,
 						piattoRepository, day);
 			}
 		} catch (Exception e) {
@@ -127,7 +127,7 @@ public class MenuController {
 						Calendar.DAY_OF_MONTH);
 				int monday = getFirstMondayOfCurrentMonth();
 
-				return MenuCreator.getMenuDelMese(piattoGiornoRepo,
+				return GestoreMenu.getMenuDelMese(piattoGiornoRepo,
 						piattoRepository, monday, max);
 
 			}
@@ -180,7 +180,7 @@ public class MenuController {
 			BasicProfile profile = service.getBasicProfile(token);
 			if (profile != null) {
 
-				return MenuCreator.getAlternative(piattoGiornoRepo,
+				return GestoreMenu.getAlternative(piattoGiornoRepo,
 						piattoRepository);
 			}
 		} catch (Exception e) {
@@ -205,7 +205,7 @@ public class MenuController {
 		Workbook workbook = NewMenuXlsUtil.getWorkbook(getClass()
 				.getResourceAsStream("/Dicembre.xls"));
 
-		MenuCreator.inizializzazioneMenuDatabase(piattoGiornoRepo,
+		GestoreMenu.inizializzazioneMenuDatabase(piattoGiornoRepo,
 				piattoRepository, workbook);
 
 		// ********************************************************************

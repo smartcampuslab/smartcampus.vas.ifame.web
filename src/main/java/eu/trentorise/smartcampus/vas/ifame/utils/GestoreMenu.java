@@ -14,7 +14,7 @@ import eu.trentorise.smartcampus.vas.ifame.model.PiattoGiorno;
 import eu.trentorise.smartcampus.vas.ifame.repository.PiattoGiornoRepository;
 import eu.trentorise.smartcampus.vas.ifame.repository.PiattoRepository;
 
-public class MenuCreator {
+public class GestoreMenu {
 
 	/**
 	 * prende dal primo giorno del mese fino all ultimo tutti i piatti e crea il
