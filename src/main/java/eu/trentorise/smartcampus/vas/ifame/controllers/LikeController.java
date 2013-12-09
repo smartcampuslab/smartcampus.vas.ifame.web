@@ -70,7 +70,7 @@ public class LikeController {
 			BasicProfileService service = new BasicProfileService(
 					profileaddress);
 			BasicProfile profile = service.getBasicProfile(token);
-			Long userId = Long.valueOf(profile.getUserId());
+
 			if (profile != null) {
 				// se l'id del giudizio non esiste torno BAD REQUEST
 				if (giudizioNewRepository.exists(giudizio_id)) {
@@ -118,7 +118,6 @@ public class LikeController {
 			BasicProfileService service = new BasicProfileService(
 					profileaddress);
 			BasicProfile profile = service.getBasicProfile(token);
-			Long userId = Long.valueOf(profile.getUserId());
 			if (profile != null) {
 				// se l'id del giudizio o del like non esiste torno BAD REQUEST
 				if (giudizioNewRepository.exists(giudizio_id)) {

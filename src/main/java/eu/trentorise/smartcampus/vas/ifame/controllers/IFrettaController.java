@@ -64,7 +64,6 @@ public class IFrettaController {
 			BasicProfileService service = new BasicProfileService(
 					profileaddress);
 			BasicProfile profile = service.getBasicProfile(token);
-			Long userId = Long.valueOf(profile.getUserId());
 			if (profile != null) {
 
 				return mensaRepository.findAll();
