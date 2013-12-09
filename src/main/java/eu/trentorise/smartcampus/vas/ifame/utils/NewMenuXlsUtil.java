@@ -18,7 +18,46 @@ import eu.trentorise.smartcampus.vas.ifame.model.MenuDelMese;
 import eu.trentorise.smartcampus.vas.ifame.model.MenuDellaSettimana;
 import eu.trentorise.smartcampus.vas.ifame.model.Piatto;
 
+/**
+ * 
+ * PRIMA DI FARE IL DEPLOY GUARDARE IL NUMERO DI FOGLI EXCEL E SETTARE LA
+ * VARIABILE GLOBALE FOGLIO FINALE COME L ULTIMO FOGLIO CONTENENTE IL MENU DEL
+ * PRANZO DI SOLITO SONO 5 MA PUÒ CAPITARE CHE LE SETTIMANE SIANO UN NUMERO
+ * DIVERSO
+ * 
+ * DI SOLITO LE COLONNE E LE RIGHE SONO RISPETTATE MA E' SEMPRE MEGLIO DARGLI UN
+ * OCCHIATA
+ * 
+ */
 public class NewMenuXlsUtil {
+
+	// ***************************************************************
+	// IMPORTANTE: DA CAMBIARE IN BASE AL NUMERO DI SETTIMANE DEL MESE
+	// IL FOGLIO FINALE
+	// final int SHEET_FINALE = 5; // NOVEMBRE
+	private static final int FOGLIO_FINALE = 6; // DICEMBRE
+	private static final int FOGLIO_INIZIALE = 0;
+	// ---------------------------------------------------------------
+	// RIGHE E COLONNE DEI MENU
+	private static final int COLONNA_INIZIALE = 0;
+	private static final int COLONNA_FINALE = 14;
+	private static final int RIGA_INIZIALE = 5;
+	private static final int RIGA_FINALE = 13;
+
+	// ***************************************************************
+
+	// le alternative sono uguali per tutte le settimane perciò leggiamo le
+	// alternative sul foglio 1 (COSÌ PER CONVENZIONE NOSTRA)
+	// NB: partono da 0 quindi sul secondo sheet
+	private static final int FOGLIO_ALTERNATIVE = 1;
+	// ---------------------------------------------------------------
+	// RIGHE E COLONNE DELLE ALTERNATIVE
+	private static final int ALTERNATIVE_COLONNA_INIZIALE = 0;
+	private static final int ALTERNATIVE_COLONNA_FINALE = 7;
+	private static final int ALTERNATIVE_RIGA_INIZIALE = 16;
+	private static final int ALTERNATIVE_RIGA_FINALE = 19;
+
+	// ***************************************************************
 
 	public static Workbook getWorkbook(InputStream stream)
 			throws BiffException, IOException {
@@ -58,18 +97,9 @@ public class NewMenuXlsUtil {
 
 		List<Piatto> listaPiatti = new ArrayList<Piatto>();
 
-		// le alternative sono uguali per tutte le settimane perciò leggiamo le
-		// alternative sul foglio 1 (partono da 0 quindi sul secondo sheet)
-		final int SHEET = 1;
-
-		final int COLONNA_INIZIALE = 0;
-		final int COLONNA_FINALE = 7;
-		final int RIGA_INIZIALE = 16;
-		final int RIGA_FINALE = 19;
-
-		Sheet sheet = workbook.getSheet(SHEET);
-		for (int colonna = COLONNA_INIZIALE; colonna <= COLONNA_FINALE; colonna = colonna + 2) {
-			for (int riga = RIGA_INIZIALE; riga <= RIGA_FINALE; riga++) {
+		Sheet sheet = workbook.getSheet(FOGLIO_ALTERNATIVE);
+		for (int colonna = ALTERNATIVE_COLONNA_INIZIALE; colonna <= ALTERNATIVE_COLONNA_FINALE; colonna = colonna + 2) {
+			for (int riga = ALTERNATIVE_RIGA_INIZIALE; riga <= ALTERNATIVE_RIGA_FINALE; riga++) {
 				Cell nomePiatto = sheet.getCell(colonna, riga);
 				CellType type = nomePiatto.getType();
 				// check se la casella contiene qualcosa
@@ -92,22 +122,11 @@ public class NewMenuXlsUtil {
 	public static MenuDelGiorno getMenuDelGiorno(Integer targetDay,
 			Workbook workbook) {
 
-		final int COLONNA_INIZIALE = 0;
-		final int COLONNA_FINALE = 14; // shhet.getColumns();
-		final int RIGA_INIZIALE = 5;
-		final int RIGA_FINALE = 13;
-		final int SHEET_INIZIALE = 0;
-		// ***************************************************************
-		// IMPORTANTE: DA CAMBIARE IN BASE AL NUMERO DI SETTIMANE DEL MESE
-		// final int SHEET_FINALE = 5; // NOVEMBRE
-		final int SHEET_FINALE = 6; // DICEMBRE
-		// ***************************************************************
-
 		List<Piatto> listaPiatti = new ArrayList<Piatto>();
 		Integer currentDay = 0;
 
 		// ciclo sui fogli desiderati (evito la cena)
-		for (int numSettimana = SHEET_INIZIALE; numSettimana < SHEET_FINALE; numSettimana++) {
+		for (int numSettimana = FOGLIO_INIZIALE; numSettimana < FOGLIO_FINALE; numSettimana++) {
 			Sheet sheet = workbook.getSheet(numSettimana);
 
 			// controllo ogni due colonne (evitando le kcal)
@@ -148,24 +167,13 @@ public class NewMenuXlsUtil {
 
 	public static MenuDelMese getMenuDelMese(Workbook workbook) {
 
-		final int COLONNA_INIZIALE = 0;
-		final int COLONNA_FINALE = 14; // shhet.getColumns();
-		final int RIGA_INIZIALE = 5;
-		final int RIGA_FINALE = 13;
-		final int SHEET_INIZIALE = 0;
-		// ***************************************************************
-		// IMPORTANTE: DA CAMBIARE IN BASE AL NUMERO DI SETTIMANE DEL MESE
-		// final int SHEET_FINALE = 5; // NOVEMBRE
-		final int SHEET_FINALE = 6; // DICEMBRE
-		// ***************************************************************
-
 		// variabile per tenere il giorno corrente tracciato
 		int giornoDelMese = 0;
 		// creo il menu del mese e una lista di menu della settimana
 		MenuDelMese mdm = new MenuDelMese();
 		ArrayList<MenuDellaSettimana> mdslist = new ArrayList<MenuDellaSettimana>();
 		// ciclo sui fogli desiderati (evito la cena)
-		for (int numSettimana = SHEET_INIZIALE; numSettimana < SHEET_FINALE; numSettimana++) {
+		for (int numSettimana = FOGLIO_INIZIALE; numSettimana < FOGLIO_FINALE; numSettimana++) {
 			// ogni foglio ha una settimana
 			Sheet sheet = workbook.getSheet(numSettimana);
 			// variabile per tracciare qual'e' il primo giorno della settimana

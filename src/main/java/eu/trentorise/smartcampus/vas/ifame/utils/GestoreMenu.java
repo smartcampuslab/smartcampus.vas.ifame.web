@@ -141,20 +141,20 @@ public class GestoreMenu {
 			PiattoGiornoRepository piattoGiornoRepo,
 			PiattoRepository piattoRepository, Workbook workbook) {
 
-		System.out.println("------Aggiorno la tabella piatti------");
+		System.out.println("Aggiorno la tabella piatti");
 
 		updateTabellaPiatti(piattoRepository, workbook);
 
-		System.out.println("------Aggiorno la tabella menu del mese------");
+		System.out.println("Elimino e reindicizzo la tabella menu del mese");
 
 		inizializzaTabellaMenu(piattoGiornoRepo, piattoRepository, workbook);
 
-		System.out.println("------Aggiorno la tabella alternative------");
+		System.out.println("Elimino e reindicizzo la tabella alternative");
 
 		inizializzaTabellaAlternative(piattoGiornoRepo, piattoRepository,
 				workbook);
 
-		System.out.println("------Fine inizializzazione database------");
+		System.out.println("Fine procedura di inizializzazione database");
 	}
 
 	private static void updateTabellaPiatti(PiattoRepository piattoRepository,

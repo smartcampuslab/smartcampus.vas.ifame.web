@@ -198,32 +198,13 @@ public class MenuController {
 	 */
 	@PostConstruct
 	private void inizializzaDatabase() throws BiffException, IOException {
-
-		logger.info("Called: inizializzaDatabase()");
-		// piattoRepository.deleteAll();
+		logger.info("Inizializzazione database");
 
 		Workbook workbook = NewMenuXlsUtil.getWorkbook(getClass()
 				.getResourceAsStream("/Dicembre.xls"));
 
 		GestoreMenu.inizializzazioneMenuDatabase(piattoGiornoRepo,
 				piattoRepository, workbook);
-
-		// ********************************************************************
-		// Only from november to december to uniformate all piatto's name. After
-		// this few lines can be commented beacause the NewMenuXlsUtils class
-		// will take care of formatting the names (the first charachter
-		// uppercase and the rest of the string lowercase). This is to avoid
-		// multiple piatti with the same name with only differnet case letters
-		// --------------------------------------------------------------------
-		// get all the piatti
-		// List<Piatto> listDbPiatti = piattoRepository.findAll();
-		// for (Piatto piatto : listDbPiatti) {
-		// // format the name
-		// piatto.setPiatto_nome(NewMenuXlsUtil.format(piatto.getPiatto_nome()));
-		// // update the database
-		// piattoRepository.saveAndFlush(piatto);
-		// }
-		// ********************************************************************
 
 		// ********************************************************************
 		// finche non ci sono aggiornamenti sui link delle webcam o nomi delle
@@ -287,5 +268,6 @@ public class MenuController {
 		// mensaRepository.save(mesiano_1);
 		// mensaRepository.save(mesiano_2);
 		// ********************************************************************
+		logger.info("Tutto apposto a ferragosto");
 	}
 }
