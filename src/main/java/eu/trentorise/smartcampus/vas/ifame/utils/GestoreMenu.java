@@ -141,20 +141,22 @@ public class GestoreMenu {
 			PiattoGiornoRepository piattoGiornoRepo,
 			PiattoRepository piattoRepository, Workbook workbook) {
 
-		System.out.println("Aggiorno la tabella piatti");
+		System.out.println("INFO: Aggiorno la tabella piatti");
 
 		updateTabellaPiatti(piattoRepository, workbook);
 
-		System.out.println("Elimino e reindicizzo la tabella menu del mese");
+		System.out
+				.println("INFO: Elimino e reindicizzo la tabella menu del mese");
 
 		inizializzaTabellaMenu(piattoGiornoRepo, piattoRepository, workbook);
 
-		System.out.println("Elimino e reindicizzo la tabella alternative");
+		System.out
+				.println("INFO: Elimino e reindicizzo la tabella alternative");
 
 		inizializzaTabellaAlternative(piattoGiornoRepo, piattoRepository,
 				workbook);
 
-		System.out.println("Fine procedura di inizializzazione database");
+		System.out.println("INFO: Fine procedura di inizializzazione database");
 	}
 
 	private static void updateTabellaPiatti(PiattoRepository piattoRepository,
@@ -196,11 +198,12 @@ public class GestoreMenu {
 				piattoRepository.saveAndFlush(nuovoPiatto);
 
 				// print the new Piatto inserted
-				System.out.println(++counterNuoviPiatti + ". Saved: "
+				System.out.println(++counterNuoviPiatti + ". "
 						+ nuovoPiatto.getPiatto_nome());
 			}
 		}
-
+		System.out
+				.println("INFO: Nuovi piatti inseriti: " + counterNuoviPiatti);
 	}
 
 	private static void inizializzaTabellaMenu(
@@ -237,8 +240,10 @@ public class GestoreMenu {
 
 						piattoGiornoRepo.saveAndFlush(piattoGiorno);
 
-						System.out.println("Giorno: " + day + " Piatto: "
-								+ piattoDB.getPiatto_id());
+						System.out.println("Menu: Giorno - " + day
+								+ " Piatto=[ id = " + piattoDB.getPiatto_id()
+								+ ", nome = " + piattoDB.getPiatto_nome()
+								+ " ]");
 					}
 				}
 				day++;
@@ -288,8 +293,9 @@ public class GestoreMenu {
 
 				piattoGiornoRepo.saveAndFlush(piattoGiorno);
 
-				System.out.println("Alternative: " + piattoDB.getPiatto_id());
-
+				System.out.println("Alternative: Piatto=[ id = "
+						+ piattoDB.getPiatto_id() + ", nome = "
+						+ piattoDB.getPiatto_nome() + " ]");
 			}
 		}
 	}
