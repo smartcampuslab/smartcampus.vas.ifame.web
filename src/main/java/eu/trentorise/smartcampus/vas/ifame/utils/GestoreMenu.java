@@ -226,6 +226,8 @@ public class GestoreMenu {
 			for (MenuDelGiorno mdg : mdglist) {
 
 				List<Piatto> piattiDelGiorno = mdg.getPiattiDelGiorno();
+
+				int ordine = 1;
 				for (Piatto piatto : piattiDelGiorno) {
 					// questa condizione dovrebbe essere sempre soddisfatta
 					// perche prima li salvo nel db e poi cerco nel db i piatti
@@ -237,13 +239,14 @@ public class GestoreMenu {
 						PiattoGiorno piattoGiorno = new PiattoGiorno();
 						piattoGiorno.setDay(day);
 						piattoGiorno.setPiattoId(piattoDB.getPiatto_id());
+						piattoGiorno.setOrdine(ordine++);
 
 						piattoGiornoRepo.saveAndFlush(piattoGiorno);
 
 						System.out.println("Menu: Giorno - " + day
-								+ " Piatto=[ id = " + piattoDB.getPiatto_id()
-								+ ", nome = " + piattoDB.getPiatto_nome()
-								+ " ]");
+								+ " Piatto=[ ordine = "
+								+ piattoGiorno.getOrdine() + ", nome = "
+								+ piattoDB.getPiatto_nome() + " ]");
 					}
 				}
 				day++;
