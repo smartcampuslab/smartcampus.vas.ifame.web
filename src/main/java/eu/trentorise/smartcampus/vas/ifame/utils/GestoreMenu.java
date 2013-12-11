@@ -281,6 +281,8 @@ public class GestoreMenu {
 		// get the new alternative from the excel
 		List<Piatto> alternative = NewMenuXlsUtil.getAlternative(workbook);
 		// aggiungo le alternative al set di piatti
+
+		int ordine = 1;
 		for (Piatto piatto : alternative) {
 			// questa condizione dovrebbe essere sempre soddisfatta
 			// perche prima li salvo nel db e poi cerco nel db i piatti
@@ -293,11 +295,12 @@ public class GestoreMenu {
 
 				piattoGiorno.setDay(ALTERNATIVE_DAY);
 				piattoGiorno.setPiattoId(piattoDB.getPiatto_id());
+				piattoGiorno.setOrdine(ordine++);
 
 				piattoGiornoRepo.saveAndFlush(piattoGiorno);
 
-				System.out.println("Alternative: Piatto=[ id = "
-						+ piattoDB.getPiatto_id() + ", nome = "
+				System.out.println("Alternative: Piatto=[ ordine = "
+						+ piattoGiorno.getOrdine() + ", nome = "
 						+ piattoDB.getPiatto_nome() + " ]");
 			}
 		}
