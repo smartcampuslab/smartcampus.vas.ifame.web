@@ -58,20 +58,6 @@ public class IGraditoController {
 	@Autowired
 	private MediationParserImpl mediationParserImpl;
 
-	/*
-	 * the base url of the service. Configure it in webtemplate.properties
-	 */
-	@Autowired
-	@Value("${services.server}")
-	private String serverAddress;
-
-	/*
-	 * the base appName of the service. Configure it in webtemplate.properties
-	 */
-	@Autowired
-	@Value("${webapp.name}")
-	private String appName;
-
 	@Autowired
 	@Value("${profile.address}")
 	private String profileaddress;
@@ -107,15 +93,9 @@ public class IGraditoController {
 			throws IOException {
 		try {
 			log.info("/getpiatti");
-			String token = getToken(request);
-			BasicProfileService service = new BasicProfileService(
-					profileaddress);
-			BasicProfile profile = service.getBasicProfile(token);
-			// Long userId = Long.valueOf(profile.getUserId());
-			if (profile != null) {
 
-				return piattoRepository.findAll();
-			}
+			return piattoRepository.findAll();
+
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
@@ -137,34 +117,27 @@ public class IGraditoController {
 			log.info("/mensa/" + mensa_id + "/piatto/" + piatto_id
 					+ "/giudizio");
 
-			String token = getToken(request);
-			BasicProfileService service = new BasicProfileService(
-					profileaddress);
-			BasicProfile profile = service.getBasicProfile(token);
-			// Long userId = Long.valueOf(profile.getUserId());
-			if (profile != null) {
+			if (mensaRepository.exists(mensa_id)
+					&& piattoRepository.exists(piatto_id)) {
 
-				if (mensaRepository.exists(mensa_id)
-						&& piattoRepository.exists(piatto_id)) {
+				List<Giudizio> giudizi_list = giudizioNewRepository
+						.getGiudiziApproved(mensa_id, piatto_id);
 
-					List<Giudizio> giudizi_list = giudizioNewRepository
-							.getGiudiziApproved(mensa_id, piatto_id);
-
-					for (Giudizio giudizio : giudizi_list) {
-						giudizio.setLikes(likeRepository
-								.getGiudizioLikes((long) giudizio.getId()));
-					}
-
-					return giudizi_list;
-
-				} else {
-					/*
-					 * not found se non trova mensa e/o piatto
-					 */
-					response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-					return null;
+				for (Giudizio giudizio : giudizi_list) {
+					giudizio.setLikes(likeRepository
+							.getGiudizioLikes((long) giudizio.getId()));
 				}
+
+				return giudizi_list;
+
+			} else {
+				/*
+				 * not found se non trova mensa e/o piatto
+				 */
+				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+				return null;
 			}
+
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
@@ -192,27 +165,20 @@ public class IGraditoController {
 			log.info("/mensa/" + mensa_id + "/piatto/" + piatto_id
 					+ "/user_id/" + user_id + "/giudizio");
 
-			String token = getToken(request);
-			BasicProfileService service = new BasicProfileService(
-					profileaddress);
-			BasicProfile profile = service.getBasicProfile(token);
-			// Long userId = Long.valueOf(profile.getUserId());
-			if (profile != null) {
+			if (mensaRepository.exists(mensa_id)
+					&& piattoRepository.exists(piatto_id)) {
 
-				if (mensaRepository.exists(mensa_id)
-						&& piattoRepository.exists(piatto_id)) {
+				return giudizioNewRepository.getUserGiudizioApproved(mensa_id,
+						piatto_id, user_id);
 
-					return giudizioNewRepository.getUserGiudizioApproved(
-							mensa_id, piatto_id, user_id);
-
-				} else {
-					/*
-					 * not found se non trova mensa e/o piatto
-					 */
-					response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-					return null;
-				}
+			} else {
+				/*
+				 * not found se non trova mensa e/o piatto
+				 */
+				response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+				return null;
 			}
+
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
@@ -444,45 +410,39 @@ public class IGraditoController {
 			log.info("/mensa/" + mensa_id + "/piatto/" + piatto_id
 					+ "/giudizio/" + giudizio_id + "/delete");
 
-			String token = getToken(request);
-			BasicProfileService service = new BasicProfileService(
-					profileaddress);
-			BasicProfile profile = service.getBasicProfile(token);
-			// Long userId = Long.valueOf(profile.getUserId());
-			if (profile != null) {
-				if (mensaRepository.exists(mensa_id)
-						&& piattoRepository.exists(piatto_id)
-						&& giudizioNewRepository.exists(giudizio_id)) {
+			if (mensaRepository.exists(mensa_id)
+					&& piattoRepository.exists(piatto_id)
+					&& giudizioNewRepository.exists(giudizio_id)) {
 
-					Giudizio giudizio_old = giudizioNewRepository
-							.getUserGiudizioApproved(mensa_id, piatto_id,
-									data.userId);
-					if (giudizio_old != null) {
-						// se 3esiste elimino i likes
-						List<Likes> like_list = likeRepository
-								.getGiudizioLikes((long) giudizio_old.getId());
+				Giudizio giudizio_old = giudizioNewRepository
+						.getUserGiudizioApproved(mensa_id, piatto_id,
+								data.userId);
+				if (giudizio_old != null) {
+					// se 3esiste elimino i likes
+					List<Likes> like_list = likeRepository
+							.getGiudizioLikes((long) giudizio_old.getId());
 
-						likeRepository.delete(like_list);
+					likeRepository.delete(like_list);
 
-						// e poi elimino il giudizio
-						giudizioNewRepository.delete(giudizio_old);
-					}
-
-					/*
-					 * RITORNO LA LISTA DI GIUDIZI
-					 */
-
-					List<Giudizio> giudizi_list = giudizioNewRepository
-							.getGiudiziApproved(mensa_id, piatto_id);
-
-					for (Giudizio giudizio : giudizi_list) {
-						giudizio.setLikes(likeRepository
-								.getGiudizioLikes((long) giudizio.getId()));
-					}
-
-					return giudizi_list;
+					// e poi elimino il giudizio
+					giudizioNewRepository.delete(giudizio_old);
 				}
+
+				/*
+				 * RITORNO LA LISTA DI GIUDIZI
+				 */
+
+				List<Giudizio> giudizi_list = giudizioNewRepository
+						.getGiudiziApproved(mensa_id, piatto_id);
+
+				for (Giudizio giudizio : giudizi_list) {
+					giudizio.setLikes(likeRepository
+							.getGiudizioLikes((long) giudizio.getId()));
+				}
+
+				return giudizi_list;
 			}
+
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}

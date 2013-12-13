@@ -17,15 +17,11 @@ import jxl.read.biff.BiffException;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import eu.trentorise.smartcampus.profileservice.BasicProfileService;
-import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 import eu.trentorise.smartcampus.vas.ifame.model.MenuDelGiorno;
 import eu.trentorise.smartcampus.vas.ifame.model.MenuDelMese;
 import eu.trentorise.smartcampus.vas.ifame.model.MenuDellaSettimana;
@@ -47,37 +43,6 @@ public class MenuController {
 	@Autowired
 	MensaRepository mensaRepository;
 
-	/*
-	 * the base url of the service. Configure it in webtemplate.properties
-	 */
-	@Autowired
-	@Value("${services.server}")
-	private String serverAddress;
-
-	/*
-	 * the base appName of the service. Configure it in webtemplate.properties
-	 */
-	@Autowired
-	@Value("${webapp.name}")
-	private String appName;
-
-	/*
-	 * 
-	 * 
-	 * 
-	 * 
-	 * MENU DEL GIORNO CONTROLLER
-	 */
-
-	@Autowired
-	@Value("${profile.address}")
-	private String profileaddress;
-
-	private String getToken(HttpServletRequest request) {
-		return (String) SecurityContextHolder.getContext().getAuthentication()
-				.getPrincipal();
-	}
-
 	@RequestMapping(method = RequestMethod.GET, value = "/getmenudelgiorno")
 	public @ResponseBody
 	MenuDelGiorno getMenuDelGiornoStringList(HttpServletRequest request,
@@ -86,18 +51,11 @@ public class MenuController {
 		try {
 			logger.info("/getmenudelgiorno");
 
-			String token = getToken(request);
-			BasicProfileService service = new BasicProfileService(
-					profileaddress);
-			BasicProfile profile = service.getBasicProfile(token);
-			// Long userId = Long.valueOf(profile.getUserId());
-			if (profile != null) {
+			Calendar data = Calendar.getInstance();
+			int day = data.get(Calendar.DAY_OF_MONTH);
 
-				Calendar data = Calendar.getInstance();
-				int day = data.get(Calendar.DAY_OF_MONTH);
+			return NewMenuXlsUtil.getMenuDelGiorno(day, workbook);
 
-				return NewMenuXlsUtil.getMenuDelGiorno(day, workbook);
-			}
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
@@ -120,18 +78,11 @@ public class MenuController {
 		try {
 
 			logger.info("/getmenudelmese");
-			String token = getToken(request);
-			BasicProfileService service = new BasicProfileService(
-					profileaddress);
-			BasicProfile profile = service.getBasicProfile(token);
-			// Long userId = Long.valueOf(profile.getUserId());
-			if (profile != null) {
 
-				MenuDelMese mdm = NewMenuXlsUtil.getMenuDelMese(workbook);
+			MenuDelMese mdm = NewMenuXlsUtil.getMenuDelMese(workbook);
 
-				return mdm;
+			return mdm;
 
-			}
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
@@ -157,15 +108,9 @@ public class MenuController {
 		try {
 
 			logger.info("/getalternative");
-			String token = getToken(request);
-			BasicProfileService service = new BasicProfileService(
-					profileaddress);
-			BasicProfile profile = service.getBasicProfile(token);
-			// Long userId = Long.valueOf(profile.getUserId());
-			if (profile != null) {
 
-				return NewMenuXlsUtil.getAlternative(workbook);
-			}
+			return NewMenuXlsUtil.getAlternative(workbook);
+
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
