@@ -3,7 +3,9 @@ package eu.trentorise.smartcampus.vas.ifame.controllers;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -195,16 +197,16 @@ public class IGraditoController {
 	public void updateRemoteComment() throws AACException {
 		log.debug("Update comment in local");
 		// aggiorno i commenti
-		List<CommentBaseEntity> updatedCommentList = (List<CommentBaseEntity>) mediationParserImpl
-				.updateCommentToMediationServiceClientCredential(
-						getCommentBase(giudizioNewRepository.findAll()),
+		Map<String, Boolean> updatedCommentList =  mediationParserImpl
+				.updateComment(0,System.currentTimeMillis(),
 						tkm.getClientSmartCampusToken());
 		if (updatedCommentList != null && !updatedCommentList.isEmpty()) {
-			for (CommentBaseEntity updatedEntity : updatedCommentList) {
+			Iterator iterator = updatedCommentList.entrySet().iterator();
+			while (iterator.hasNext()) {
+				Map.Entry mapEntry = (Map.Entry) iterator.next();
 
-				Giudizio g = giudizioNewRepository.findOne(updatedEntity
-						.getId());
-				g.setApproved(updatedEntity.isApproved());
+				Giudizio g = giudizioNewRepository.findOne((Long)mapEntry.getKey());
+				g.setApproved((Boolean)mapEntry.getValue());
 				giudizioNewRepository.saveAndFlush(g);
 
 			}
@@ -258,17 +260,18 @@ public class IGraditoController {
 
 						giudizio_old.setVoto(data.voto);
 						giudizio_old.setTesto(data.commento);
+				
 						giudizio_old.setApproved(mediationParserImpl
 								.localValidationComment(
 										giudizio_old.getTesto(), giudizio_old
-												.getId().intValue(), userId,
+												.getId().toString(), userId,
 										token));
 
 						if (giudizio_old.isApproved()) {
 							giudizio_old.setApproved(mediationParserImpl
 									.remoteValidationComment(
 											giudizio_old.getTesto(),
-											giudizio_old.getId().intValue(),
+											giudizio_old.getId().toString(),
 											userId, token));
 						}
 
@@ -309,7 +312,7 @@ public class IGraditoController {
 
 						giudizio.setApproved(mediationParserImpl
 								.localValidationComment(giudizio.getTesto(),
-										giudizio.getId().intValue(), userId,
+										giudizio.getId().toString(), userId,
 										token));
 
 						giudizio = giudizioNewRepository.save(giudizio);
@@ -317,8 +320,7 @@ public class IGraditoController {
 						if (giudizio.isApproved()) {
 							giudizio.setApproved(mediationParserImpl
 									.remoteValidationComment(giudizio
-											.getTesto(), giudizio.getId()
-											.intValue(), userId, token));
+											.getTesto(), giudizio.getId().toString(), userId, token));
 						}
 
 						if (giudizio.isApproved()) {

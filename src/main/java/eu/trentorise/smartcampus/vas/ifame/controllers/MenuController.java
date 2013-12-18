@@ -2,7 +2,9 @@ package eu.trentorise.smartcampus.vas.ifame.controllers;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -22,6 +24,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import eu.trentorise.smartcampus.network.JsonUtils;
+import eu.trentorise.smartcampus.unidataservice.model.CanteenOpening;
+import eu.trentorise.smartcampus.unidataservice.model.Dish;
+import eu.trentorise.smartcampus.unidataservice.model.Menu;
 import eu.trentorise.smartcampus.vas.ifame.model.MenuDelGiorno;
 import eu.trentorise.smartcampus.vas.ifame.model.MenuDelMese;
 import eu.trentorise.smartcampus.vas.ifame.model.MenuDellaSettimana;
@@ -54,8 +60,20 @@ public class MenuController {
 			Calendar data = Calendar.getInstance();
 			int day = data.get(Calendar.DAY_OF_MONTH);
 
+			
+			
+			Date datan=new Date(System.currentTimeMillis());
+			SimpleDateFormat sdf=new SimpleDateFormat("yyyy-m-d");
+			
+			//call client unidata 
+			String dataFrom=sdf.format(datan);
+			String dataTo=sdf.format(datan);
+			
+			//http://localhost:8080/core.unidata/data/getmenu/2013-11-01/2013-11-01
+			String piattiDiungiorno="[{\"id\":\"323031332d31312d30315f63\",\"date\":\"2013-11-01\",\"dishes\":[{\"name\":\"Zuppa di farro e fagioli\",\"cal\":\"485\"},{\"name\":\"Pasta panna e prosciutto\",\"cal\":\"619\"},{\"name\":\"Pasta cacio e pepe\",\"cal\":\"605\"},{\"name\":\"Saltimbocca alla romana\",\"cal\":\"312\"},{\"name\":\"Bruschetta rustica\",\"cal\":\"346\"},{\"name\":\"Patate al forno\",\"cal\":\"292\"},{\"name\":\"Carciofi saltati\",\"cal\":\"164\"}],\"type\":\"c\"},{\"id\":\"323031332d31312d30315f70\",\"date\":\"2013-11-01\",\"dishes\":[{\"name\":\"Zuppa di ceci\",\"cal\":\"472\"},{\"name\":\"Pasta alla marinara\",\"cal\":\"450\"},{\"name\":\"Wurstel farciti\",\"cal\":\"370\"},{\"name\":\"Merluzzo alle olive e capperi\",\"cal\":\"184\"},{\"name\":\"Crocchette di patate\",\"cal\":\"350\"},{\"name\":\"Carote prezzemolate\",\"cal\":\"140\"}],\"type\":\"p\"}]";
+		
+			
 			return NewMenuXlsUtil.getMenuDelGiorno(day, workbook);
-
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
@@ -78,7 +96,24 @@ public class MenuController {
 		try {
 
 			logger.info("/getmenudelmese");
-
+			
+			Calendar cal = Calendar.getInstance();			
+			cal.set(Calendar.DATE, 1);
+			Date firstDateOfMonth = cal.getTime();
+			cal.set(Calendar.DATE, cal.getActualMaximum(Calendar.DATE)); 
+			Date lastDateOfMonth = cal.getTime();			
+			SimpleDateFormat sdf=new SimpleDateFormat("yyyy-m-d");
+			
+			//call client unidata 
+			String dataFrom=sdf.format(firstDateOfMonth);
+			String dataTo=sdf.format(lastDateOfMonth);
+			
+			//http://localhost:8080/core.unidata/data/getmenu/2013-11-01/2013-11-01
+			String piattiDiungiorno="[{\"id\":\"323031332d31312d30315f63\",\"date\":\"2013-11-01\",\"dishes\":[{\"name\":\"Zuppa di farro e fagioli\",\"cal\":\"485\"},{\"name\":\"Pasta panna e prosciutto\",\"cal\":\"619\"},{\"name\":\"Pasta cacio e pepe\",\"cal\":\"605\"},{\"name\":\"Saltimbocca alla romana\",\"cal\":\"312\"},{\"name\":\"Bruschetta rustica\",\"cal\":\"346\"},{\"name\":\"Patate al forno\",\"cal\":\"292\"},{\"name\":\"Carciofi saltati\",\"cal\":\"164\"}],\"type\":\"c\"},{\"id\":\"323031332d31312d30315f70\",\"date\":\"2013-11-01\",\"dishes\":[{\"name\":\"Zuppa di ceci\",\"cal\":\"472\"},{\"name\":\"Pasta alla marinara\",\"cal\":\"450\"},{\"name\":\"Wurstel farciti\",\"cal\":\"370\"},{\"name\":\"Merluzzo alle olive e capperi\",\"cal\":\"184\"},{\"name\":\"Crocchette di patate\",\"cal\":\"350\"},{\"name\":\"Carote prezzemolate\",\"cal\":\"140\"}],\"type\":\"p\"}]";
+		
+			
+			
+			
 			MenuDelMese mdm = NewMenuXlsUtil.getMenuDelMese(workbook);
 
 			return mdm;
@@ -255,4 +290,9 @@ public class MenuController {
 		// mensaRepository.save(mesiano_1);
 		// mensaRepository.save(mesiano_2);
 	}
+	
+	
+	
+	
+	
 }
