@@ -40,7 +40,7 @@ public class Giudizio extends CommentBaseEntity {
 	private String user_name;
 
 	@Column(name = "MENSA_ID")
-	private Long mensa_id;
+	private String mensa_id;
 
 	@Column(name = "PIATTO_ID")
 	private Long piatto_id;
@@ -72,11 +72,11 @@ public class Giudizio extends CommentBaseEntity {
 		this.user_id = user_id;
 	}
 
-	public Long getMensa_id() {
+	public String getMensa_id() {
 		return mensa_id;
 	}
 
-	public void setMensa_id(Long mensa_id) {
+	public void setMensa_id(String mensa_id) {
 		this.mensa_id = mensa_id;
 	}
 

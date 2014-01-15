@@ -57,8 +57,8 @@ public class IGraditoController {
 	@Autowired
 	LikesRepository likeRepository;
 
-	@Autowired
-	private MediationParserImpl mediationParserImpl;
+	//@Autowired
+	//private MediationParserImpl mediationParserImpl;
 
 	@Autowired
 	@Value("${profile.address}")
@@ -113,7 +113,7 @@ public class IGraditoController {
 	public @ResponseBody
 	List<Giudizio> getMensaPiatti(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
-			@PathVariable("mensa_id") Long mensa_id,
+			@PathVariable("mensa_id") String mensa_id,
 			@PathVariable("piatto_id") Long piatto_id) throws IOException {
 		try {
 			log.info("/mensa/" + mensa_id + "/piatto/" + piatto_id
@@ -160,7 +160,7 @@ public class IGraditoController {
 	public @ResponseBody
 	Giudizio getUserGiudizio(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
-			@PathVariable("mensa_id") Long mensa_id,
+			@PathVariable("mensa_id") String mensa_id,
 			@PathVariable("piatto_id") Long piatto_id,
 			@PathVariable("user_id") Long user_id) throws IOException {
 		try {
@@ -197,20 +197,20 @@ public class IGraditoController {
 	public void updateRemoteComment() throws AACException {
 		log.debug("Update comment in local");
 		// aggiorno i commenti
-		Map<String, Boolean> updatedCommentList =  mediationParserImpl
-				.updateComment(0,System.currentTimeMillis(),
-						tkm.getClientSmartCampusToken());
-		if (updatedCommentList != null && !updatedCommentList.isEmpty()) {
-			Iterator iterator = updatedCommentList.entrySet().iterator();
-			while (iterator.hasNext()) {
-				Map.Entry mapEntry = (Map.Entry) iterator.next();
-
-				Giudizio g = giudizioNewRepository.findOne((Long)mapEntry.getKey());
-				g.setApproved((Boolean)mapEntry.getValue());
-				giudizioNewRepository.saveAndFlush(g);
-
-			}
-		}
+//		Map<String, Boolean> updatedCommentList =  mediationParserImpl
+//				.updateComment(0,System.currentTimeMillis(),
+//						tkm.getClientSmartCampusToken());
+//		if (updatedCommentList != null && !updatedCommentList.isEmpty()) {
+//			Iterator iterator = updatedCommentList.entrySet().iterator();
+//			while (iterator.hasNext()) {
+//				Map.Entry mapEntry = (Map.Entry) iterator.next();
+//
+//				Giudizio g = giudizioNewRepository.findOne((Long)mapEntry.getKey());
+//				g.setApproved((Boolean)mapEntry.getValue());
+//				giudizioNewRepository.saveAndFlush(g);
+//
+//			}
+//		}
 	}
 
 	/*
@@ -222,7 +222,7 @@ public class IGraditoController {
 	public @ResponseBody
 	List<Giudizio> aggiungiGiudizio(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
-			@PathVariable("mensa_id") Long mensa_id,
+			@PathVariable("mensa_id") String mensa_id,
 			@PathVariable("piatto_id") Long piatto_id,
 			@RequestBody GiudizioDataToPost data) throws IOException {
 		try {
@@ -247,7 +247,7 @@ public class IGraditoController {
 							.getUserGiudizioApproved(mensa_id, piatto_id,
 									data.userId);
 
-					mediationParserImpl.updateKeyWord(token);
+					//mediationParserImpl.updateKeyWord(token);
 
 					if (giudizio_old != null) {
 
@@ -261,18 +261,18 @@ public class IGraditoController {
 						giudizio_old.setVoto(data.voto);
 						giudizio_old.setTesto(data.commento);
 				
-						giudizio_old.setApproved(mediationParserImpl
-								.localValidationComment(
-										giudizio_old.getTesto(), giudizio_old
-												.getId().toString(), userId,
-										token));
+//						giudizio_old.setApproved(mediationParserImpl
+//								.localValidationComment(
+//										giudizio_old.getTesto(), giudizio_old
+//												.getId().toString(), userId,
+//										token));
 
 						if (giudizio_old.isApproved()) {
-							giudizio_old.setApproved(mediationParserImpl
-									.remoteValidationComment(
-											giudizio_old.getTesto(),
-											giudizio_old.getId().toString(),
-											userId, token));
+//							giudizio_old.setApproved(mediationParserImpl
+//									.remoteValidationComment(
+//											giudizio_old.getTesto(),
+//											giudizio_old.getId().toString(),
+//											userId, token));
 						}
 
 						if (giudizio_old.isApproved()) {
@@ -310,18 +310,18 @@ public class IGraditoController {
 
 						giudizio = giudizioNewRepository.save(giudizio);
 
-						giudizio.setApproved(mediationParserImpl
-								.localValidationComment(giudizio.getTesto(),
-										giudizio.getId().toString(), userId,
-										token));
+////						giudizio.setApproved(mediationParserImpl
+//								.localValidationComment(giudizio.getTesto(),
+//										giudizio.getId().toString(), userId,
+//										token));
 
 						giudizio = giudizioNewRepository.save(giudizio);
 
 						if (giudizio.isApproved()) {
-							giudizio.setApproved(mediationParserImpl
-									.remoteValidationComment(giudizio
-											.getTesto(), giudizio.getId().toString(), userId, token));
-						}
+//							giudizio.setApproved(mediationParserImpl
+//									.remoteValidationComment(giudizio
+//											.getTesto(), giudizio.getId().toString(), userId, token));
+					}
 
 						if (giudizio.isApproved()) {
 							giudizioNewRepository.save(giudizio);
@@ -404,7 +404,7 @@ public class IGraditoController {
 	public @ResponseBody
 	List<Giudizio> eliminaGiudizio(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
-			@PathVariable("mensa_id") Long mensa_id,
+			@PathVariable("mensa_id") String mensa_id,
 			@PathVariable("piatto_id") Long piatto_id,
 			@PathVariable("giudizio_id") Long giudizio_id,
 			@RequestBody GiudizioDataToPost data) throws IOException {

@@ -4,13 +4,13 @@
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
-        <dependent-module archiveName="aac.client-1.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/aac.client/aac.client">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
         <dependent-module archiveName="unidataservice.client-1.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/unidataservice.client/unidataservice.client">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="mediation.api-1.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/mediation.api/mediation.api">
+        <dependent-module archiveName="mediation.api-1.1.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/mediation.api/mediation.api">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="moderator.client-1.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/moderator.client/moderator.client">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <property name="context-root" value="web-ifame"/>
