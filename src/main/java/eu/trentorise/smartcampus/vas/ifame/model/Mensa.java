@@ -26,20 +26,24 @@ public class Mensa {
 
 	@Column(name = "MENSA_LINK_OFFLINE")
 	private String mensa_link_offline;
-	
+
 	@Transient
 	private List<CanteenOpeningTimes> times;
+	
+	public Mensa() {
+		
+	}
 
 	public Mensa(CanteenOpening canteenOpening) {
 		super();
-		this.mensa_id=canteenOpening.getId();
-		this.mensa_nome=canteenOpening.getCanteen();
+		this.mensa_id = canteenOpening.getId();
+		this.mensa_nome = canteenOpening.getCanteen();
 	}
 
-	public Mensa(String mensa_id,String mensa_nome, String mensa_link_online,
+	public Mensa(String mensa_id, String mensa_nome, String mensa_link_online,
 			String mensa_link_offline) {
 		super();
-		this.mensa_id=mensa_id;
+		this.mensa_id = mensa_id;
 		this.mensa_nome = mensa_nome;
 		this.mensa_link_online = mensa_link_online;
 		this.mensa_link_offline = mensa_link_offline;

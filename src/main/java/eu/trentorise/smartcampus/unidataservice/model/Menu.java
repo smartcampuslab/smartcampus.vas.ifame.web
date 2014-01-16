@@ -24,7 +24,7 @@ public class Menu {
 	private String id;
 	private String date;
 	private List<Dish> dishes;
-	
+
 	/**
 	 * Type: "p" for lunch, "c" for dinner
 	 */
@@ -33,7 +33,7 @@ public class Menu {
 	public Menu() {
 		dishes = new ArrayList<Dish>();
 	}
-	
+
 	public String getId() {
 		return id;
 	}

@@ -7,9 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -20,7 +18,6 @@ import jxl.Workbook;
 import jxl.read.biff.BiffException;
 
 import org.apache.log4j.Logger;
-import org.hibernate.loader.custom.Return;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -33,12 +30,10 @@ import eu.trentorise.smartcampus.unidataservice.model.Dish;
 import eu.trentorise.smartcampus.unidataservice.model.Menu;
 import eu.trentorise.smartcampus.vas.ifame.model.MenuDelGiorno;
 import eu.trentorise.smartcampus.vas.ifame.model.MenuDelMese;
-import eu.trentorise.smartcampus.vas.ifame.model.MenuDellaSettimana;
 import eu.trentorise.smartcampus.vas.ifame.model.Piatto;
 import eu.trentorise.smartcampus.vas.ifame.repository.MensaRepository;
 import eu.trentorise.smartcampus.vas.ifame.repository.PiattoRepository;
 import eu.trentorise.smartcampus.vas.ifame.utils.EasyTokenManger;
-import eu.trentorise.smartcampus.vas.ifame.utils.NewMenuXlsUtil;
 
 @Controller("MenuController")
 public class MenuController {
@@ -103,16 +98,16 @@ public class MenuController {
 			// piattiDiungiorno="[{\"id\":\"323031332d31312d30315f63\",\"date\":\"2013-11-01\",\"dishes\":[{\"name\":\"Zuppa di farro e fagioli\",\"cal\":\"485\"},{\"name\":\"Pasta panna e prosciutto\",\"cal\":\"619\"},{\"name\":\"Pasta cacio e pepe\",\"cal\":\"605\"},{\"name\":\"Saltimbocca alla romana\",\"cal\":\"312\"},{\"name\":\"Bruschetta rustica\",\"cal\":\"346\"},{\"name\":\"Patate al forno\",\"cal\":\"292\"},{\"name\":\"Carciofi saltati\",\"cal\":\"164\"}],\"type\":\"c\"},{\"id\":\"323031332d31312d30315f70\",\"date\":\"2013-11-01\",\"dishes\":[{\"name\":\"Zuppa di ceci\",\"cal\":\"472\"},{\"name\":\"Pasta alla marinara\",\"cal\":\"450\"},{\"name\":\"Wurstel farciti\",\"cal\":\"370\"},{\"name\":\"Merluzzo alle olive e capperi\",\"cal\":\"184\"},{\"name\":\"Crocchette di patate\",\"cal\":\"350\"},{\"name\":\"Carote prezzemolate\",\"cal\":\"140\"}],\"type\":\"p\"}]";
 
 			return extrapolateMenu(sdf, listaMenu);
-			//TEST
-//			MenuDelGiorno mgg = new MenuDelGiorno();
-//			mgg.setDay(15);
-//			List<Piatto> lp = new ArrayList<Piatto>();
-//			lp.add(new Piatto("test1","0"));
-//			lp.add(new Piatto("test2","100"));
-//			
-//			mgg.setPiattiDelGiorno(lp);
-//			
-//			return mgg;
+			// TEST
+			// MenuDelGiorno mgg = new MenuDelGiorno();
+			// mgg.setDay(15);
+			// List<Piatto> lp = new ArrayList<Piatto>();
+			// lp.add(new Piatto("test1","0"));
+			// lp.add(new Piatto("test2","100"));
+			//
+			// mgg.setPiattiDelGiorno(lp);
+			//
+			// return mgg;
 
 			// return NewMenuXlsUtil.getMenuDelGiorno(day, workbook);
 
@@ -185,20 +180,20 @@ public class MenuController {
 				mm.setStart_day(Integer.parseInt(dataFrom));
 				mm.setEnd_day(Integer.parseInt(dataTo));
 			}
-//			MenuDelMese mmese = new MenuDelMese();
-//			mmese.setStart_day(1);
-//			mmese.setEnd_day(31);
-//			MenuDelGiorno mgg = new MenuDelGiorno();
-//			mgg.setDay(15);
-//			List<Piatto> lp = new ArrayList<Piatto>();
-//			lp.add(new Piatto("test1","0"));
-//			lp.add(new Piatto("test2","100"));
-//			mgg.setPiattiDelGiorno(lp);
-//			List<MenuDelGiorno> lmg = new ArrayList<MenuDelGiorno>();
-//			lmg.add(mgg);
-//			mmese.setMenuDelGg(lmg);
-//			return mmese;
-			//return mgg;
+			// MenuDelMese mmese = new MenuDelMese();
+			// mmese.setStart_day(1);
+			// mmese.setEnd_day(31);
+			// MenuDelGiorno mgg = new MenuDelGiorno();
+			// mgg.setDay(15);
+			// List<Piatto> lp = new ArrayList<Piatto>();
+			// lp.add(new Piatto("test1","0"));
+			// lp.add(new Piatto("test2","100"));
+			// mgg.setPiattiDelGiorno(lp);
+			// List<MenuDelGiorno> lmg = new ArrayList<MenuDelGiorno>();
+			// lmg.add(mgg);
+			// mmese.setMenuDelGg(lmg);
+			// return mmese;
+			// return mgg;
 			// MenuDelMese mdm = NewMenuXlsUtil.getMenuDelMese(workbook);
 
 			return mm;
@@ -229,7 +224,7 @@ public class MenuController {
 
 			logger.info("/getalternative");
 
-			return NewMenuXlsUtil.getAlternative(workbook);
+			return null;//NewMenuXlsUtil.getAlternative(workbook);
 
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -248,7 +243,7 @@ public class MenuController {
 
 		InputStream stream = getClass().getResourceAsStream("/Dicembre.xls");
 
-		MenuController.workbook = NewMenuXlsUtil.getWorkbook(stream);
+	//	MenuController.workbook = NewMenuXlsUtil.getWorkbook(stream);
 	}
 
 	/*

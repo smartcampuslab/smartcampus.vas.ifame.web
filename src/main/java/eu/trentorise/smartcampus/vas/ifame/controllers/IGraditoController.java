@@ -3,9 +3,7 @@ package eu.trentorise.smartcampus.vas.ifame.controllers;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -25,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import eu.trentorise.smartcampus.aac.AACException;
-import eu.trentorise.smartcampus.mediation.engine.MediationParserImpl;
 import eu.trentorise.smartcampus.mediation.model.CommentBaseEntity;
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
@@ -57,8 +54,8 @@ public class IGraditoController {
 	@Autowired
 	LikesRepository likeRepository;
 
-	//@Autowired
-	//private MediationParserImpl mediationParserImpl;
+	// @Autowired
+	// private MediationParserImpl mediationParserImpl;
 
 	@Autowired
 	@Value("${profile.address}")
@@ -197,20 +194,20 @@ public class IGraditoController {
 	public void updateRemoteComment() throws AACException {
 		log.debug("Update comment in local");
 		// aggiorno i commenti
-//		Map<String, Boolean> updatedCommentList =  mediationParserImpl
-//				.updateComment(0,System.currentTimeMillis(),
-//						tkm.getClientSmartCampusToken());
-//		if (updatedCommentList != null && !updatedCommentList.isEmpty()) {
-//			Iterator iterator = updatedCommentList.entrySet().iterator();
-//			while (iterator.hasNext()) {
-//				Map.Entry mapEntry = (Map.Entry) iterator.next();
-//
-//				Giudizio g = giudizioNewRepository.findOne((Long)mapEntry.getKey());
-//				g.setApproved((Boolean)mapEntry.getValue());
-//				giudizioNewRepository.saveAndFlush(g);
-//
-//			}
-//		}
+		// Map<String, Boolean> updatedCommentList = mediationParserImpl
+		// .updateComment(0,System.currentTimeMillis(),
+		// tkm.getClientSmartCampusToken());
+		// if (updatedCommentList != null && !updatedCommentList.isEmpty()) {
+		// Iterator iterator = updatedCommentList.entrySet().iterator();
+		// while (iterator.hasNext()) {
+		// Map.Entry mapEntry = (Map.Entry) iterator.next();
+		//
+		// Giudizio g = giudizioNewRepository.findOne((Long)mapEntry.getKey());
+		// g.setApproved((Boolean)mapEntry.getValue());
+		// giudizioNewRepository.saveAndFlush(g);
+		//
+		// }
+		// }
 	}
 
 	/*
@@ -247,7 +244,7 @@ public class IGraditoController {
 							.getUserGiudizioApproved(mensa_id, piatto_id,
 									data.userId);
 
-					//mediationParserImpl.updateKeyWord(token);
+					// mediationParserImpl.updateKeyWord(token);
 
 					if (giudizio_old != null) {
 
@@ -260,19 +257,19 @@ public class IGraditoController {
 
 						giudizio_old.setVoto(data.voto);
 						giudizio_old.setTesto(data.commento);
-				
-//						giudizio_old.setApproved(mediationParserImpl
-//								.localValidationComment(
-//										giudizio_old.getTesto(), giudizio_old
-//												.getId().toString(), userId,
-//										token));
+
+						// giudizio_old.setApproved(mediationParserImpl
+						// .localValidationComment(
+						// giudizio_old.getTesto(), giudizio_old
+						// .getId().toString(), userId,
+						// token));
 
 						if (giudizio_old.isApproved()) {
-//							giudizio_old.setApproved(mediationParserImpl
-//									.remoteValidationComment(
-//											giudizio_old.getTesto(),
-//											giudizio_old.getId().toString(),
-//											userId, token));
+							// giudizio_old.setApproved(mediationParserImpl
+							// .remoteValidationComment(
+							// giudizio_old.getTesto(),
+							// giudizio_old.getId().toString(),
+							// userId, token));
 						}
 
 						if (giudizio_old.isApproved()) {
@@ -310,18 +307,19 @@ public class IGraditoController {
 
 						giudizio = giudizioNewRepository.save(giudizio);
 
-////						giudizio.setApproved(mediationParserImpl
-//								.localValidationComment(giudizio.getTesto(),
-//										giudizio.getId().toString(), userId,
-//										token));
+						// // giudizio.setApproved(mediationParserImpl
+						// .localValidationComment(giudizio.getTesto(),
+						// giudizio.getId().toString(), userId,
+						// token));
 
 						giudizio = giudizioNewRepository.save(giudizio);
 
 						if (giudizio.isApproved()) {
-//							giudizio.setApproved(mediationParserImpl
-//									.remoteValidationComment(giudizio
-//											.getTesto(), giudizio.getId().toString(), userId, token));
-					}
+							// giudizio.setApproved(mediationParserImpl
+							// .remoteValidationComment(giudizio
+							// .getTesto(), giudizio.getId().toString(), userId,
+							// token));
+						}
 
 						if (giudizio.isApproved()) {
 							giudizioNewRepository.save(giudizio);
