@@ -4,19 +4,9 @@ import java.util.List;
 
 public class MenuDelMese {
 
-	private List<MenuDelGiorno> menuDelGg;
-	// private List<MenuDellaSettimana> menuDellaSettimana;
+	private List<MenuDelGiorno> menuDelGg;	
 	private int start_day;
 	private int end_day;
-
-	// public List<MenuDellaSettimana> getMenuDellaSettimana() {
-	// return menuDellaSettimana;
-	// }
-	//
-	// public void setMenuDellaSettimana(
-	// List<MenuDellaSettimana> menuDellaSettimana) {
-	// this.menuDellaSettimana = menuDellaSettimana;
-	// }
 
 	public List<MenuDelGiorno> getMenuDelGg() {
 		return menuDelGg;

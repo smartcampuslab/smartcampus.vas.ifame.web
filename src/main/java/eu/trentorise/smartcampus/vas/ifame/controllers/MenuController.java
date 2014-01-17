@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -83,8 +84,12 @@ public class MenuController {
 			Calendar data = Calendar.getInstance();
 			int day = data.get(Calendar.DAY_OF_MONTH);
 
-			Date datan = new Date(System.currentTimeMillis());
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-m-d");
+			Date datan = new Date(System.currentTimeMillis()
+					- Long.valueOf("5843351778"));// TEST
+			
+			
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-d");
 
 			// call client unidata
 			String dataFrom = sdf.format(datan);
@@ -93,23 +98,8 @@ public class MenuController {
 			List<Menu> listaMenu = studentInfoService.getMenu(
 					tkm.getClientSmartCampusToken(), dataFrom, dataTo);
 
-			// http://localhost:8080/core.unidata/data/getmenu/2013-11-01/2013-11-01
-			// String
-			// piattiDiungiorno="[{\"id\":\"323031332d31312d30315f63\",\"date\":\"2013-11-01\",\"dishes\":[{\"name\":\"Zuppa di farro e fagioli\",\"cal\":\"485\"},{\"name\":\"Pasta panna e prosciutto\",\"cal\":\"619\"},{\"name\":\"Pasta cacio e pepe\",\"cal\":\"605\"},{\"name\":\"Saltimbocca alla romana\",\"cal\":\"312\"},{\"name\":\"Bruschetta rustica\",\"cal\":\"346\"},{\"name\":\"Patate al forno\",\"cal\":\"292\"},{\"name\":\"Carciofi saltati\",\"cal\":\"164\"}],\"type\":\"c\"},{\"id\":\"323031332d31312d30315f70\",\"date\":\"2013-11-01\",\"dishes\":[{\"name\":\"Zuppa di ceci\",\"cal\":\"472\"},{\"name\":\"Pasta alla marinara\",\"cal\":\"450\"},{\"name\":\"Wurstel farciti\",\"cal\":\"370\"},{\"name\":\"Merluzzo alle olive e capperi\",\"cal\":\"184\"},{\"name\":\"Crocchette di patate\",\"cal\":\"350\"},{\"name\":\"Carote prezzemolate\",\"cal\":\"140\"}],\"type\":\"p\"}]";
-
-			//return extrapolateMenu(sdf, listaMenu);
-			// TEST
-			 MenuDelGiorno mgg = new MenuDelGiorno();
-			 mgg.setDay(15);
-			 List<Piatto> lp = new ArrayList<Piatto>();
-			 lp.add(new Piatto("test1","0"));
-			 lp.add(new Piatto("test2","100"));
-			
-			 mgg.setPiattiDelGiorno(lp);
-			
-			 return mgg;
-
-			// return NewMenuXlsUtil.getMenuDelGiorno(day, workbook);
+			return extrapolateMenu(sdf, listaMenu);
+		
 
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -123,20 +113,24 @@ public class MenuController {
 		MenuDelGiorno menu = null;
 		for (Menu index : listaMenu) {
 
-			menu = new MenuDelGiorno();
+			if (index.getType().compareTo("c") != 0) {
+				menu = new MenuDelGiorno();
 
-			Date date = sdf.parse(index.getDate());
-			menu.setDay(date.getDay());
+				Date date = sdf.parse(index.getDate());
+				Calendar cal = new GregorianCalendar();
+				cal.setTime(date);
+				menu.setDay(cal.get(Calendar.DAY_OF_MONTH));
 
-			List<Piatto> p = new ArrayList<Piatto>();
+				List<Piatto> p = new ArrayList<Piatto>();
 
-			for (Dish d : index.getDishes()) {
-				Piatto piatto = new Piatto(d.getName(), d.getCal());
-				p.add(piatto);
+				for (Dish d : index.getDishes()) {
+					Piatto piatto = new Piatto(d.getName(), d.getCal());
+					p.add(piatto);
 
+				}
+
+				menu.setPiattiDelGiorno(p);
 			}
-
-			menu.setPiattiDelGiorno(p);
 		}
 		return menu;
 
@@ -159,45 +153,62 @@ public class MenuController {
 
 			logger.info("/getmenudelmese");
 
-			Calendar cal = Calendar.getInstance();
-			cal.set(Calendar.DATE, 1);
-			Date firstDateOfMonth = cal.getTime();
-			cal.set(Calendar.DATE, cal.getActualMaximum(Calendar.DATE));
-			Date lastDateOfMonth = cal.getTime();
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-m-d");
+			MenuDelMese mm = new MenuDelMese();
+			Calendar data = Calendar.getInstance();
+
+			
+			//TEST
+			
+			data.add(Calendar.MONTH, -2);
+			
+			//TEST
+			
+			
+			
+			int month = data.get(Calendar.MONTH);
+			data.set(Calendar.DAY_OF_MONTH, 1);
+			Date firstDateOfMonth = data.getTime();
+			mm.setStart_day(data.get(Calendar.DAY_OF_MONTH));
+			data.set(Calendar.DAY_OF_MONTH,
+					data.getActualMaximum(Calendar.DATE));
+			Date lastDateOfMonth = data.getTime();
+			mm.setEnd_day(data.get(Calendar.DAY_OF_MONTH));
 
 			// call client unidata
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-M-d");
 			String dataFrom = sdf.format(firstDateOfMonth);
 			String dataTo = sdf.format(lastDateOfMonth);
 
 			List<Menu> listaMenu = studentInfoService.getMenu(
 					tkm.getClientSmartCampusToken(), dataFrom, dataTo);
-			MenuDelMese mm = new MenuDelMese();
+
 			List<MenuDelGiorno> mg = new ArrayList<MenuDelGiorno>();
 			for (Menu menu : listaMenu) {
-				mg.add(extrapolateMenu(sdf, listaMenu));
-				mm.setMenuDelGg(mg);
-				mm.setStart_day(Integer.parseInt(dataFrom));
-				mm.setEnd_day(Integer.parseInt(dataTo));
+				if(menu.getType().compareTo("p")==0){
+				MenuDelGiorno newMenu = new MenuDelGiorno();
+
+				Date date = sdf.parse(menu.getDate());
+				Calendar cal = new GregorianCalendar();
+				cal.setTime(date);
+				newMenu.setDay(cal.get(Calendar.DAY_OF_MONTH));
+				List<Piatto> piattiList=new ArrayList<Piatto>();
+				for (Dish piattoEntrante : menu.getDishes()) {
+					Piatto nuovopiatto=new Piatto();
+					//nuovopiatto.setPiatto_id(piattoEntrante.getId());
+					nuovopiatto.setPiatto_kcal(piattoEntrante.getCal());
+					nuovopiatto.setPiatto_nome(piattoEntrante.getName());
+					piattiList.add(nuovopiatto);
+				}
+				newMenu.setPiattiDelGiorno(piattiList);
+				mg.add(newMenu);
+				}
+
 			}
-			 MenuDelMese mmese = new MenuDelMese();
-			 mmese.setStart_day(1);
-			 mmese.setEnd_day(31);
-			 MenuDelGiorno mgg = new MenuDelGiorno();
-			 mgg.setDay(15);
-			 List<Piatto> lp = new ArrayList<Piatto>();
-			 lp.add(new Piatto("test1","0"));
-			 lp.add(new Piatto("test2","100"));
-			 mgg.setPiattiDelGiorno(lp);
-			 List<MenuDelGiorno> lmg = new ArrayList<MenuDelGiorno>();
-			 lmg.add(mgg);
-			 mmese.setMenuDelGg(lmg);
-			 return mmese;
-			 //return mgg;
-			// MenuDelMese mdm = NewMenuXlsUtil.getMenuDelMese(workbook);
 
-			//return mm;
+			mm.setMenuDelGg(mg);
 
+			return mm;
+		
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
@@ -224,7 +235,7 @@ public class MenuController {
 
 			logger.info("/getalternative");
 
-			return null;//NewMenuXlsUtil.getAlternative(workbook);
+			return null;// NewMenuXlsUtil.getAlternative(workbook);
 
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -243,7 +254,7 @@ public class MenuController {
 
 		InputStream stream = getClass().getResourceAsStream("/Dicembre.xls");
 
-	//	MenuController.workbook = NewMenuXlsUtil.getWorkbook(stream);
+		// MenuController.workbook = NewMenuXlsUtil.getWorkbook(stream);
 	}
 
 	/*
