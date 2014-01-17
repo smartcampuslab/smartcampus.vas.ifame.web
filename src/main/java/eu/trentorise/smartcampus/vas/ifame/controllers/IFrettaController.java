@@ -52,9 +52,10 @@ public class IFrettaController {
 	private CanteenService studentInfoService;
 
 	@PostConstruct
-	private void initStudentInfoService() {
+	private void initStudentInfoService() throws SecurityException, AACException, UnidataServiceException {
 		studentInfoService = new CanteenService(URLStudenteService);
 		tkm = new EasyTokenManger(profileaddress, clientId, clientSecret);
+		updateMense();
 	}
 
 	private static final Logger logger = Logger
@@ -89,7 +90,7 @@ public class IFrettaController {
 		return null;
 	}
 
-	@PostConstruct
+	
 	public void updateMense() throws AACException, SecurityException,
 			UnidataServiceException {
 		log.debug("Update mense in local");
@@ -161,25 +162,26 @@ public class IFrettaController {
 		for (CanteenOpening canteenOpening : mense) {
 			Mensa newMensa = new Mensa(canteenOpening);
 
-			if (canteenOpening.getCanteen() == "Povo1 (Polo Ferrari) Pranzo (linea standard)") {
+			if (canteenOpening.getId().compareTo("506f766f30")==0) {
 				newMensa.setMensa_link_offline(url_povo_mensa_offline);
 				newMensa.setMensa_link_online(url_povo_mensa_online);
-			} else if (canteenOpening.getCanteen() == "Povo1 (Polo Ferrari) Pranzo (linea veloce)") {
+			} else if (canteenOpening.getId().compareTo("506f766f312028506f6c6f204665727261726929")==0) {
 				newMensa.setMensa_link_offline(url_povo_mensa_veloce_offline);
 				newMensa.setMensa_link_online(url_povo_mensa_veloce_online);
-			} else if (canteenOpening.getCanteen() == "T. Gar") {
+			} else if (canteenOpening.getId().compareTo("542e20476172")==0) {
 				newMensa.setMensa_link_offline(url_tommaso_gar_offline);
 				newMensa.setMensa_link_online(url_tommaso_gar_online);
-			} else if (canteenOpening.getCanteen() == "Zanella") {
+			} else if (canteenOpening.getId().compareTo("5a616e656c6c61")==0) {
 				newMensa.setMensa_link_offline(url_zanella_offline);
 				newMensa.setMensa_link_online(url_zanella_online);
-			} else if (canteenOpening.getCanteen() == "Mesiano") {
+			} else if (canteenOpening.getId().compareTo("4d657369616e6f")==0) {
 				newMensa.setMensa_link_offline(url_mesiano_1_offline);
 				newMensa.setMensa_link_online(url_mesiano_1_online);
-			} else if (canteenOpening.getCanteen() == "Mesiano Bar") {
-				newMensa.setMensa_link_offline(url_mesiano_2_offline);
-				newMensa.setMensa_link_online(url_mesiano_2_online);
 			}
+				//else if (canteenOpening.getCanteen().compareTo("5a616e656c6c61")==0) {
+//				newMensa.setMensa_link_offline(url_mesiano_2_offline);
+//				newMensa.setMensa_link_online(url_mesiano_2_online);
+//			}
 
 			mensaRepository.save(newMensa);
 

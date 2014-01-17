@@ -97,17 +97,17 @@ public class MenuController {
 			// String
 			// piattiDiungiorno="[{\"id\":\"323031332d31312d30315f63\",\"date\":\"2013-11-01\",\"dishes\":[{\"name\":\"Zuppa di farro e fagioli\",\"cal\":\"485\"},{\"name\":\"Pasta panna e prosciutto\",\"cal\":\"619\"},{\"name\":\"Pasta cacio e pepe\",\"cal\":\"605\"},{\"name\":\"Saltimbocca alla romana\",\"cal\":\"312\"},{\"name\":\"Bruschetta rustica\",\"cal\":\"346\"},{\"name\":\"Patate al forno\",\"cal\":\"292\"},{\"name\":\"Carciofi saltati\",\"cal\":\"164\"}],\"type\":\"c\"},{\"id\":\"323031332d31312d30315f70\",\"date\":\"2013-11-01\",\"dishes\":[{\"name\":\"Zuppa di ceci\",\"cal\":\"472\"},{\"name\":\"Pasta alla marinara\",\"cal\":\"450\"},{\"name\":\"Wurstel farciti\",\"cal\":\"370\"},{\"name\":\"Merluzzo alle olive e capperi\",\"cal\":\"184\"},{\"name\":\"Crocchette di patate\",\"cal\":\"350\"},{\"name\":\"Carote prezzemolate\",\"cal\":\"140\"}],\"type\":\"p\"}]";
 
-			return extrapolateMenu(sdf, listaMenu);
+			//return extrapolateMenu(sdf, listaMenu);
 			// TEST
-			// MenuDelGiorno mgg = new MenuDelGiorno();
-			// mgg.setDay(15);
-			// List<Piatto> lp = new ArrayList<Piatto>();
-			// lp.add(new Piatto("test1","0"));
-			// lp.add(new Piatto("test2","100"));
-			//
-			// mgg.setPiattiDelGiorno(lp);
-			//
-			// return mgg;
+			 MenuDelGiorno mgg = new MenuDelGiorno();
+			 mgg.setDay(15);
+			 List<Piatto> lp = new ArrayList<Piatto>();
+			 lp.add(new Piatto("test1","0"));
+			 lp.add(new Piatto("test2","100"));
+			
+			 mgg.setPiattiDelGiorno(lp);
+			
+			 return mgg;
 
 			// return NewMenuXlsUtil.getMenuDelGiorno(day, workbook);
 
