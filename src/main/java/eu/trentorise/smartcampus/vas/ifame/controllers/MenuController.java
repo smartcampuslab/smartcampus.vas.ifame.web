@@ -180,23 +180,23 @@ public class MenuController {
 				mm.setStart_day(Integer.parseInt(dataFrom));
 				mm.setEnd_day(Integer.parseInt(dataTo));
 			}
-			// MenuDelMese mmese = new MenuDelMese();
-			// mmese.setStart_day(1);
-			// mmese.setEnd_day(31);
-			// MenuDelGiorno mgg = new MenuDelGiorno();
-			// mgg.setDay(15);
-			// List<Piatto> lp = new ArrayList<Piatto>();
-			// lp.add(new Piatto("test1","0"));
-			// lp.add(new Piatto("test2","100"));
-			// mgg.setPiattiDelGiorno(lp);
-			// List<MenuDelGiorno> lmg = new ArrayList<MenuDelGiorno>();
-			// lmg.add(mgg);
-			// mmese.setMenuDelGg(lmg);
-			// return mmese;
-			// return mgg;
+			 MenuDelMese mmese = new MenuDelMese();
+			 mmese.setStart_day(1);
+			 mmese.setEnd_day(31);
+			 MenuDelGiorno mgg = new MenuDelGiorno();
+			 mgg.setDay(15);
+			 List<Piatto> lp = new ArrayList<Piatto>();
+			 lp.add(new Piatto("test1","0"));
+			 lp.add(new Piatto("test2","100"));
+			 mgg.setPiattiDelGiorno(lp);
+			 List<MenuDelGiorno> lmg = new ArrayList<MenuDelGiorno>();
+			 lmg.add(mgg);
+			 mmese.setMenuDelGg(lmg);
+			 return mmese;
+			 //return mgg;
 			// MenuDelMese mdm = NewMenuXlsUtil.getMenuDelMese(workbook);
 
-			return mm;
+			//return mm;
 
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
