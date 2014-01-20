@@ -6,6 +6,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -204,6 +206,11 @@ public class MenuController {
 				}
 
 			}
+			Collections.sort(mg, new Comparator<MenuDelGiorno>() {
+			    public int compare(MenuDelGiorno a, MenuDelGiorno b) {
+			        return Integer.signum(a.getDay() - b.getDay());
+			    }			 
+			});
 
 			mm.setMenuDelGg(mg);
 
