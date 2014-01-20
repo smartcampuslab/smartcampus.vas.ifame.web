@@ -125,11 +125,13 @@ public class IFrettaController {
 
 		for (CanteenOpening canteenOpening : mense) {
 			Mensa newMensa = new Mensa(canteenOpening);
-
-			if (canteenOpening.getId().compareTo("506f766f30")==0) {
+//TODO: Rimappare (barando) i nomi 
+			if (canteenOpening.getId().compareTo("506f766f312028506f6c6f204665727261726929")==0) {
+				newMensa.setMensa_nome("F.Ferrari (Veloce)");
 				newMensa.setMensa_link_offline(url_povo_mensa_offline);
 				newMensa.setMensa_link_online(url_povo_mensa_online);
-			} else if (canteenOpening.getId().compareTo("506f766f312028506f6c6f204665727261726929")==0) {
+			} else if (canteenOpening.getId().compareTo("506f766f30")==0) {
+				newMensa.setMensa_nome("F.Ferrari");
 				newMensa.setMensa_link_offline(url_povo_mensa_veloce_offline);
 				newMensa.setMensa_link_online(url_povo_mensa_veloce_online);
 			} else if (canteenOpening.getId().compareTo("542e20476172")==0) {
