@@ -373,6 +373,7 @@ public class IGraditoController {
 
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			e.printStackTrace();
 		}
 		/*
 		 * BAD REQUEST SE HO ERRORI NEI CONTROLLI
