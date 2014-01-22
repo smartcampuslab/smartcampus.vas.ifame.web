@@ -125,27 +125,31 @@ public class IFrettaController {
 
 		for (CanteenOpening canteenOpening : mense) {
 			Mensa newMensa = new Mensa(canteenOpening);
-			//TODO: change name of "Povo0" in "F.Ferrari (Veloce)", change name of "Povo1 (Polo Ferrari)" in "F.Ferrari"
-			if (canteenOpening.getId().compareTo("506f766f312028506f6c6f204665727261726929")==0) {
-				newMensa.setMensa_nome("F.Ferrari");
+			//TODO: change name of canteens for mach previous version of IFretta
+			if (canteenOpening.getId().compareTo("506f766f30")==0) {
+				newMensa.setMensa_nome("Povo Mensa");
 				newMensa.setMensa_link_offline(url_povo_mensa_offline);
 				newMensa.setMensa_link_online(url_povo_mensa_online);
-			} else if (canteenOpening.getId().compareTo("506f766f30")==0) {
-				newMensa.setMensa_nome("F.Ferrari (Veloce)");
+			} else if (canteenOpening.getId().compareTo("506f766f312028506f6c6f204665727261726929")==0) {
+				newMensa.setMensa_nome("Povo Mensa Veloce");
 				newMensa.setMensa_link_offline(url_povo_mensa_veloce_offline);
 				newMensa.setMensa_link_online(url_povo_mensa_veloce_online);
 			} else if (canteenOpening.getId().compareTo("542e20476172")==0) {
+				newMensa.setMensa_nome("Tommaso Gar.");
 				newMensa.setMensa_link_offline(url_tommaso_gar_offline);
 				newMensa.setMensa_link_online(url_tommaso_gar_online);
-			} else if (canteenOpening.getId().compareTo("5a616e656c6c61")==0) {
+			} else if (canteenOpening.getId().compareTo("5a616e656c6c61")==0) {;
 				newMensa.setMensa_link_offline(url_zanella_offline);
 				newMensa.setMensa_link_online(url_zanella_online);
 			} else if (canteenOpening.getId().compareTo("4d657369616e6f")==0) {
+				newMensa.setMensa_nome("Mesiano 1");
 				newMensa.setMensa_link_offline(url_mesiano_1_offline);
 				newMensa.setMensa_link_online(url_mesiano_1_online);
+			}else if (canteenOpening.getId().compareTo("532e20426172746f6c616d656f")==0) {
+				newMensa.setMensa_nome("Mesiano 2");
+				newMensa.setMensa_link_offline(url_mesiano_2_offline);
+				newMensa.setMensa_link_online(url_mesiano_2_online);
 			}
-				
-
 			mensaRepository.save(newMensa);
 
 		}

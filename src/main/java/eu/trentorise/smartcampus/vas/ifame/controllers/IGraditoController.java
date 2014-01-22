@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import eu.trentorise.smartcampus.aac.AACException;
+import eu.trentorise.smartcampus.filestorage.client.utils.Utils;
 import eu.trentorise.smartcampus.mediation.model.CommentBaseEntity;
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
@@ -139,12 +140,13 @@ public class IGraditoController {
 
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			e.printStackTrace();
 		}
 
 		/*
 		 * BAD REQUEST SE HO ERRORI NEI CONTROLLI
 		 */
-		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		//response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		return null;
 	}
 
@@ -167,7 +169,7 @@ public class IGraditoController {
 			if (mensaRepository.exists(mensa_id)
 					&& piattoRepository.exists(piatto_id)) {
 
-				return giudizioNewRepository.getUserGiudizioApproved(mensa_id,
+				return  giudizioNewRepository.getUserGiudizioApproved(mensa_id,
 						piatto_id, user_id);
 
 			} else {
