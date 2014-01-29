@@ -52,7 +52,8 @@ public class IFrettaController {
 	private CanteenService studentInfoService;
 
 	@PostConstruct
-	private void initStudentInfoService() throws SecurityException, AACException, UnidataServiceException {
+	private void initStudentInfoService() throws SecurityException,
+			AACException, UnidataServiceException {
 		studentInfoService = new CanteenService(URLStudenteService);
 		tkm = new EasyTokenManger(profileaddress, clientId, clientSecret);
 		updateMense();
@@ -68,16 +69,16 @@ public class IFrettaController {
 			throws IOException {
 		try {
 			logger.info("/getmense");
-			 updateMense();
+			updateMense();
 			List<Mensa> reList = new ArrayList<Mensa>();
 			List<CanteenOpening> mense = studentInfoService.getOpening(tkm
 					.getClientSmartCampusToken());
-			
-			 for (CanteenOpening canteenOpening : mense) {
-			 Mensa x = mensaRepository.findOne(canteenOpening.getId());
-			 x.setTimes(canteenOpening.getTimes());
-			 reList.add(x);
-			 }
+
+			for (CanteenOpening canteenOpening : mense) {
+				Mensa x = mensaRepository.findOne(canteenOpening.getId());
+				x.setTimes(canteenOpening.getTimes());
+				reList.add(x);
+			}
 
 			return reList;
 
@@ -88,7 +89,6 @@ public class IFrettaController {
 		return null;
 	}
 
-	
 	public void updateMense() throws AACException, SecurityException,
 			UnidataServiceException {
 		log.debug("Update mense in local");
@@ -115,8 +115,6 @@ public class IFrettaController {
 		final String url_mesiano_1_online = "http://www.operauni.tn.it/upload/Webcam/MensaMes01.jpg";
 		final String url_mesiano_2_online = "http://www.operauni.tn.it/upload/Webcam/MensaMes02.jpg";
 
-		
-
 		// List<String>
 		// mense="[{\"id\":\"323031332d31312d30315f63\",\"date\":\"2013-11-01\",\"dishes\":[{\"name\":\"Zuppa di farro e fagioli\",\"cal\":\"485\"},{\"name\":\"Pasta panna e prosciutto\",\"cal\":\"619\"},{\"name\":\"Pasta cacio e pepe\",\"cal\":\"605\"},{\"name\":\"Saltimbocca alla romana\",\"cal\":\"312\"},{\"name\":\"Bruschetta rustica\",\"cal\":\"346\"},{\"name\":\"Patate al forno\",\"cal\":\"292\"},{\"name\":\"Carciofi saltati\",\"cal\":\"164\"}],\"type\":\"c\"},{\"id\":\"323031332d31312d30315f70\",\"date\":\"2013-11-01\",\"dishes\":[{\"name\":\"Zuppa di ceci\",\"cal\":\"472\"},{\"name\":\"Pasta alla marinara\",\"cal\":\"450\"},{\"name\":\"Wurstel farciti\",\"cal\":\"370\"},{\"name\":\"Merluzzo alle olive e capperi\",\"cal\":\"184\"},{\"name\":\"Crocchette di patate\",\"cal\":\"350\"},{\"name\":\"Carote prezzemolate\",\"cal\":\"140\"}],\"type\":\"p\"}]";
 
@@ -125,27 +123,31 @@ public class IFrettaController {
 
 		for (CanteenOpening canteenOpening : mense) {
 			Mensa newMensa = new Mensa(canteenOpening);
-			//TODO: change name of canteens for mach previous version of IFretta
-			if (canteenOpening.getId().compareTo("506f766f30")==0) {
+			// TODO: change name of canteens for mach previous version of
+			// IFretta
+			if (canteenOpening.getId().compareTo("506f766f30") == 0) {
 				newMensa.setMensa_nome("Povo Mensa");
 				newMensa.setMensa_link_offline(url_povo_mensa_offline);
 				newMensa.setMensa_link_online(url_povo_mensa_online);
-			} else if (canteenOpening.getId().compareTo("506f766f312028506f6c6f204665727261726929")==0) {
+			} else if (canteenOpening.getId().compareTo(
+					"506f766f312028506f6c6f204665727261726929") == 0) {
 				newMensa.setMensa_nome("Povo Mensa Veloce");
 				newMensa.setMensa_link_offline(url_povo_mensa_veloce_offline);
 				newMensa.setMensa_link_online(url_povo_mensa_veloce_online);
-			} else if (canteenOpening.getId().compareTo("542e20476172")==0) {
+			} else if (canteenOpening.getId().compareTo("542e20476172") == 0) {
 				newMensa.setMensa_nome("Tommaso Gar.");
 				newMensa.setMensa_link_offline(url_tommaso_gar_offline);
 				newMensa.setMensa_link_online(url_tommaso_gar_online);
-			} else if (canteenOpening.getId().compareTo("5a616e656c6c61")==0) {;
+			} else if (canteenOpening.getId().compareTo("5a616e656c6c61") == 0) {
+				;
 				newMensa.setMensa_link_offline(url_zanella_offline);
 				newMensa.setMensa_link_online(url_zanella_online);
-			} else if (canteenOpening.getId().compareTo("4d657369616e6f")==0) {
+			} else if (canteenOpening.getId().compareTo("4d657369616e6f") == 0) {
 				newMensa.setMensa_nome("Mesiano 1");
 				newMensa.setMensa_link_offline(url_mesiano_1_offline);
 				newMensa.setMensa_link_online(url_mesiano_1_online);
-			}else if (canteenOpening.getId().compareTo("532e20426172746f6c616d656f")==0) {
+			} else if (canteenOpening.getId().compareTo(
+					"532e20426172746f6c616d656f") == 0) {
 				newMensa.setMensa_nome("Mesiano 2");
 				newMensa.setMensa_link_offline(url_mesiano_2_offline);
 				newMensa.setMensa_link_online(url_mesiano_2_online);

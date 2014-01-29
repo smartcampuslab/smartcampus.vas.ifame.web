@@ -4,7 +4,7 @@ import java.util.List;
 
 public class MenuDelMese {
 
-	private List<MenuDelGiorno> menuDelGg;	
+	private List<MenuDelGiorno> menuDelGg;
 	private int start_day;
 	private int end_day;
 

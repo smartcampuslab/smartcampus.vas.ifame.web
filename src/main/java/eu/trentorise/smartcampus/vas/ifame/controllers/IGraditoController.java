@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
@@ -26,8 +24,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import eu.trentorise.smartcampus.aac.AACException;
-import eu.trentorise.smartcampus.mediation.engine.MediationParserImpl;
 import eu.trentorise.smartcampus.mediation.model.CommentBaseEntity;
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
@@ -54,7 +50,7 @@ public class IGraditoController {
 
 	@Autowired
 	GiudizioRepository giudizioRepository;
-	
+
 	@Autowired
 	MensaRepository mensaRepository;
 
@@ -155,7 +151,7 @@ public class IGraditoController {
 		/*
 		 * BAD REQUEST SE HO ERRORI NEI CONTROLLI
 		 */
-		//response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		// response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		return null;
 	}
 
@@ -178,7 +174,7 @@ public class IGraditoController {
 			if (mensaRepository.exists(mensa_id)
 					&& piattoRepository.exists(piatto_id)) {
 
-				return  giudizioNewRepository.getUserGiudizioApproved(mensa_id,
+				return giudizioNewRepository.getUserGiudizioApproved(mensa_id,
 						piatto_id, user_id);
 
 			} else {
@@ -200,31 +196,31 @@ public class IGraditoController {
 		return null;
 	}
 
-//	@Scheduled(fixedDelay = 900000)
-//	// 15min
-//	public void updateRemoteComment() throws AACException {
-//		log.debug("Update comment in local");
-//		// aggiorno i commenti
-//		MediationParserImpl mediationParserImpl = new MediationParserImpl();
-//		 Map<String, Boolean> updatedCommentList = mediationParserImpl
-//		 .updateComment(0,System.currentTimeMillis(),
-//		 tkm.getClientSmartCampusToken());
-//		 if (updatedCommentList != null && !updatedCommentList.isEmpty()) {
-//		 Iterator iterator = updatedCommentList.entrySet().iterator();
-//		 while (iterator.hasNext()) {
-//		 Map.Entry mapEntry = (Map.Entry) iterator.next();
-//		
-//		 Giudizio g = giudizioNewRepository.findOne((Long)mapEntry.getKey());
-//		 g.setApproved((Boolean)mapEntry.getValue());
-//		 giudizioNewRepository.saveAndFlush(g);
-//		
-//		 }
-//		 }
-//	}
+	// @Scheduled(fixedDelay = 900000)
+	// // 15min
+	// public void updateRemoteComment() throws AACException {
+	// log.debug("Update comment in local");
+	// // aggiorno i commenti
+	// MediationParserImpl mediationParserImpl = new MediationParserImpl();
+	// Map<String, Boolean> updatedCommentList = mediationParserImpl
+	// .updateComment(0,System.currentTimeMillis(),
+	// tkm.getClientSmartCampusToken());
+	// if (updatedCommentList != null && !updatedCommentList.isEmpty()) {
+	// Iterator iterator = updatedCommentList.entrySet().iterator();
+	// while (iterator.hasNext()) {
+	// Map.Entry mapEntry = (Map.Entry) iterator.next();
+	//
+	// Giudizio g = giudizioNewRepository.findOne((Long)mapEntry.getKey());
+	// g.setApproved((Boolean)mapEntry.getValue());
+	// giudizioNewRepository.saveAndFlush(g);
+	//
+	// }
+	// }
+	// }
 	@Scheduled(cron = "0 0 1 * * *")
-	//ogni primo del mese
+	// ogni primo del mese
 	private void updatePiatti() {
-		log.debug("Update piatti");	
+		log.debug("Update piatti");
 		// get the updated piatti and now do what you want
 		List<Piatto> piattiPresentiNelDb = piattoRepository.findAll();
 		List<Giudizio> giudizidb = giudizioRepository.findAll();
@@ -240,7 +236,8 @@ public class IGraditoController {
 					if (piattodb.getPiatto_nome().compareTo(
 							piatto.getPiatto_nome()) == 0) {
 						for (Giudizio g : giudizidb) {
-							if (g.getPiatto_id().compareTo(piattodb.getPiatto_id())==0) {
+							if (g.getPiatto_id().compareTo(
+									piattodb.getPiatto_id()) == 0) {
 								g.setPiatto_id(piatto.getPiatto_id());
 							}
 						}
@@ -253,6 +250,7 @@ public class IGraditoController {
 			}
 		}
 	}
+
 	/*
 	 * 
 	 * 

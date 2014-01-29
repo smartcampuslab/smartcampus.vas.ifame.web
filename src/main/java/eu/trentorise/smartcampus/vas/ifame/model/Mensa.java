@@ -29,9 +29,9 @@ public class Mensa {
 
 	@Transient
 	private List<CanteenOpeningTimes> times;
-	
+
 	public Mensa() {
-		
+
 	}
 
 	public Mensa(CanteenOpening canteenOpening) {
