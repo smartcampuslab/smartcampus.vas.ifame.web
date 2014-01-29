@@ -3,7 +3,11 @@ package eu.trentorise.smartcampus.vas.ifame.controllers;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -23,13 +27,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import eu.trentorise.smartcampus.aac.AACException;
-import eu.trentorise.smartcampus.filestorage.client.utils.Utils;
+import eu.trentorise.smartcampus.mediation.engine.MediationParserImpl;
 import eu.trentorise.smartcampus.mediation.model.CommentBaseEntity;
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 import eu.trentorise.smartcampus.vas.ifame.model.Giudizio;
 import eu.trentorise.smartcampus.vas.ifame.model.GiudizioDataToPost;
 import eu.trentorise.smartcampus.vas.ifame.model.Likes;
+import eu.trentorise.smartcampus.vas.ifame.model.MenuDelGiorno;
+import eu.trentorise.smartcampus.vas.ifame.model.MenuDelMese;
 import eu.trentorise.smartcampus.vas.ifame.model.Piatto;
 import eu.trentorise.smartcampus.vas.ifame.repository.GiudizioRepository;
 import eu.trentorise.smartcampus.vas.ifame.repository.LikesRepository;
@@ -46,6 +52,9 @@ public class IGraditoController {
 	@Autowired
 	PiattoRepository piattoRepository;
 
+	@Autowired
+	GiudizioRepository giudizioRepository;
+	
 	@Autowired
 	MensaRepository mensaRepository;
 
@@ -112,7 +121,7 @@ public class IGraditoController {
 	List<Giudizio> getMensaPiatti(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
 			@PathVariable("mensa_id") String mensa_id,
-			@PathVariable("piatto_id") Long piatto_id) throws IOException {
+			@PathVariable("piatto_id") String piatto_id) throws IOException {
 		try {
 			log.info("/mensa/" + mensa_id + "/piatto/" + piatto_id
 					+ "/giudizio");
@@ -160,7 +169,7 @@ public class IGraditoController {
 	Giudizio getUserGiudizio(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
 			@PathVariable("mensa_id") String mensa_id,
-			@PathVariable("piatto_id") Long piatto_id,
+			@PathVariable("piatto_id") String piatto_id,
 			@PathVariable("user_id") Long user_id) throws IOException {
 		try {
 			log.info("/mensa/" + mensa_id + "/piatto/" + piatto_id
@@ -191,27 +200,59 @@ public class IGraditoController {
 		return null;
 	}
 
-	@Scheduled(fixedDelay = 900000)
-	// 15min
-	public void updateRemoteComment() throws AACException {
-		log.debug("Update comment in local");
-		// aggiorno i commenti
-		// Map<String, Boolean> updatedCommentList = mediationParserImpl
-		// .updateComment(0,System.currentTimeMillis(),
-		// tkm.getClientSmartCampusToken());
-		// if (updatedCommentList != null && !updatedCommentList.isEmpty()) {
-		// Iterator iterator = updatedCommentList.entrySet().iterator();
-		// while (iterator.hasNext()) {
-		// Map.Entry mapEntry = (Map.Entry) iterator.next();
-		//
-		// Giudizio g = giudizioNewRepository.findOne((Long)mapEntry.getKey());
-		// g.setApproved((Boolean)mapEntry.getValue());
-		// giudizioNewRepository.saveAndFlush(g);
-		//
-		// }
-		// }
-	}
+//	@Scheduled(fixedDelay = 900000)
+//	// 15min
+//	public void updateRemoteComment() throws AACException {
+//		log.debug("Update comment in local");
+//		// aggiorno i commenti
+//		MediationParserImpl mediationParserImpl = new MediationParserImpl();
+//		 Map<String, Boolean> updatedCommentList = mediationParserImpl
+//		 .updateComment(0,System.currentTimeMillis(),
+//		 tkm.getClientSmartCampusToken());
+//		 if (updatedCommentList != null && !updatedCommentList.isEmpty()) {
+//		 Iterator iterator = updatedCommentList.entrySet().iterator();
+//		 while (iterator.hasNext()) {
+//		 Map.Entry mapEntry = (Map.Entry) iterator.next();
+//		
+//		 Giudizio g = giudizioNewRepository.findOne((Long)mapEntry.getKey());
+//		 g.setApproved((Boolean)mapEntry.getValue());
+//		 giudizioNewRepository.saveAndFlush(g);
+//		
+//		 }
+//		 }
+//	}
+	@Scheduled(cron = "0 0 1 * * *")
+	//ogni primo del mese
+	private void updatePiatti() {
+		log.debug("Update piatti");	
+		// get the updated piatti and now do what you want
+		List<Piatto> piattiPresentiNelDb = piattoRepository.findAll();
+		List<Giudizio> giudizidb = giudizioRepository.findAll();
+		// get the new piatti from the excel
+		MenuDelMese menuDelMese = MenuController.MenuDelMeseUpdateForDish;
 
+		// add to the set every single piatto
+		Set<Piatto> setPiatti = new HashSet<Piatto>();
+		for (MenuDelGiorno mdg : menuDelMese.getMenuDelGg()) {
+			List<Piatto> piattiDelGiorno = mdg.getPiattiDelGiorno();
+			for (Piatto piatto : piattiDelGiorno) {
+				for (Piatto piattodb : piattiPresentiNelDb) {
+					if (piattodb.getPiatto_nome().compareTo(
+							piatto.getPiatto_nome()) == 0) {
+						for (Giudizio g : giudizidb) {
+							if (g.getPiatto_id().compareTo(piattodb.getPiatto_id())==0) {
+								g.setPiatto_id(piatto.getPiatto_id());
+							}
+						}
+						piattodb.setPiatto_id(piatto.getPiatto_id());
+					} else {
+						piattoRepository.saveAndFlush(piatto);
+					}
+				}
+				setPiatti.add(piatto);
+			}
+		}
+	}
 	/*
 	 * 
 	 * 
@@ -222,7 +263,7 @@ public class IGraditoController {
 	List<Giudizio> aggiungiGiudizio(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
 			@PathVariable("mensa_id") String mensa_id,
-			@PathVariable("piatto_id") Long piatto_id,
+			@PathVariable("piatto_id") String piatto_id,
 			@RequestBody GiudizioDataToPost data) throws IOException {
 		try {
 
@@ -406,7 +447,7 @@ public class IGraditoController {
 	List<Giudizio> eliminaGiudizio(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session,
 			@PathVariable("mensa_id") String mensa_id,
-			@PathVariable("piatto_id") Long piatto_id,
+			@PathVariable("piatto_id") String piatto_id,
 			@PathVariable("giudizio_id") Long giudizio_id,
 			@RequestBody GiudizioDataToPost data) throws IOException {
 		try {

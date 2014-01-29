@@ -11,8 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Piatto {
 
 	@Id
-	@GeneratedValue
-	private Long piatto_id;
+	private String piatto_id;
 
 	@Column(name = "PIATTO_NOME")
 	private String piatto_nome;
@@ -30,11 +29,11 @@ public class Piatto {
 		this.piatto_kcal = piatto_kcal;
 	}
 
-	public Long getPiatto_id() {
+	public String getPiatto_id() {
 		return piatto_id;
 	}
 
-	public void setPiatto_id(Long piatto_id) {
+	public void setPiatto_id(String piatto_id) {
 		this.piatto_id = piatto_id;
 	}
 

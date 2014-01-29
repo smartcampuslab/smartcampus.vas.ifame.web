@@ -10,13 +10,13 @@ import eu.trentorise.smartcampus.vas.ifame.model.Giudizio;
 @Repository
 public interface GiudizioRepository extends JpaRepository<Giudizio, Long> {
 
-	List<Giudizio> getGiudiziApproved(String mensa_id, Long piatto_id);
+	List<Giudizio> getGiudiziApproved(String mensa_id, String piatto_id);
 
-	Giudizio getUserGiudizioApproved(String mensa_id, Long piatto_id,
+	Giudizio getUserGiudizioApproved(String mensa_id, String piatto_id,
 			Long user_id);
 
-	List<Giudizio> getGiudiziAll(String mensa_id, Long piatto_id);
+	List<Giudizio> getGiudiziAll(String mensa_id, String piatto_id);
 
-	Giudizio getUserGiudizioAll(String mensa_id, Long piatto_id, Long user_id);
+	Giudizio getUserGiudizioAll(String mensa_id, String piatto_id, Long user_id);
 
 }

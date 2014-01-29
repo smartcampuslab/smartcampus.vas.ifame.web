@@ -43,7 +43,7 @@ public class Giudizio extends CommentBaseEntity {
 	private String mensa_id;
 
 	@Column(name = "PIATTO_ID")
-	private Long piatto_id;
+	private String piatto_id;
 
 	@Transient
 	private List<Likes> likes;
@@ -80,11 +80,11 @@ public class Giudizio extends CommentBaseEntity {
 		this.mensa_id = mensa_id;
 	}
 
-	public Long getPiatto_id() {
+	public String getPiatto_id() {
 		return piatto_id;
 	}
 
-	public void setPiatto_id(Long piatto_id) {
+	public void setPiatto_id(String piatto_id) {
 		this.piatto_id = piatto_id;
 	}
 

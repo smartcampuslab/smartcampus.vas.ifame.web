@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import eu.trentorise.smartcampus.vas.ifame.model.Piatto;
 
 @Repository
-public interface PiattoRepository extends JpaRepository<Piatto, Long> {
+public interface PiattoRepository extends JpaRepository<Piatto, String> {
 
 }
