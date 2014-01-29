@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
@@ -24,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import eu.trentorise.smartcampus.aac.AACException;
+import eu.trentorise.smartcampus.mediation.engine.MediationParserImpl;
 import eu.trentorise.smartcampus.mediation.model.CommentBaseEntity;
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
@@ -60,8 +64,8 @@ public class IGraditoController {
 	@Autowired
 	LikesRepository likeRepository;
 
-	// @Autowired
-	// private MediationParserImpl mediationParserImpl;
+	@Autowired
+	private MediationParserImpl mediationParserImpl;
 
 	@Autowired
 	@Value("${profile.address}")
@@ -196,27 +200,30 @@ public class IGraditoController {
 		return null;
 	}
 
-	// @Scheduled(fixedDelay = 900000)
-	// // 15min
-	// public void updateRemoteComment() throws AACException {
-	// log.debug("Update comment in local");
-	// // aggiorno i commenti
-	// MediationParserImpl mediationParserImpl = new MediationParserImpl();
-	// Map<String, Boolean> updatedCommentList = mediationParserImpl
-	// .updateComment(0,System.currentTimeMillis(),
-	// tkm.getClientSmartCampusToken());
-	// if (updatedCommentList != null && !updatedCommentList.isEmpty()) {
-	// Iterator iterator = updatedCommentList.entrySet().iterator();
-	// while (iterator.hasNext()) {
-	// Map.Entry mapEntry = (Map.Entry) iterator.next();
-	//
-	// Giudizio g = giudizioNewRepository.findOne((Long)mapEntry.getKey());
-	// g.setApproved((Boolean)mapEntry.getValue());
-	// giudizioNewRepository.saveAndFlush(g);
-	//
-	// }
-	// }
-	// }
+	@Scheduled(fixedDelay = 900000)
+	// 15min
+	public void updateRemoteComment() throws AACException {
+		log.debug("Update comment in local");
+		// aggiorno i commenti
+		//MediationParserImpl mediationParserImpl = new MediationParserImpl();
+		Map<String, Boolean> updatedCommentList = mediationParserImpl
+				.updateComment(0, System.currentTimeMillis(),
+						tkm.getClientSmartCampusToken());
+		if (updatedCommentList != null && !updatedCommentList.isEmpty()) {
+			Iterator iterator = updatedCommentList.entrySet().iterator();
+			while (iterator.hasNext()) {
+				Map.Entry mapEntry = (Map.Entry) iterator.next();
+
+				Giudizio g = giudizioNewRepository.findOne(Long.parseLong(mapEntry
+						.getKey().toString()));
+				
+				if(g!=null){
+					g.setApproved((Boolean) mapEntry.getValue());
+					giudizioNewRepository.saveAndFlush(g);
+				}
+			}
+		}
+	}
 	@Scheduled(cron = "0 0 1 * * *")
 	// ogni primo del mese
 	private void updatePiatti() {
@@ -285,7 +292,7 @@ public class IGraditoController {
 							.getUserGiudizioApproved(mensa_id, piatto_id,
 									data.userId);
 
-					// mediationParserImpl.updateKeyWord(token);
+					//mediationParserImpl.updateKeyWord(token);
 
 					if (giudizio_old != null) {
 
