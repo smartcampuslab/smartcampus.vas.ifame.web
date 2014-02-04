@@ -292,7 +292,7 @@ public class IGraditoController {
 							.getUserGiudizioApproved(mensa_id, piatto_id,
 									data.userId);
 
-					//mediationParserImpl.updateKeyWord(token);
+					mediationParserImpl.updateKeyWord(tkm.getClientSmartCampusToken());
 
 					if (giudizio_old != null) {
 
@@ -306,18 +306,18 @@ public class IGraditoController {
 						giudizio_old.setVoto(data.voto);
 						giudizio_old.setTesto(data.commento);
 
-						// giudizio_old.setApproved(mediationParserImpl
-						// .localValidationComment(
-						// giudizio_old.getTesto(), giudizio_old
-						// .getId().toString(), userId,
-						// token));
+						 giudizio_old.setApproved(mediationParserImpl
+						 .localValidationComment(
+						 giudizio_old.getTesto(), giudizio_old
+						 .getId().toString(), userId,
+						 tkm.getClientSmartCampusToken()));
 
 						if (giudizio_old.isApproved()) {
-							// giudizio_old.setApproved(mediationParserImpl
-							// .remoteValidationComment(
-							// giudizio_old.getTesto(),
-							// giudizio_old.getId().toString(),
-							// userId, token));
+							 giudizio_old.setApproved(mediationParserImpl
+							 .remoteValidationComment(
+							 giudizio_old.getTesto(),
+							 giudizio_old.getId().toString(),
+							 userId, tkm.getClientSmartCampusToken()));
 						}
 
 						if (giudizio_old.isApproved()) {
@@ -355,18 +355,18 @@ public class IGraditoController {
 
 						giudizio = giudizioNewRepository.save(giudizio);
 
-						// // giudizio.setApproved(mediationParserImpl
-						// .localValidationComment(giudizio.getTesto(),
-						// giudizio.getId().toString(), userId,
-						// token));
+						 giudizio.setApproved(mediationParserImpl
+						 .localValidationComment(giudizio.getTesto(),
+						 giudizio.getId().toString(), userId,
+						 tkm.getClientSmartCampusToken()));
 
 						giudizio = giudizioNewRepository.save(giudizio);
 
 						if (giudizio.isApproved()) {
-							// giudizio.setApproved(mediationParserImpl
-							// .remoteValidationComment(giudizio
-							// .getTesto(), giudizio.getId().toString(), userId,
-							// token));
+							 giudizio.setApproved(mediationParserImpl
+							 .remoteValidationComment(giudizio
+							 .getTesto(), giudizio.getId().toString(), userId,
+							 tkm.getClientSmartCampusToken()));
 						}
 
 						if (giudizio.isApproved()) {
