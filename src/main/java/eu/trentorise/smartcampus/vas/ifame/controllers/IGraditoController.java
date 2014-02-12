@@ -93,8 +93,7 @@ public class IGraditoController {
 		tkm = new EasyTokenManger(profileaddress, clientId, clientSecret);
 
 		Properties prop = new Properties();
-		OutputStream output = null;
-		InputStream in = null;
+		
 		try {
 			ClassLoader loader = Thread.currentThread().getContextClassLoader();     
 			InputStream streamIn = loader.getResourceAsStream("/ifame.properties");
@@ -106,7 +105,6 @@ public class IGraditoController {
 			prop.store(new FileWriter("ifame.properties"), null);
 			
 			loader = Thread.currentThread().getContextClassLoader();  
-			streamIn = loader.getResourceAsStream("/ifame.properties");
 
 			prop.load(streamIn);
 			
@@ -261,6 +259,7 @@ public class IGraditoController {
 				if (g != null) {
 					g.setApproved((Boolean) mapEntry.getValue());
 					giudizioNewRepository.saveAndFlush(g);
+					log.info("Scheduled Synchronization comments... "+updatedCommentList.size()+" comments updated");
 				}
 			}
 		}
