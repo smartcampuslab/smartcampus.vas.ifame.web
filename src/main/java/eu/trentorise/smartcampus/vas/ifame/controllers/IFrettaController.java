@@ -56,7 +56,7 @@ public class IFrettaController {
 			AACException, UnidataServiceException {
 		studentInfoService = new CanteenService(URLStudenteService);
 		tkm = new EasyTokenManger(profileaddress, clientId, clientSecret);
-		updateMense();
+		//updateMense();
 	}
 
 	private static final Logger logger = Logger

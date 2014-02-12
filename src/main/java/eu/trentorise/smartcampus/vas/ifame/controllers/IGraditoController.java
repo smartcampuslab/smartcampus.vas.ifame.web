@@ -1,12 +1,21 @@
 package eu.trentorise.smartcampus.vas.ifame.controllers;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
@@ -29,6 +38,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import eu.trentorise.smartcampus.aac.AACException;
 import eu.trentorise.smartcampus.mediation.engine.MediationParserImpl;
 import eu.trentorise.smartcampus.mediation.model.CommentBaseEntity;
+import eu.trentorise.smartcampus.mediation.util.KeyWordsFileReader;
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 import eu.trentorise.smartcampus.vas.ifame.model.Giudizio;
@@ -64,7 +74,6 @@ public class IGraditoController {
 	@Autowired
 	LikesRepository likeRepository;
 
-	@Autowired
 	private MediationParserImpl mediationParserImpl;
 
 	@Autowired
@@ -82,6 +91,38 @@ public class IGraditoController {
 	@PostConstruct
 	private void init() {
 		tkm = new EasyTokenManger(profileaddress, clientId, clientSecret);
+
+		Properties prop = new Properties();
+		OutputStream output = null;
+		InputStream in = null;
+		try {
+			ClassLoader loader = Thread.currentThread().getContextClassLoader();     
+			InputStream streamIn = loader.getResourceAsStream("/ifame.properties");
+			prop.load(streamIn);
+			prop.setProperty("url.file.resource.keywords",
+					IGraditoController.class.getResource("/bad-words/keywords")
+							.toString());
+			
+			prop.store(new FileWriter("ifame.properties"), null);
+			
+			loader = Thread.currentThread().getContextClassLoader();  
+			streamIn = loader.getResourceAsStream("/ifame.properties");
+
+			prop.load(streamIn);
+			
+			String mediationService = prop.getProperty("url.mediation.services");
+			String webappName = prop.getProperty("webapp.name");
+			String urlResourceKW = prop.getProperty("url.file.resource.keywords");
+			
+			mediationParserImpl = new MediationParserImpl(mediationService, webappName, new URL(urlResourceKW));
+
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 
@@ -205,7 +246,7 @@ public class IGraditoController {
 	public void updateRemoteComment() throws AACException {
 		log.debug("Update comment in local");
 		// aggiorno i commenti
-		//MediationParserImpl mediationParserImpl = new MediationParserImpl();
+		// MediationParserImpl mediationParserImpl = new MediationParserImpl();
 		Map<String, Boolean> updatedCommentList = mediationParserImpl
 				.updateComment(0, System.currentTimeMillis(),
 						tkm.getClientSmartCampusToken());
@@ -214,16 +255,17 @@ public class IGraditoController {
 			while (iterator.hasNext()) {
 				Map.Entry mapEntry = (Map.Entry) iterator.next();
 
-				Giudizio g = giudizioNewRepository.findOne(Long.parseLong(mapEntry
-						.getKey().toString()));
-				
-				if(g!=null){
+				Giudizio g = giudizioNewRepository.findOne(Long
+						.parseLong(mapEntry.getKey().toString()));
+
+				if (g != null) {
 					g.setApproved((Boolean) mapEntry.getValue());
 					giudizioNewRepository.saveAndFlush(g);
 				}
 			}
 		}
 	}
+
 	@Scheduled(cron = "0 0 1 * * *")
 	// ogni primo del mese
 	private void updatePiatti() {
@@ -292,7 +334,9 @@ public class IGraditoController {
 							.getUserGiudizioApproved(mensa_id, piatto_id,
 									data.userId);
 
-					mediationParserImpl.updateKeyWord(tkm.getClientSmartCampusToken());
+
+					mediationParserImpl.initKeywords(
+							tkm.getClientSmartCampusToken());
 
 					if (giudizio_old != null) {
 
@@ -306,18 +350,19 @@ public class IGraditoController {
 						giudizio_old.setVoto(data.voto);
 						giudizio_old.setTesto(data.commento);
 
-						 giudizio_old.setApproved(mediationParserImpl
-						 .localValidationComment(
-						 giudizio_old.getTesto(), giudizio_old
-						 .getId().toString(), userId,
-						 tkm.getClientSmartCampusToken()));
+						giudizio_old.setApproved(mediationParserImpl
+								.localValidationComment(
+										giudizio_old.getTesto(), giudizio_old
+												.getId().toString(), userId,
+										tkm.getClientSmartCampusToken()));
 
 						if (giudizio_old.isApproved()) {
-							 giudizio_old.setApproved(mediationParserImpl
-							 .remoteValidationComment(
-							 giudizio_old.getTesto(),
-							 giudizio_old.getId().toString(),
-							 userId, tkm.getClientSmartCampusToken()));
+							giudizio_old.setApproved(mediationParserImpl
+									.remoteValidationComment(
+											giudizio_old.getTesto(),
+											giudizio_old.getId().toString(),
+											userId,
+											tkm.getClientSmartCampusToken()));
 						}
 
 						if (giudizio_old.isApproved()) {
@@ -355,18 +400,19 @@ public class IGraditoController {
 
 						giudizio = giudizioNewRepository.save(giudizio);
 
-						 giudizio.setApproved(mediationParserImpl
-						 .localValidationComment(giudizio.getTesto(),
-						 giudizio.getId().toString(), userId,
-						 tkm.getClientSmartCampusToken()));
+						giudizio.setApproved(mediationParserImpl
+								.localValidationComment(giudizio.getTesto(),
+										giudizio.getId().toString(), userId,
+										tkm.getClientSmartCampusToken()));
 
 						giudizio = giudizioNewRepository.save(giudizio);
 
 						if (giudizio.isApproved()) {
-							 giudizio.setApproved(mediationParserImpl
-							 .remoteValidationComment(giudizio
-							 .getTesto(), giudizio.getId().toString(), userId,
-							 tkm.getClientSmartCampusToken()));
+							giudizio.setApproved(mediationParserImpl
+									.remoteValidationComment(giudizio
+											.getTesto(), giudizio.getId()
+											.toString(), userId, tkm
+											.getClientSmartCampusToken()));
 						}
 
 						if (giudizio.isApproved()) {
