@@ -48,7 +48,6 @@ public class MenuController {
 
 	@Autowired
 	MensaRepository mensaRepository;
-
 	@Autowired
 	@Value("${profile.address}")
 	private String profileaddress;
