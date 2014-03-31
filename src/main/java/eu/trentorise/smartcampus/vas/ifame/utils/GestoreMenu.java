@@ -42,7 +42,7 @@ public class GestoreMenu {
 		mdsList.add(firstWeekMenu);
 
 		// ciclo di lunedi in lunedi
-		while (firstMonday < lastDayInMonth) {
+		while (firstMonday <= lastDayInMonth) { /////////fix
 
 			int lastday = firstMonday + 6;
 
