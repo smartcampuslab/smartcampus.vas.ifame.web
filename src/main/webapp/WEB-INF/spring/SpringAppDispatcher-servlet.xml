@@ -18,28 +18,44 @@
 	<mvc:annotation-driven/>
 
 	<!-- Scan controllers in this package -->
-	<context:component-scan base-package="eu.trentorise.smartcampus.vas.ifame.controllers"/>
-
-	<context:property-placeholder location="classpath:ifame.properties"/>
+	<context:component-scan base-package="eu.trentorise.smartcampus.vas.ifame"/>
 
 	
-	<context:annotation-config />
+	<context:property-placeholder location="classpath:ifame.properties" />
 	
-		<import resource="datalayer.xml"/>
-		
-		
-		<bean id="dataSource" destroy-method="close"
-		class="org.apache.commons.dbcp.BasicDataSource">
-		<property name="driverClassName" value="${jdbc.driver}" />
-		<property name="url" value="${jdbc.url}" />
-		<property name="username" value="${jdbc.user}" />
-		<property name="password" value="${jdbc.password}" />
+	<import resource="datalayer.xml"/>
+	
+		<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+		<property name="viewResolvers">
+			<bean
+				class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+				<property name="prefix" value="/WEB-INF/jsp/"></property>
+				<property name="suffix" value=".jsp"></property>
+			</bean>
+		</property>
 	</bean>
+	
+		
+	<mongo:mongo host="${smartcampus.vas.web.mongo.host}" port="${smartcampus.vas.web.mongo.port}" />
 
-	<bean id="MediationParserImpl"
-		class="eu.trentorise.smartcampus.mediation.engine.MediationParserImpl">
-		<property name="dataSource" ref="dataSource" />	
-		<property name="urlServermediation" value="${url.mediation.services}"/>
-		<property name="webappname" value="${webapp.name}"/>
+
+
+	<!-- DB SECTION -->
+<!-- 
+
+
+	Cloudfoundry uses mongo db-factory to generate a mongo database to 
+		bind with deployed service
+ 	<mongo:db-factory id="factory" dbname="${smartcampus.vas.web.mongo.db}" 
+ 		mongo-ref="mongo" /> 
+
+	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+		 <constructor-arg ref="mongo" /> 
+	 	 <constructor-arg name="databaseName" value="${smartcampus.vas.web.mongo.db}" /> 
+		 <constructor-arg name="mongoDbFactory" ref="factory" />
 	</bean>
+		
+	 -->
+	
 </beans>
