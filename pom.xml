@@ -15,23 +15,10 @@
 	</properties>
 
 	<dependencies>
-
-		<dependency>
-			<groupId>eu.trentorise.smartcampus</groupId>
-			<artifactId>ac-service-provider-api</artifactId>
-			<version>${ac-service-provider-api}</version>
-			<type>jar</type>
-		</dependency>
-
-		<!-- this -->
-		<dependency>
-			<groupId>eu.trentorise.smartcampus</groupId>
-			<artifactId>ac-service-provider-filter</artifactId>
-			<version>${ac-service-provider-filter}</version>
-			<type>jar</type>
-		</dependency>
-
-		<!-- Spring security -->
+	    
+	    
+	    
+	    <!-- Spring security -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-core</artifactId>
@@ -47,7 +34,7 @@
 			<artifactId>spring-security-config</artifactId>
 			<version>${spring-security-version}</version>
 		</dependency>
-
+			
 		<!-- Spring -->
 
 
@@ -80,8 +67,8 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-expression</artifactId>
 			<version>${spring-version}</version>
-		</dependency>
-
+		</dependency>	
+			
 		<!-- Log -->
 		<dependency>
 			<groupId>log4j</groupId>
@@ -89,7 +76,8 @@
 			<version>1.2.14</version>
 			<type>jar</type>
 			<scope>compile</scope>
-		</dependency>
+		</dependency>	
+		
 		<!-- Smartcampus libs -->
 		<dependency>
 			<groupId>eu.trentorise.smartcampus</groupId>
@@ -110,12 +98,13 @@
 			<artifactId>filestorage.client</artifactId>
 			<version>2.0</version>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>eu.trentorise.smartcampus</groupId>
 			<artifactId>mobilityservice.client</artifactId>
 			<version>1.0</version>
 		</dependency>
+		
 		<dependency>
 			<groupId>eu.trentorise.smartcampus</groupId>
 			<artifactId>unidataservice.client</artifactId>
@@ -126,24 +115,60 @@
 			<artifactId>territoryservice.client</artifactId>
 			<version>1.0</version>
 		</dependency>
-
 		<dependency>
 			<groupId>eu.trentorise.smartcampus</groupId>
 			<artifactId>communicator.client</artifactId>
 			<version>2.0</version>
 		</dependency>
-
 		<dependency>
 			<groupId>eu.trentorise.smartcampus</groupId>
 			<artifactId>socialservice.client</artifactId>
 			<version>2.0</version>
 		</dependency>
-
+		<dependency>
+			<groupId>eu.trentorise.smartcampus</groupId>
+			<artifactId>smartcampus.client.commons</artifactId>
+			<version>2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.trentorise.smartcampus</groupId>
+			<artifactId>smartcampus.moderator</artifactId>
+			<version>1.0</version>
+		</dependency>
 		<dependency>
 			<groupId>eu.trentorise.smartcampus</groupId>
 			<artifactId>mediation.api</artifactId>
 			<version>1.2</version>
 		</dependency>
+
+		<dependency>
+			<groupId>eu.trentorise.smartcampus</groupId>
+			<artifactId>ac-service-provider-api</artifactId>
+			<version>${ac-service-provider-api}</version>
+			<type>jar</type>
+		</dependency>
+		
+		<dependency>
+			<groupId>eu.trentorise.smartcampus</groupId>
+			<artifactId>resource.api</artifactId>
+			<version>1.0</version>
+		</dependency>
+
+		<!-- this -->
+		<dependency>
+			<groupId>eu.trentorise.smartcampus</groupId>
+			<artifactId>ac-service-provider-filter</artifactId>
+			<version>${ac-service-provider-filter}</version>
+			<type>jar</type>
+		</dependency>
+
+		
+		
+
+		
+
+		
+		
 		<!-- DB -->
 
 		<dependency>

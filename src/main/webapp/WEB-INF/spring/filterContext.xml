@@ -52,22 +52,7 @@
 	</http> -->
 	
 	 
-	<sec:http create-session='always' pattern="/web/**" disable-url-rewriting="true" auto-config="false" authentication-manager-ref="resourceAuthenticationManager">
-		
-		<sec:intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY" />
-		<sec:form-login login-page="/login" />
-		<sec:logout invalidate-session="true" logout-url="/logout"
-			delete-cookies="JSESSIONID,open_id_session_id,vasdevgoogle"
-			logout-success-url="/logout" />
-	</sec:http>
 	
-    
-	
-	
-	<sec:http pattern="/rest**" entry-point-ref="forbEntryPoint" use-expressions="true" create-session="stateless">
-		<sec:custom-filter position="PRE_AUTH_FILTER" ref="authTokenFilter" />
-		 <sec:intercept-url pattern="/**" access="isFullyAuthenticated()" />
-	</sec:http>
 
 	
 	
@@ -124,6 +109,23 @@
 	<bean id="httpSessionRequestCache" class="org.springframework.security.web.savedrequest.HttpSessionRequestCache"> 
     <property name="createSessionAllowed" value="false" /> 
 </bean>
+
+	
+	<sec:http create-session='always' pattern="/web/**" disable-url-rewriting="true" auto-config="false" authentication-manager-ref="resourceAuthenticationManager">
+		
+		<sec:intercept-url pattern="/**" access="IS_AUTHENTICATED_FULLY" />
+		<sec:form-login login-page="/login" />
+		<sec:logout invalidate-session="true" logout-url="/logout"
+			delete-cookies="JSESSIONID,open_id_session_id,vasdevgoogle"
+			logout-success-url="/logout" />
+	</sec:http>
+	
+	
+	
+	<sec:http entry-point-ref="forbEntryPoint" use-expressions="true" create-session="stateless">
+		<sec:custom-filter position="PRE_AUTH_FILTER" ref="authTokenFilter" />
+		 <sec:intercept-url pattern="/rest**" access="isFullyAuthenticated()" />
+	</sec:http>
 	
 	<sec:authentication-manager alias="authenticationManager">
 		<sec:authentication-provider ref="preauthAuthProvider" />

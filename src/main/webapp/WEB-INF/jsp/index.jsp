@@ -55,7 +55,7 @@ var user_name="<%=request.getAttribute("user")%>";
 <body ng-controller="MainCtrl" data-ng-init="init()">
 	<div class="container" style="width: 80%;">
 		<div class="row" style="height: 65px">
-			<h2>Usage statistics Console of StudyMate</h2>
+			<h2>Usage statistics Console of Ifame</h2>
 		</div>
 					<div class="span1" style="text-align: center">
 						<i class="fa fa-user fa-5x"></i>

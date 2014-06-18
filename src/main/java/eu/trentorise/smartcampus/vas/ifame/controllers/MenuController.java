@@ -196,7 +196,7 @@ public class MenuController {
 	 * 
 	 * INIZIALIZZO / AGGIORNO IL DATABASE
 	 */
-	@PostConstruct
+	//@PostConstruct
 	private void inizializzaDatabase() throws BiffException, IOException {
 		logger.info("Inizializzazione database");
 
