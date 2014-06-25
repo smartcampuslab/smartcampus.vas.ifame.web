@@ -104,4 +104,5 @@ public class Giudizio extends CommentBaseEntity {
 		this.user_name = user_name;
 	}
 
+
 }

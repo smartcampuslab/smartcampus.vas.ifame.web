@@ -81,7 +81,6 @@ public class PortalController extends SCController {
 		model.put("aacExtURL", aacURL);
 		BasicProfile user=profileService.getBasicProfile(getToken(request));
 		model.put("user", user.getSurname()+","+user.getName());
-		request.getSession().setAttribute("user", user.getName()+" "+user.getSurname());
 		return new ModelAndView("index", model);
 	}
 

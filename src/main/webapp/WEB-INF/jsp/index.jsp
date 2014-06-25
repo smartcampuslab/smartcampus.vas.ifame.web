@@ -38,7 +38,7 @@
 <script src="lib/angular-resource.min.js"></script>
 <script src="lib/angular-cookies.min.js"></script>
 <script src="lib/moment.js"></script>
-<script src="lib/ng-csv.js"></script>
+<!-- <script src="lib/ng-csv.js"></script> -->
 <script src="lib/ng-csv.min.js"></script> 
 
 
@@ -71,7 +71,7 @@ var user_name = "<%=request.getAttribute("user")%>";
 					<div class="span4">
 						<p>
 							User :<strong><span id="developer"></span></strong>
-							<button style="margin-left: 70px;" class="btn btn-primary" ng-click="getAllRatings()"> Load all ratings </button><!-- //////////// -->
+							<button style="margin-left: 70px;" class="btn btn-primary" ng-click="getAllRatings()"> Load all ratings </button>
 						</p>
 						<p style="margin-top: 25px;">Filter contents by:</p>
 						<p>
@@ -80,7 +80,7 @@ var user_name = "<%=request.getAttribute("user")%>";
 								{{mensaSelected.mensa_nome}} <span class="caret"></span>
 							</a>
 							<ul class="dropdown-menu">
-								<li ng-repeat="mensa in menseList"><a ng-click="setCurrentMensa(mensa)">{{mensa.mensa_nome}}</a></li><!-- //////////// -->
+								<li ng-repeat="mensa in menseList"><a ng-click="setCurrentMensa(mensa)">{{mensa.mensa_nome}}</a></li>
 							</ul>
 							
 						</div>
@@ -177,17 +177,17 @@ var user_name = "<%=request.getAttribute("user")%>";
 								</tr>
 							</thead>
 							<tbody class="animate-repeat"
-								ng-repeat="comment in comments | filter:filterContents | orderBy:orderByField:reverseSort">
-								<tr class="{{setColorRowTable(comment)}}">
-									<td>{{comment.id}}</td>
-									<td>{{comment.ultimo_aggiornamento | date:'MM/dd/yyyy h:mma'}}</td>
-									<td>{{comment.approved}}</td>
-									<td>{{comment.user_id}}</td>
-									<td>{{comment.user_name}}</td>
-									<td>{{comment.testo}}</td>
-									<td>{{comment.mensa_id}}</td>
-									<td>{{comment.piatto_id}}</td>
-									<td>{{comment.likes.lenght}}</td>
+								ng-repeat="giudizio in giudiziList | filter:filterContents | orderBy:orderByField:reverseSort">
+								<tr class="{{setColorRowTable(giudizio)}}">
+									<td>{{giudizio.id}}</td>
+									<td>{{giudizio.ultimo_aggiornamento | date:'MM/dd/yyyy h:mma'}}</td>
+									<td>{{giudizio.approved}}</td>
+									<td>{{giudizio.user_id}}</td>
+									<td>{{giudizio.user_name}}</td>
+									<td>{{giudizio.testo}}</td>
+									<td>{{giudizio.mensa_id}}</td>
+									<td>{{giudizio.piatto_id}}</td>
+									<td>{{giudizio.likes.lenght}}</td>
 						</table>
 
 					</div>

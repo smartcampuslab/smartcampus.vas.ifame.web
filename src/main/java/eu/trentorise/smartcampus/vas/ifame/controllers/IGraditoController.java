@@ -157,6 +157,45 @@ public class IGraditoController {
 		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		return null;
 	}
+	
+	
+	
+	/*
+	 * 
+	 * 
+	 * GET GIUDIZI /mensa/{id}/piatto/{id}/giudizio
+	 */
+	@RequestMapping(method = RequestMethod.GET, value = "/mensa/giudizio/all")
+	public @ResponseBody
+	List<Giudizio> getMensaGiudizioAll(HttpServletRequest request,
+			HttpServletResponse response, HttpSession session) throws IOException {
+		try {
+			log.info("/mensa/giudizio/all");
+
+			String token = getToken(request);
+			BasicProfileService service = new BasicProfileService(
+					profileaddress);
+			BasicProfile profile = service.getBasicProfile(token);
+			
+			if (profile != null) {
+				List<Giudizio> giudiziAll = giudizioNewRepository.findAll();
+				return giudiziAll;
+			}
+			
+			
+		} catch (Exception e) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+
+		/*
+		 * BAD REQUEST SE HO ERRORI NEI CONTROLLI
+		 */
+		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		return null;
+	}
+	
+	
+	
 
 	/*
 	 * 
@@ -178,7 +217,7 @@ public class IGraditoController {
 			BasicProfileService service = new BasicProfileService(
 					profileaddress);
 			BasicProfile profile = service.getBasicProfile(token);
-			// Long userId = Long.valueOf(profile.getUserId());
+
 			if (profile != null) {
 
 				if (mensaRepository.exists(mensa_id)
