@@ -160,6 +160,10 @@ var user_name = "<%=request.getAttribute("user")%>";
           								Text <span ng-show="orderByField == 'testo'"><span ng-show="!reverseSort" class="glyphicon glyphicon-chevron-up"></span><span ng-show="reverseSort" class="glyphicon glyphicon-chevron-down"></span></span>
          								</a>						
          							</th>
+         							<th><a href="#" ng-click="orderByField='voto'; reverseSort = !reverseSort">
+          								Rate <span ng-show="orderByField == 'voto'"><span ng-show="!reverseSort" class="glyphicon glyphicon-chevron-up"></span><span ng-show="reverseSort" class="glyphicon glyphicon-chevron-down"></span></span>
+         								</a>						
+         							</th>
          							<th><a href="#" ng-click="orderByField='mensa_id'; reverseSort = !reverseSort">
           								Canteen Id <span ng-show="orderByField == 'mensa_id'"><span ng-show="!reverseSort" class="glyphicon glyphicon-chevron-up"></span><span ng-show="reverseSort" class="glyphicon glyphicon-chevron-down"></span></span>
          								</a>						
@@ -185,9 +189,10 @@ var user_name = "<%=request.getAttribute("user")%>";
 									<td>{{giudizio.user_id}}</td>
 									<td>{{giudizio.user_name}}</td>
 									<td>{{giudizio.testo}}</td>
+									<td>{{giudizio.voto}}</td>
 									<td>{{giudizio.mensa_id}}</td>
 									<td>{{giudizio.piatto_id}}</td>
-									<td>{{giudizio.likes.lenght}}</td>
+									<td>{{giudizio.likes.length}}</td>
 						</table>
 
 					</div>

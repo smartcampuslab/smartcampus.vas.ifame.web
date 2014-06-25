@@ -105,7 +105,7 @@ app.controller('MainCtrl', function($scope, $http, $window, $location) {
 						+ data[i].voto;
 			}
 
-			$scope.average = averValue
+			$scope.average = sumValue
 					/ data.length;
 
 			// $scope.info = 'Find latest comments inserted';
