@@ -251,13 +251,13 @@ var user_name = "<%=request.getAttribute("user")%>";
 									<td>{{giudizio.voto}}</td>
 									<td>{{giudizio.mensa_id}}</td>
 									<td>{{giudizio.piatto_id}}</td>
-									<td>{{giudizio.likes.lenght}}</td>
+									<td>{{giudizio.likes.length}}</td>
 							</tbody>
 						</table>
 						<button class="btn btn-primary"
 								ng-disabled="currentPageFiltro2 == 0"
 								ng-click="currentPageFiltro2=currentPageFiltro2-1">Previous</button>
-							{{currentPageFiltro2+1}}/{{numberOfPagesFiltro2()}}
+							<span class="sr-only">{{setCurrentPage()}}</span>
 							<button class="btn btn-primary"
 								ng-disabled="currentPageFiltro2 >= giudiziList.length/pageSize - 1"
 								ng-click="currentPageFiltro2=currentPageFiltro2+1">Next</button>

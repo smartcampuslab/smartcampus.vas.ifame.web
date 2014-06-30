@@ -92,6 +92,11 @@ app.controller('MainCtrl', function($scope, $http, $window, $location) {
 			$scope.loadRatings($scope.mensaSelected, piatto);
 	};
 	
+	$scope.setCurrentPage = function() {
+		return $scope.currentPageFiltro2+1/$scope.numberOfPagesFiltro2();
+	};
+
+	
 	$scope.loadRatings = function(mensa, piatto) {
 		
 		$http({
