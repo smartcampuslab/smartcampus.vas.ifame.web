@@ -259,7 +259,7 @@ var user_name = "<%=request.getAttribute("user")%>";
 								ng-click="currentPageFiltro2=currentPageFiltro2-1">Previous</button>
 							{{currentPageFiltro2+1}}/{{numberOfPagesFiltro2()}}
 							<button class="btn btn-primary"
-								ng-disabled="currentPageFiltro2 >= remoteComment.length/pageSize - 1"
+								ng-disabled="currentPageFiltro2 >= giudiziList.length/pageSize - 1"
 								ng-click="currentPageFiltro2=currentPageFiltro2+1">Next</button>
 					</div>
 				</div>
