@@ -15,6 +15,13 @@ app.controller('MainCtrl', function($scope, $http, $window, $location) {
 	
 	$scope.numberGiudizi = 0;
 	$scope.average = 0;
+
+	$scope.currentPageFiltro2 = 0;
+	$scope.pageSize = 5;
+	$scope.numberOfPagesFiltro2 = function() {
+		return Math.ceil($scope.remoteComment.length
+				/ $scope.pageSize);
+	}
 	
 	$scope.orderByField = 'ultimo_aggiornamento';
 	$scope.reverseSort = true;
@@ -115,6 +122,7 @@ app.controller('MainCtrl', function($scope, $http, $window, $location) {
 			// $scope.error = "No comments found";
 		});
 	};
+	
 	
 	$scope.getAllRatings = function(){
 		$http({
