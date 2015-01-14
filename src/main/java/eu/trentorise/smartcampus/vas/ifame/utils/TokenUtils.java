@@ -35,34 +35,30 @@ public class TokenUtils extends RemoteConnector {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public String getClientToken() {
-		
-		synchronized (token) {
-			if (token == null || System.currentTimeMillis() + 10000 > expiresAt) {
-				final HttpResponse resp;
-				if (!aacURL.endsWith("/"))
-					aacURL += "/";
-				String url = aacURL + PATH_TOKEN
-						+ "?grant_type=client_credentials&client_id="
-						+ clientId + "&client_secret=" + clientSecret;
-				final HttpGet get = new HttpGet(url);
-				get.setHeader("Accept", "application/json");
-				try {
-					resp = getHttpClient().execute(get);
-					final String response = EntityUtils.toString(resp
-							.getEntity());
-					if (resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-						Map<String,Object> map = JsonUtils.toObject(response, Map.class);
-						expiresAt = System.currentTimeMillis()
-								+ (Integer) map.get("expires_in") * 1000;
-						token = (String) map.get("access_token");
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
+	public synchronized String getClientToken() {
+		if (token == null || System.currentTimeMillis() + 10000 > expiresAt) {
+			final HttpResponse resp;
+			if (!aacURL.endsWith("/"))
+				aacURL += "/";
+			String url = aacURL + PATH_TOKEN
+					+ "?grant_type=client_credentials&client_id="
+					+ clientId + "&client_secret=" + clientSecret;
+			final HttpGet get = new HttpGet(url);
+			get.setHeader("Accept", "application/json");
+			try {
+				resp = getHttpClient().execute(get);
+				final String response = EntityUtils.toString(resp
+						.getEntity());
+				if (resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+					Map<String,Object> map = JsonUtils.toObject(response, Map.class);
+					expiresAt = System.currentTimeMillis()
+							+ (Integer) map.get("expires_in") * 1000;
+					token = (String) map.get("access_token");
 				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-			return token;
 		}
-
+		return token;
 	}
 }
