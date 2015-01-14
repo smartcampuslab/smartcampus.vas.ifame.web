@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,7 +52,10 @@ public class IFrettaController {
 		InputStream is = getClass().getResourceAsStream("/mense.json");
 		MensaContainer container = new ObjectMapper().readValue(is, MensaContainer.class);
 		if (container.getMense() != null) {
-			mensaRepository.save(container.getMense());
+			for (Mensa m : container.getMense()) {
+				logger.info("storing mensa "+m.getMensa_id()+":"+ m.getMensa_nome());
+				mensaRepository.save(m);
+			}
 		}
 	}
 	
