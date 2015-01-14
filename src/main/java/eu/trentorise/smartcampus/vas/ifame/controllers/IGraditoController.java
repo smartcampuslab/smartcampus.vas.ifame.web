@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -12,7 +13,6 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -69,6 +69,11 @@ public class IGraditoController {
 	@Value("${profile.address}")
 	private String profileaddress;
 
+	@PostConstruct
+	public void initKeyWords() throws Exception {
+		mediationParserImpl.initKeywords(tokenUtils.getClientToken());
+	}
+	
 	/*
 	 * 
 	 * 
@@ -142,11 +147,6 @@ public class IGraditoController {
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
-
-		/*
-		 * BAD REQUEST SE HO ERRORI NEI CONTROLLI
-		 */
-		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		return null;
 	}
 
@@ -190,11 +190,6 @@ public class IGraditoController {
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
-
-		/*
-		 * BAD REQUEST SE HO ERRORI NEI CONTROLLI
-		 */
-		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		return null;
 	}
 
@@ -233,8 +228,6 @@ public class IGraditoController {
 							.getUserGiudizioApproved(mensa_id, piatto_id,
 									data.userId);
 
-					mediationParserImpl.updateKeyWord(clientToken);
-
 					if (giudizio_old != null) {
 
 						log.debug("Aggiorno il giudizio");
@@ -248,15 +241,15 @@ public class IGraditoController {
 						giudizio_old.setTesto(data.commento);
 						giudizio_old.setApproved(mediationParserImpl
 								.localValidationComment(
-										giudizio_old.getTesto(), giudizio_old
-												.getId().intValue(), userId,
+										giudizio_old.getTesto(), ""+giudizio_old
+												.getId(), userId,
 												clientToken));
 
 						if (giudizio_old.isApproved()) {
 							giudizio_old.setApproved(mediationParserImpl
 									.remoteValidationComment(
 											giudizio_old.getTesto(),
-											giudizio_old.getId().intValue(),
+											""+giudizio_old.getId(),
 											userId, clientToken));
 						}
 
@@ -297,7 +290,7 @@ public class IGraditoController {
 
 						giudizio.setApproved(mediationParserImpl
 								.localValidationComment(giudizio.getTesto(),
-										giudizio.getId().intValue(), userId,
+										""+giudizio.getId(), userId,
 										clientToken));
 
 						giudizio = giudizioNewRepository.save(giudizio);
@@ -305,8 +298,7 @@ public class IGraditoController {
 						if (giudizio.isApproved()) {
 							giudizio.setApproved(mediationParserImpl
 									.remoteValidationComment(giudizio
-											.getTesto(), giudizio.getId()
-											.intValue(), userId, clientToken));
+											.getTesto(), ""+giudizio.getId(), userId, clientToken));
 						}
 
 						if (giudizio.isApproved()) {
@@ -316,20 +308,20 @@ public class IGraditoController {
 						}
 					}
 
-					// aggiorno i commenti
-					List<CommentBaseEntity> updatedCommentList = (List<CommentBaseEntity>) mediationParserImpl
-							.updateCommentToMediationService(
-									getCommentBase(giudizioNewRepository
-											.findAll()), clientToken);
-
-					for (CommentBaseEntity updatedEntity : updatedCommentList) {
-
-						Giudizio g = giudizioNewRepository
-								.findOne(updatedEntity.getId());
-						g.setApproved(updatedEntity.isApproved());
-						giudizioNewRepository.saveAndFlush(g);
-
-					}
+//					// aggiorno i commenti
+//					List<CommentBaseEntity> updatedCommentList = (List<CommentBaseEntity>) mediationParserImpl
+//							.updateCommentToMediationService(
+//									getCommentBase(giudizioNewRepository
+//											.findAll()), clientToken);
+//
+//					for (CommentBaseEntity updatedEntity : updatedCommentList) {
+//
+//						Giudizio g = giudizioNewRepository
+//								.findOne(updatedEntity.getId());
+//						g.setApproved(updatedEntity.isApproved());
+//						giudizioNewRepository.saveAndFlush(g);
+//
+//					}
 
 					/*
 					 * ritorno la lista di giudizi con anche i likes associati
@@ -358,11 +350,6 @@ public class IGraditoController {
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
-		/*
-		 * BAD REQUEST SE HO ERRORI NEI CONTROLLI
-		 */
-		log.debug("Bad request");
-		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		return null;
 
 	}
@@ -438,11 +425,6 @@ public class IGraditoController {
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
-
-		/*
-		 * BAD REQUEST SE HO ERRORI NEI CONTROLLI
-		 */
-		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		return null;
 	}
 }
