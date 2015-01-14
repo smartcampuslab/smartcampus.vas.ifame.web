@@ -30,13 +30,6 @@ public class ISoldiController {
 			.getLogger(ISoldiController.class);
 
 	/*
-	 * the base url of the service. Configure it in webtemplate.properties
-	 */
-	@Autowired
-	@Value("${services.server}")
-	private String serverAddress;
-
-	/*
 	 * the base appName of the service. Configure it in webtemplate.properties
 	 */
 	@Autowired
