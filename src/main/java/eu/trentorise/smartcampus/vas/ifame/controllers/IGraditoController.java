@@ -3,7 +3,10 @@ package eu.trentorise.smartcampus.vas.ifame.controllers;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import eu.trentorise.smartcampus.mediation.engine.MediationParserImpl;
 import eu.trentorise.smartcampus.mediation.model.CommentBaseEntity;
+import eu.trentorise.smartcampus.moderatorservice.model.State;
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 import eu.trentorise.smartcampus.vas.ifame.model.Giudizio;
@@ -96,6 +100,7 @@ public class IGraditoController {
 				return piattoRepository.findAll();
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return null;
@@ -145,6 +150,7 @@ public class IGraditoController {
 				}
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return null;
@@ -176,7 +182,7 @@ public class IGraditoController {
 				if (mensaRepository.exists(mensa_id)
 						&& piattoRepository.exists(piatto_id)) {
 
-					return giudizioNewRepository.getUserGiudizioApproved(
+					return giudizioNewRepository.getUserGiudizio(
 							mensa_id, piatto_id, user_id);
 
 				} else {
@@ -188,6 +194,7 @@ public class IGraditoController {
 				}
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return null;
@@ -225,7 +232,7 @@ public class IGraditoController {
 					 * controllo se ha gi� inserito un giudizio
 					 */
 					Giudizio giudizio_old = giudizioNewRepository
-							.getUserGiudizioApproved(mensa_id, piatto_id,
+							.getUserGiudizio(mensa_id, piatto_id,
 									data.userId);
 
 					if (giudizio_old != null) {
@@ -234,39 +241,31 @@ public class IGraditoController {
 						/*
 						 * lo aggiorno
 						 */
-						giudizio_old.setUltimo_aggiornamento(new Date(System
-								.currentTimeMillis()));
+						giudizio_old.setUltimo_aggiornamento(new Date(System.currentTimeMillis()));
 
 						giudizio_old.setVoto(data.voto);
 						giudizio_old.setTesto(data.commento);
-						giudizio_old.setApproved(mediationParserImpl
+						boolean keyWordApproved = mediationParserImpl
 								.localValidationComment(
 										giudizio_old.getTesto(), ""+giudizio_old
 												.getId(), userId,
-												clientToken));
-
-						if (giudizio_old.isApproved()) {
-							giudizio_old.setApproved(mediationParserImpl
-									.remoteValidationComment(
-											giudizio_old.getTesto(),
-											""+giudizio_old.getId(),
-											userId, clientToken));
-						}
-
-						if (giudizio_old.isApproved()) {
+												clientToken);
+						if (!keyWordApproved) {
+							giudizio_old.setApproved(State.NOT_APPROVED);
+						} else {
+							giudizio_old.setApproved(State.WAITING);
+							mediationParserImpl
+							.remoteValidationComment(
+									giudizio_old.getTesto(),
+									""+giudizio_old.getId(),
+									userId, clientToken);						
 							giudizio_old.setUser_name(profile.getName() + "."
 									+ profile.getSurname());
 
-							giudizio_old = giudizioNewRepository
-									.save(giudizio_old);
-
-							List<Likes> like_list = likeRepository
-									.getGiudizioLikes((long) giudizio_old
-											.getId());
-
+							giudizio_old = giudizioNewRepository.save(giudizio_old);
+							List<Likes> like_list = likeRepository.getGiudizioLikes((long) giudizio_old.getId());
 							likeRepository.delete(like_list);
 						}
-
 					} else {
 						/*
 						 * lo aggiungo
@@ -280,49 +279,26 @@ public class IGraditoController {
 						giudizio.setVoto(data.voto);
 						giudizio.setMensa_id(mensa_id);
 						giudizio.setPiatto_id(piatto_id);
-
-						giudizio.setApproved(true);
-
-						giudizio.setUser_name(profile.getName() + "."
-								+ profile.getSurname());
-
+						giudizio.setUser_name(profile.getName() + "." + profile.getSurname());
 						giudizio = giudizioNewRepository.save(giudizio);
 
-						giudizio.setApproved(mediationParserImpl
+						boolean keyWordApproved = mediationParserImpl
 								.localValidationComment(giudizio.getTesto(),
 										""+giudizio.getId(), userId,
-										clientToken));
-
-						giudizio = giudizioNewRepository.save(giudizio);
-
-						if (giudizio.isApproved()) {
-							giudizio.setApproved(mediationParserImpl
-									.remoteValidationComment(giudizio
-											.getTesto(), ""+giudizio.getId(), userId, clientToken));
-						}
-
-						if (giudizio.isApproved()) {
-							giudizioNewRepository.save(giudizio);
+										clientToken);
+						if (keyWordApproved) {
+							giudizio.setApproved(State.WAITING);
+							mediationParserImpl
+							.remoteValidationComment(giudizio
+									.getTesto(), ""+giudizio.getId(), userId, clientToken);
+							giudizio = giudizioNewRepository.save(giudizio);
 						} else {
 							giudizioNewRepository.delete(giudizio);
 						}
 					}
 
-//					// aggiorno i commenti
-//					List<CommentBaseEntity> updatedCommentList = (List<CommentBaseEntity>) mediationParserImpl
-//							.updateCommentToMediationService(
-//									getCommentBase(giudizioNewRepository
-//											.findAll()), clientToken);
-//
-//					for (CommentBaseEntity updatedEntity : updatedCommentList) {
-//
-//						Giudizio g = giudizioNewRepository
-//								.findOne(updatedEntity.getId());
-//						g.setApproved(updatedEntity.isApproved());
-//						giudizioNewRepository.saveAndFlush(g);
-//
-//					}
-
+					updateApprovalStatus();
+					
 					/*
 					 * ritorno la lista di giudizi con anche i likes associati
 					 */
@@ -348,6 +324,7 @@ public class IGraditoController {
 			}
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return null;
@@ -394,7 +371,7 @@ public class IGraditoController {
 						&& giudizioNewRepository.exists(giudizio_id)) {
 
 					Giudizio giudizio_old = giudizioNewRepository
-							.getUserGiudizioApproved(mensa_id, piatto_id,
+							.getUserGiudizio(mensa_id, piatto_id,
 									data.userId);
 					if (giudizio_old != null) {
 						// se 3esiste elimino i likes
@@ -423,8 +400,38 @@ public class IGraditoController {
 				}
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return null;
+	}
+	
+	private void updateApprovalStatus() {
+		List<Giudizio> pending = giudizioNewRepository.getGiudiziPending();
+		Map<String, Giudizio> map = new HashMap<String, Giudizio>();
+		if (pending != null) {
+			for (Giudizio g : pending) {
+				map.put(""+g.getId(), g);
+			}
+			Map<String, Boolean> updateComment = mediationParserImpl.updateComment(new LinkedList<String>(map.keySet()), tokenUtils.getClientToken());
+			for (String id : updateComment.keySet()) {
+				Giudizio g = map.get(id);
+				g.setApproved(updateComment.get(id) ? State.APPROVED : State.NOT_APPROVED);
+			}
+		}
+//		// aggiorno i commenti
+//		List<CommentBaseEntity> updatedCommentList = (List<CommentBaseEntity>) mediationParserImpl
+//				.updateCommentToMediationService(
+//						getCommentBase(giudizioNewRepository
+//								.findAll()), clientToken);
+//
+//		for (CommentBaseEntity updatedEntity : updatedCommentList) {
+//
+//			Giudizio g = giudizioNewRepository
+//					.findOne(updatedEntity.getId());
+//			g.setApproved(updatedEntity.isApproved());
+//			giudizioNewRepository.saveAndFlush(g);
+//
+//		}
 	}
 }

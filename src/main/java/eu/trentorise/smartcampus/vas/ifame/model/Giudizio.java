@@ -15,11 +15,9 @@ import eu.trentorise.smartcampus.mediation.model.CommentBaseEntity;
 @Entity
 @XmlRootElement(name = "Giudizio")
 @NamedQueries({
-		@NamedQuery(name = "Giudizio.getGiudiziApproved", query = "from Giudizio where mensa_id = ?1 and piatto_id = ?2 and approved=1"),
-		@NamedQuery(name = "Giudizio.getUserGiudizioApproved", query = "from Giudizio where mensa_id = ?1 and piatto_id = ?2 and user_id = ?3 "),
-		@NamedQuery(name = "Giudizio.getGiudiziAll", query = "from Giudizio where mensa_id = ?1 and piatto_id = ?2 and approved=1"),
-		@NamedQuery(name = "Giudizio.getUserGiudizioAll", query = "from Giudizio where mensa_id = ?1 and piatto_id = ?2 and user_id = ?3 ")
-
+		@NamedQuery(name = "Giudizio.getGiudiziApproved", query = "from Giudizio where mensa_id = ?1 and piatto_id = ?2 and approved != 'NOT_APPROVED'"),
+		@NamedQuery(name = "Giudizio.getGiudiziPending", query = "from Giudizio where approved = 'WAITING'"),
+		@NamedQuery(name = "Giudizio.getUserGiudizio", query = "from Giudizio where mensa_id = ?1 and piatto_id = ?2 and user_id = ?3 ")
 })
 public class Giudizio extends CommentBaseEntity {
 
