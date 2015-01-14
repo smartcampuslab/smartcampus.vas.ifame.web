@@ -32,6 +32,7 @@ import eu.trentorise.smartcampus.vas.ifame.repository.GiudizioRepository;
 import eu.trentorise.smartcampus.vas.ifame.repository.LikesRepository;
 import eu.trentorise.smartcampus.vas.ifame.repository.MensaRepository;
 import eu.trentorise.smartcampus.vas.ifame.repository.PiattoRepository;
+import eu.trentorise.smartcampus.vas.ifame.utils.TokenUtils;
 
 @Controller("GiudizioController")
 public class IGraditoController {
@@ -40,16 +41,19 @@ public class IGraditoController {
 			.getLogger(IGraditoController.class);
 
 	@Autowired
-	PiattoRepository piattoRepository;
+	private TokenUtils tokenUtils;
+	
+	@Autowired
+	private PiattoRepository piattoRepository;
 
 	@Autowired
-	MensaRepository mensaRepository;
+	private MensaRepository mensaRepository;
 
 	@Autowired
-	GiudizioRepository giudizioNewRepository;
+	private GiudizioRepository giudizioNewRepository;
 
 	@Autowired
-	LikesRepository likeRepository;
+	private LikesRepository likeRepository;
 
 	@Autowired
 	private MediationParserImpl mediationParserImpl;
@@ -65,11 +69,6 @@ public class IGraditoController {
 	@Value("${profile.address}")
 	private String profileaddress;
 
-	private String getToken(HttpServletRequest request) {
-		return (String) SecurityContextHolder.getContext().getAuthentication()
-				.getPrincipal();
-	}
-
 	/*
 	 * 
 	 * 
@@ -82,7 +81,7 @@ public class IGraditoController {
 			throws IOException {
 		try {
 			log.debug("/getpiatti");
-			String token = getToken(request);
+			String token = tokenUtils.getUserToken();
 			BasicProfileService service = new BasicProfileService(
 					profileaddress);
 			BasicProfile profile = service.getBasicProfile(token);
@@ -112,7 +111,7 @@ public class IGraditoController {
 			log.debug("/mensa/" + mensa_id + "/piatto/" + piatto_id
 					+ "/giudizio");
 
-			String token = getToken(request);
+			String token = tokenUtils.getUserToken();
 			BasicProfileService service = new BasicProfileService(
 					profileaddress);
 			BasicProfile profile = service.getBasicProfile(token);
@@ -167,7 +166,7 @@ public class IGraditoController {
 			log.debug("/mensa/" + mensa_id + "/piatto/" + piatto_id
 					+ "/user_id/" + user_id + "/giudizio");
 
-			String token = getToken(request);
+			String token = tokenUtils.getUserToken();
 			BasicProfileService service = new BasicProfileService(
 					profileaddress);
 			BasicProfile profile = service.getBasicProfile(token);
@@ -216,7 +215,8 @@ public class IGraditoController {
 			log.debug("/mensa/" + mensa_id + "/piatto/" + piatto_id
 					+ "/giudizio/add");
 
-			String token = getToken(request);
+			String token = tokenUtils.getUserToken();
+			String clientToken = tokenUtils.getClientToken();
 			BasicProfileService service = new BasicProfileService(
 					profileaddress);
 			BasicProfile profile = service.getBasicProfile(token);
@@ -233,7 +233,7 @@ public class IGraditoController {
 							.getUserGiudizioApproved(mensa_id, piatto_id,
 									data.userId);
 
-					mediationParserImpl.updateKeyWord(token);
+					mediationParserImpl.updateKeyWord(clientToken);
 
 					if (giudizio_old != null) {
 
@@ -250,14 +250,14 @@ public class IGraditoController {
 								.localValidationComment(
 										giudizio_old.getTesto(), giudizio_old
 												.getId().intValue(), userId,
-										token));
+												clientToken));
 
 						if (giudizio_old.isApproved()) {
 							giudizio_old.setApproved(mediationParserImpl
 									.remoteValidationComment(
 											giudizio_old.getTesto(),
 											giudizio_old.getId().intValue(),
-											userId, token));
+											userId, clientToken));
 						}
 
 						if (giudizio_old.isApproved()) {
@@ -298,7 +298,7 @@ public class IGraditoController {
 						giudizio.setApproved(mediationParserImpl
 								.localValidationComment(giudizio.getTesto(),
 										giudizio.getId().intValue(), userId,
-										token));
+										clientToken));
 
 						giudizio = giudizioNewRepository.save(giudizio);
 
@@ -306,7 +306,7 @@ public class IGraditoController {
 							giudizio.setApproved(mediationParserImpl
 									.remoteValidationComment(giudizio
 											.getTesto(), giudizio.getId()
-											.intValue(), userId, token));
+											.intValue(), userId, clientToken));
 						}
 
 						if (giudizio.isApproved()) {
@@ -320,7 +320,7 @@ public class IGraditoController {
 					List<CommentBaseEntity> updatedCommentList = (List<CommentBaseEntity>) mediationParserImpl
 							.updateCommentToMediationService(
 									getCommentBase(giudizioNewRepository
-											.findAll()), token);
+											.findAll()), clientToken);
 
 					for (CommentBaseEntity updatedEntity : updatedCommentList) {
 
@@ -396,7 +396,7 @@ public class IGraditoController {
 			log.debug("/mensa/" + mensa_id + "/piatto/" + piatto_id
 					+ "/giudizio/" + giudizio_id + "/delete");
 
-			String token = getToken(request);
+			String token = tokenUtils.getUserToken();
 			BasicProfileService service = new BasicProfileService(
 					profileaddress);
 			BasicProfile profile = service.getBasicProfile(token);
