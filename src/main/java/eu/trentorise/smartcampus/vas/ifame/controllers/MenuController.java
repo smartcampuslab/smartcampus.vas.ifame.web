@@ -76,7 +76,7 @@ public class MenuController {
 			HttpServletResponse response, HttpSession session)
 			throws IOException {
 		try {
-			logger.info("/getmenudelgiorno");
+			logger.debug("/getmenudelgiorno");
 
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
@@ -109,7 +109,7 @@ public class MenuController {
 			HttpServletResponse response, HttpSession session)
 			throws IOException {
 		try {
-			logger.info("/getmenudelmese");
+			logger.debug("/getmenudelmese");
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
 					profileaddress);
@@ -166,7 +166,7 @@ public class MenuController {
 			throws IOException {
 		try {
 
-			logger.info("/getalternative");
+			logger.debug("/getalternative");
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
 					profileaddress);
@@ -191,7 +191,7 @@ public class MenuController {
 	 */
 	@PostConstruct
 	private void inizializzaDatabase() throws BiffException, IOException {
-		logger.info("Inizializzazione database");
+		logger.debug("Inizializzazione database");
 
 		Workbook workbook = NewMenuXlsUtil.getWorkbook(getClass()
 				.getResourceAsStream("/gennaio2015.xls"));
@@ -261,6 +261,6 @@ public class MenuController {
 		// mensaRepository.save(mesiano_1);
 		// mensaRepository.save(mesiano_2);
 		// ********************************************************************
-		logger.info("Tutto apposto a ferragosto");
+		logger.debug("Tutto apposto a ferragosto");
 	}
 }

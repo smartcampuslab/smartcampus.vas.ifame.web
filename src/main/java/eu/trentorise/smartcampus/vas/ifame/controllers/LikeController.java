@@ -57,7 +57,7 @@ public class LikeController {
 			HttpSession session, @PathVariable("giudizio_id") Long giudizio_id,
 			@RequestBody Likes like) throws IOException {
 		try {
-			logger.info("giudizio/" + giudizio_id + "/like");
+			logger.debug("giudizio/" + giudizio_id + "/like");
 
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
@@ -106,7 +106,7 @@ public class LikeController {
 			HttpSession session, @PathVariable("giudizio_id") Long giudizio_id,
 			@RequestBody Likes like) throws IOException {
 		try {
-			logger.info("giudizio/" + giudizio_id + "/like -> delete");
+			logger.debug("giudizio/" + giudizio_id + "/like -> delete");
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
 					profileaddress);

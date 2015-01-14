@@ -81,7 +81,7 @@ public class IGraditoController {
 			HttpServletResponse response, HttpSession session)
 			throws IOException {
 		try {
-			log.info("/getpiatti");
+			log.debug("/getpiatti");
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
 					profileaddress);
@@ -109,7 +109,7 @@ public class IGraditoController {
 			@PathVariable("mensa_id") Long mensa_id,
 			@PathVariable("piatto_id") Long piatto_id) throws IOException {
 		try {
-			log.info("/mensa/" + mensa_id + "/piatto/" + piatto_id
+			log.debug("/mensa/" + mensa_id + "/piatto/" + piatto_id
 					+ "/giudizio");
 
 			String token = getToken(request);
@@ -164,7 +164,7 @@ public class IGraditoController {
 			@PathVariable("piatto_id") Long piatto_id,
 			@PathVariable("user_id") Long user_id) throws IOException {
 		try {
-			log.info("/mensa/" + mensa_id + "/piatto/" + piatto_id
+			log.debug("/mensa/" + mensa_id + "/piatto/" + piatto_id
 					+ "/user_id/" + user_id + "/giudizio");
 
 			String token = getToken(request);
@@ -213,7 +213,7 @@ public class IGraditoController {
 			@RequestBody GiudizioDataToPost data) throws IOException {
 		try {
 
-			log.info("/mensa/" + mensa_id + "/piatto/" + piatto_id
+			log.debug("/mensa/" + mensa_id + "/piatto/" + piatto_id
 					+ "/giudizio/add");
 
 			String token = getToken(request);
@@ -237,7 +237,7 @@ public class IGraditoController {
 
 					if (giudizio_old != null) {
 
-						log.info("Aggiorno il giudizio");
+						log.debug("Aggiorno il giudizio");
 						/*
 						 * lo aggiorno
 						 */
@@ -349,7 +349,7 @@ public class IGraditoController {
 					 * SE NON TROVO PIATTO e/o MENSA CORRISPONDENTI AI VALORI
 					 * PASSATI NELL URL
 					 */
-					log.info("Mensa or piatto not found");
+					log.debug("Mensa or piatto not found");
 					response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 					return null;
 				}
@@ -361,7 +361,7 @@ public class IGraditoController {
 		/*
 		 * BAD REQUEST SE HO ERRORI NEI CONTROLLI
 		 */
-		log.info("Bad request");
+		log.debug("Bad request");
 		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		return null;
 
@@ -393,7 +393,7 @@ public class IGraditoController {
 			@PathVariable("giudizio_id") Long giudizio_id,
 			@RequestBody GiudizioDataToPost data) throws IOException {
 		try {
-			log.info("/mensa/" + mensa_id + "/piatto/" + piatto_id
+			log.debug("/mensa/" + mensa_id + "/piatto/" + piatto_id
 					+ "/giudizio/" + giudizio_id + "/delete");
 
 			String token = getToken(request);

@@ -63,7 +63,7 @@ public class ISoldiController {
 		Saldo saldo = null;
 		try {
 
-			logger.info("/isoldi/getsoldi");
+			logger.debug("/isoldi/getsoldi");
 
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(

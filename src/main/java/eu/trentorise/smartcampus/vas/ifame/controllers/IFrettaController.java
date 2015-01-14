@@ -1,13 +1,16 @@
 package eu.trentorise.smartcampus.vas.ifame.controllers;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import eu.trentorise.smartcampus.profileservice.BasicProfileService;
 import eu.trentorise.smartcampus.profileservice.model.BasicProfile;
 import eu.trentorise.smartcampus.vas.ifame.model.Mensa;
+import eu.trentorise.smartcampus.vas.ifame.model.MensaContainer;
 import eu.trentorise.smartcampus.vas.ifame.repository.MensaRepository;
 
 @Controller("IFrettaController")
@@ -41,6 +45,15 @@ public class IFrettaController {
 	@Value("${webapp.name}")
 	private String appName;
 
+	@PostConstruct
+	public void initCanteens() throws Exception {
+		InputStream is = getClass().getResourceAsStream("/mense.json");
+		MensaContainer container = new ObjectMapper().readValue(is, MensaContainer.class);
+		if (container.getMense() != null) {
+			mensaRepository.save(container.getMense());
+		}
+	}
+	
 	private String getToken(HttpServletRequest request) {
 		return (String) SecurityContextHolder.getContext().getAuthentication()
 				.getPrincipal();
@@ -52,7 +65,7 @@ public class IFrettaController {
 			HttpServletResponse response, HttpSession session)
 			throws IOException {
 		try {
-			logger.info("/getmense");
+			logger.debug("/getmense");
 			String token = getToken(request);
 			BasicProfileService service = new BasicProfileService(
 					profileaddress);
