@@ -34,8 +34,7 @@ public class NewMenuXlsUtil {
 	// ***************************************************************
 	// IMPORTANTE: DA CAMBIARE IN BASE AL NUMERO DI SETTIMANE DEL MESE
 	// IL FOGLIO FINALE
-	// final int SHEET_FINALE = 6;// DICEMBRE
-	private static final int FOGLIO_FINALE = 5; //maggio
+	private static final int FOGLIO_FINALE = 5; //genn
 	private static final int FOGLIO_INIZIALE = 0;
 	// ---------------------------------------------------------------
 	// RIGHE E COLONNE DEI MENU
@@ -49,7 +48,7 @@ public class NewMenuXlsUtil {
 	// le alternative sono uguali per tutte le settimane perciò leggiamo le
 	// alternative sul foglio 1 (COSÌ PER CONVENZIONE NOSTRA)
 	// NB: partono da 0 quindi sul secondo sheet
-	private static final int FOGLIO_ALTERNATIVE = 1;
+	private static final int FOGLIO_ALTERNATIVE = 0;
 	// ---------------------------------------------------------------
 	// RIGHE E COLONNE DELLE ALTERNATIVE
 	private static final int ALTERNATIVE_COLONNA_INIZIALE = 0;

@@ -34,15 +34,19 @@ public class GestoreMenu {
 
 		// setto first e last
 		firstWeekMenu.setStart_day(1);
-		firstWeekMenu.setEnd_day(firstMonday - 1);
-
-		firstWeekMenu = getMenuDellaSettimana(piattoGiornoRepo, piattoRepo, 1,
-				firstMonday - 1);
-
+		if (firstMonday != 1) {
+			firstWeekMenu.setEnd_day(firstMonday - 1);
+			firstWeekMenu = getMenuDellaSettimana(piattoGiornoRepo, piattoRepo,
+					1, firstMonday - 1);
+		} else {
+			firstWeekMenu.setEnd_day(7);
+			firstWeekMenu = getMenuDellaSettimana(piattoGiornoRepo, piattoRepo,
+					1, firstMonday + 6);
+		}
 		mdsList.add(firstWeekMenu);
 
 		// ciclo di lunedi in lunedi
-		while (firstMonday <= lastDayInMonth) { /////////fix
+		while (firstMonday <= lastDayInMonth) { // ///////fix
 
 			int lastday = firstMonday + 6;
 
