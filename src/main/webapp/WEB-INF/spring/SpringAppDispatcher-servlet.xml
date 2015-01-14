@@ -42,6 +42,6 @@
 		class="eu.trentorise.smartcampus.mediation.engine.MediationParserImpl">
 		<constructor-arg value="${url.mediation.services}"/>
         <constructor-arg value="${webapp.name}"/>
-        <property name="webappname" value="${keyword.file}"/>
+        <constructor-arg value="${keyword.file}"/>
 	</bean>
 </beans>
