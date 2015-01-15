@@ -23,7 +23,7 @@ import eu.trentorise.smartcampus.unidataservice.StudentInfoService;
 import eu.trentorise.smartcampus.unidataservice.model.OperaPayment;
 import eu.trentorise.smartcampus.vas.ifame.model.Saldo;
 
-@Controller("ISoldiController")
+//@Controller("ISoldiController")
 public class ISoldiController {
 
 	private static final Logger logger = Logger

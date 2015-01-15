@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -75,7 +76,7 @@ public class IGraditoController {
 
 	@PostConstruct
 	public void initKeyWords() throws Exception {
-		mediationParserImpl.initKeywords(tokenUtils.getClientToken());
+ 		mediationParserImpl.initKeywords(tokenUtils.getClientToken());
 	}
 	
 	/*
@@ -406,6 +407,11 @@ public class IGraditoController {
 		return null;
 	}
 	
+	@Scheduled(fixedRate = 18000)
+	public void synchronizeApprovalStatus() {
+		updateApprovalStatus();
+	}
+	
 	private void updateApprovalStatus() {
 		List<Giudizio> pending = giudizioNewRepository.getGiudiziPending();
 		Map<String, Giudizio> map = new HashMap<String, Giudizio>();
@@ -417,21 +423,8 @@ public class IGraditoController {
 			for (String id : updateComment.keySet()) {
 				Giudizio g = map.get(id);
 				g.setApproved(updateComment.get(id) ? State.APPROVED : State.NOT_APPROVED);
+				giudizioNewRepository.save(g);
 			}
 		}
-//		// aggiorno i commenti
-//		List<CommentBaseEntity> updatedCommentList = (List<CommentBaseEntity>) mediationParserImpl
-//				.updateCommentToMediationService(
-//						getCommentBase(giudizioNewRepository
-//								.findAll()), clientToken);
-//
-//		for (CommentBaseEntity updatedEntity : updatedCommentList) {
-//
-//			Giudizio g = giudizioNewRepository
-//					.findOne(updatedEntity.getId());
-//			g.setApproved(updatedEntity.isApproved());
-//			giudizioNewRepository.saveAndFlush(g);
-//
-//		}
 	}
 }

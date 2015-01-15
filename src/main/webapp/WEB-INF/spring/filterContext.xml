@@ -53,9 +53,6 @@
 	</sec:authentication-manager>
 
 	<bean id="preauthAuthProvider" class="eu.trentorise.smartcampus.aac.conf.OAuthAuthenticationProvider">
-<!-- 	  <property name="tokenStore" ref="tokenStore"/>   
-    <property name="aacURL" value="https://vas-dev.smartcampuslab.it/aac"/>  
-     <property name="scope" value="smartcampus.profile.basicprofile.me"/>  -->
 	</bean>
 		
 	<bean id="tokenStore" class="eu.trentorise.smartcampus.aac.conf.impl.InMemoryTokenStore"/> 
