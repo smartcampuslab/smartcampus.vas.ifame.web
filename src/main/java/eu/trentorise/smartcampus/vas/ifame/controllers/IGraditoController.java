@@ -407,7 +407,7 @@ public class IGraditoController {
 		return null;
 	}
 	
-	@Scheduled(fixedRate = 18000)
+	@Scheduled(fixedRate = 1800000)
 	public void synchronizeApprovalStatus() {
 		updateApprovalStatus();
 	}
