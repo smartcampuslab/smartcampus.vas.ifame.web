@@ -194,7 +194,7 @@ public class MenuController {
 		logger.debug("Inizializzazione database");
 
 		Workbook workbook = NewMenuXlsUtil.getWorkbook(getClass()
-				.getResourceAsStream("/maggio2016.xls"));
+				.getResourceAsStream("/giugno2016.xls"));
 
 		GestoreMenu.inizializzazioneMenuDatabase(piattoGiornoRepo,
 				piattoRepository, workbook);
