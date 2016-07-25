@@ -3,13 +3,13 @@
     {
         "mensa_id": 18,
         "mensa_nome": "Mesiano 2",
-        "mensa_link_online": "http://www.operauni.tn.it/upload/Webcam/MensaMes02.jpg",
+        "mensa_link_online": "http://ftp.tn.ymir.eu/mesiano02.jpg",
         "mensa_link_offline": "http://www.operauni.tn.it/upload/cms/456_x/mesiano-web-2.jpg"
     },
     {
         "mensa_id": 17,
         "mensa_nome": "Mesiano 1",
-        "mensa_link_online": "http://www.operauni.tn.it/upload/Webcam/MensaMes01.jpg",
+        "mensa_link_online": "http://ftp.tn.ymir.eu/mesiano01.jpg",
         "mensa_link_offline": "http://www.operauni.tn.it/upload/cms/456_x/mesiano-offline.jpg"
     },
     {
@@ -21,19 +21,19 @@
     {
         "mensa_id": 15,
         "mensa_nome": "Tommaso Gar",
-        "mensa_link_online": "http://www.operauni.tn.it/upload/Webcam/MensaUni.jpg",
+        "mensa_link_online": "http://ftp.tn.ymir.eu/tgar.jpg",
         "mensa_link_offline": "http://www.operauni.tn.it/upload/cms/456_x/gar-offline.jpg"
     },
     {
         "mensa_id": 14,
         "mensa_nome": "Povo Mensa Veloce",
-        "mensa_link_online": "http://www.operauni.tn.it/upload/Webcam/Povo01.jpg",
+        "mensa_link_online": "http://ftp.tn.ymir.eu/Povo01.jpg",
         "mensa_link_offline": "http://www.operauni.tn.it/upload/cms/456_x/mensa-povo1.jpg"
     },
     {
         "mensa_id": 13,
         "mensa_nome": "Povo Mensa",
-        "mensa_link_online": "http://www.operauni.tn.it/upload/Webcam/Povo02.jpg",
+        "mensa_link_online": "http://ftp.tn.ymir.eu/Povo02.jpg",
         "mensa_link_offline": "http://www.operauni.tn.it/upload/cms/456_x/mensa-povo2.jpg"
     }
 ]
