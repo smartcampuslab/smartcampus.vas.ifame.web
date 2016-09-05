@@ -22,19 +22,19 @@
         "mensa_id": 15,
         "mensa_nome": "Tommaso Gar",
         "mensa_link_online": "http://ftp.tn.ymir.eu/tgar.jpg",
-        "mensa_link_offline": "http://www.operauni.tn.it/upload/cms/456_x/gar-offline.jpg"
+        "mensa_link_offline": "http://ftp.tn.ymir.eu/tgar.jpg"
     },
     {
         "mensa_id": 14,
         "mensa_nome": "Povo Mensa Veloce",
         "mensa_link_online": "http://ftp.tn.ymir.eu/Povo01.jpg",
-        "mensa_link_offline": "http://www.operauni.tn.it/upload/cms/456_x/mensa-povo1.jpg"
+        "mensa_link_offline": "http://ftp.tn.ymir.eu/Povo01.jpg"
     },
     {
         "mensa_id": 13,
         "mensa_nome": "Povo Mensa",
         "mensa_link_online": "http://ftp.tn.ymir.eu/Povo02.jpg",
-        "mensa_link_offline": "http://www.operauni.tn.it/upload/cms/456_x/mensa-povo2.jpg"
+        "mensa_link_offline": "http://ftp.tn.ymir.eu/Povo02.jpg"
     }
 ]
 }
