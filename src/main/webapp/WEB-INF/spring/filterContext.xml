@@ -36,6 +36,9 @@
 
 	<!-- AC SERVICE PROVIDER FILTER INTEGRATION -->
 	
+	<http xmlns="http://www.springframework.org/schema/security"
+		pattern="/open/**" security="none" />
+	
 	<sec:http entry-point-ref="forbEntryPoint" use-expressions="true" create-session="stateless">
 		<sec:custom-filter position="PRE_AUTH_FILTER" ref="authTokenFilter" />
 		 <sec:intercept-url pattern="/**" access="isFullyAuthenticated()" />

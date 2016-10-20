@@ -84,4 +84,19 @@ public class IFrettaController {
 		}
 		return null;
 	}
+	
+	/* Open method getmense */
+	@RequestMapping(method = RequestMethod.GET, value = "/open/getmense")
+	public @ResponseBody
+	List<Mensa> getMense(HttpServletRequest request,
+			HttpServletResponse response)
+			throws IOException {
+		try {
+			logger.debug("/getmense");
+				return mensaRepository.findAll();
+		} catch (Exception e) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+	}
 }

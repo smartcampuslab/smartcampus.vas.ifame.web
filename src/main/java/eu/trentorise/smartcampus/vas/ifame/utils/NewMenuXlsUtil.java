@@ -34,7 +34,8 @@ public class NewMenuXlsUtil {
 	// ***************************************************************
 	// IMPORTANTE: DA CAMBIARE IN BASE AL NUMERO DI SETTIMANE DEL MESE
 	// IL FOGLIO FINALE
-	private static final int FOGLIO_FINALE = 5; //novembre
+	//private static final int FOGLIO_FINALE = 5; //novembre
+	private static final int FOGLIO_FINALE = 6; //ottobre
 	private static final int FOGLIO_INIZIALE = 0;
 	// ---------------------------------------------------------------
 	// RIGHE E COLONNE DEI MENU

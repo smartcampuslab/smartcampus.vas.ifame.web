@@ -181,6 +181,58 @@ public class MenuController {
 		}
 		return null;
 	}
+	
+	/* Open method menudelgiorno */
+	@RequestMapping(method = RequestMethod.GET, value = "/open/getmenudelgiorno")
+	public @ResponseBody
+	MenuDelGiorno getMenuDelGiornoStringListOpen(HttpServletRequest request,
+			HttpServletResponse response)
+			throws IOException {
+		try {
+			logger.debug("/getmenudelgiorno");
+			int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+			return GestoreMenu.getMenuDelGiorno(piattoGiornoRepo,
+						piattoRepository, day);
+		} catch (Exception e) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+	}
+	
+	/* Open method menudelmese */
+	@RequestMapping(method = RequestMethod.GET, value = "/open/getmenudelmese")
+	public @ResponseBody
+	MenuDelMese getMenuDelMeseOpen(HttpServletRequest request,
+			HttpServletResponse response)
+			throws IOException {
+		try {
+			logger.debug("/getmenudelmese");
+			int max = Calendar.getInstance().getActualMaximum(
+					Calendar.DAY_OF_MONTH);
+			int monday = getFirstMondayOfCurrentMonth();
+			return GestoreMenu.getMenuDelMese(piattoGiornoRepo,
+					piattoRepository, monday, max);
+		} catch (Exception e) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+	}
+	
+	/* Open method alternative */
+	@RequestMapping(method = RequestMethod.GET, value = "/open/getalternative")
+	public @ResponseBody
+	List<Piatto> getAlternative(HttpServletRequest request,
+			HttpServletResponse response)
+			throws IOException {
+		try {
+			logger.debug("/getalternative");
+				return GestoreMenu.getAlternative(piattoGiornoRepo,
+						piattoRepository);
+		} catch (Exception e) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return null;
+	}
 
 	/*
 	 * 
@@ -194,7 +246,8 @@ public class MenuController {
 		logger.debug("Inizializzazione database");
 
 		Workbook workbook = NewMenuXlsUtil.getWorkbook(getClass()
-				.getResourceAsStream("/novembre2016.xls"));
+				//.getResourceAsStream("/novembre2016.xls"));
+				.getResourceAsStream("/ottobre2016.xls"));
 
 		GestoreMenu.inizializzazioneMenuDatabase(piattoGiornoRepo,
 				piattoRepository, workbook);
